@@ -1,8 +1,9 @@
 {
-  "name": "naive",
+  "name": "native",
   "description": "Smart Chat test app",
   "author": "Nika",
+   "version": "1.2.0",
   "dependencies": {
-    "express": ">= 1.2.0"
-  },
+    "express": ">=3.4.4"
+  }
 }
