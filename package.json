@@ -1,6 +1,8 @@
 {
-  "name": "my-project-name",
-  "version": "0.1.0",
-  "devDependencies": {
-  }
+  "name": "naive",
+  "description": "Smart Chat test app",
+  "author": "Nika",
+  "dependencies": {
+    "express": ">= 1.2.0"
+  },
 }
