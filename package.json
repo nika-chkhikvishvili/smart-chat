@@ -2,8 +2,9 @@
   "name": "native",
   "description": "Smart Chat test app",
   "author": "Nika",
-   "version": "1.2.0",
+  "version": "1.2.0",
+  "homepage": "http://pilotfish.io",
   "dependencies": {
-    "express": ">=3.4.4"
+       "express": ">=3.4.4"
   }
 }
