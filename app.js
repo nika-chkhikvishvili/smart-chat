@@ -3,7 +3,7 @@ var app = express();
 
 app.get('/', function (req, res) {
   
-   res.send('<html><head><meta http-equiv="refresh" content="2"></head><body><h2>უZZZZZZZZZZZZZZZZZZZA');
+   res.send('<html><head><meta http-equiv="refresh" content="2"></head><body><h2>asd4asd54d56as4d56as4d65as4d65as4d65as4d65as4d654');
   
 });
 
