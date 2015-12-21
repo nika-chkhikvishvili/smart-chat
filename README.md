@@ -15,4 +15,4 @@ Smart Chat App
 
 
 
-ბაზის პარამატრები (conenction string) დააიკლუდეთ ფაილიდან.
+ბაზის პარამატრები (conenction string) დააინკლუდეთ ფაილიდან.
