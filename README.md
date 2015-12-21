@@ -1,6 +1,11 @@
 # smart-chat
 
-რასაც შეცვლით პირდაპირ აისახება აქ: 
+რასაც შეცვლით პირდაპირ აისახება აქ: http://smartchat.opensource.gov.ge:3000/
+
+
+--
+
+
 
 მაგ: https://github.com/nika-chkhikvishvili/smartchat/blob/master/app.js - ფაილში დაარედაქტირეთ 
   res.send('......');
