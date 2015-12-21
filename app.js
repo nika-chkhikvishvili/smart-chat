@@ -3,7 +3,7 @@ var app = express();
 
 app.get('/', function (req, res) {
   
-  rs.send('<html><head><meta http-equiv="refresh" content="2"></head>');
+  res.send('<html><head><meta http-equiv="refresh" content="2"></head>');
   res.send('უჩა თაბაგარი!');
 });
 
