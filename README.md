@@ -12,3 +12,7 @@
   და დააკომიტეთ ცვლილება შემდეგ დაარეფრეშეთ: http://smartchat.opensource.gov.ge:3000/
 
 Smart Chat App
+
+
+
+ბაზის პარამატრები (conenction string) დააიკლუდეთ ფაილიდან.
