@@ -3,7 +3,7 @@ var app = express();
 
 app.get('/', function (req, res) {
   
-   res.send('<html><head><meta http-equiv="refresh" content="2"></head><body><h2>kkkkkkkkkkkkkkkkkkkk</h2>');
+   res.send('<html><head><meta http-equiv="refresh" content="2"></head><body><h2>ტესტ</h2>');
   
 });
 
