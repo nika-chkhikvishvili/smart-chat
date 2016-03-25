@@ -1,10 +1,10 @@
 cd /var/www/
 
-## setup instruction
+## nodeJS setup instruction
 
 `$ git clone https://github.com/nika-chkhikvishvili/smartchat`
 
-`$ cd node`
+`$ cd smartchat/node`
 
 `$ npm install `
 
