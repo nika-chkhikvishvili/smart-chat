@@ -1,6 +1,7 @@
-cd /var/www/
+
 
 ## nodeJS setup instruction
+`$ cd /var/www/`
 
 `$ git clone https://github.com/nika-chkhikvishvili/smartchat`
 
