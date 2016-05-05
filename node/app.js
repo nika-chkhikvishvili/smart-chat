@@ -7,7 +7,7 @@ http_server.listen(3000);
 var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
-    password : '',
+    password : 'root',
     database : 'mydb'
 });
 connection.connect();
