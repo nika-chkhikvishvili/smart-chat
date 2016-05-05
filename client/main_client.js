@@ -8,7 +8,7 @@ var msgCount = 0;
 var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
 var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
-var socket = io('http://localhost:3000');
+var socket = io('http://smartchat.cloud.gov.ge:3000');
 
 socket.on('testResponse', function (data) {
     console.log('execute: testResponse');
