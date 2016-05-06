@@ -18,6 +18,9 @@ connection.connect();
 
 
 
+
+
+
 var chatRooms = {};
 var readyForPlay = require('fifo')();
 var onlinePersons = {};
