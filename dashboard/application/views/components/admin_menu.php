@@ -1,4 +1,4 @@
-﻿<ul>
+<ul>
     <li>
         <a href="<?=base_url();?>dashboard" class="waves-effect active"><i class="md md-home"></i><span> მთავარი გვერდი </span></a>
     </li>
