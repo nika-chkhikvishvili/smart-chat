@@ -55,50 +55,54 @@ CREATE TABLE IF NOT EXISTS `categoryservices` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat`
+-- Table structure for table `chats`
 --
 
-CREATE TABLE IF NOT EXISTS `chat` (
-  `chatId` int(11) NOT NULL AUTO_INCREMENT,
-  `onlineUserId` int(11) DEFAULT NULL,
-  `repoId` int(11) DEFAULT NULL,
-  `serviceId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`chatId`)
+CREATE TABLE IF NOT EXISTS `chats` (
+  `chat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `online_user_id` int(11) DEFAULT NULL,
+  `repo_id` int(11) DEFAULT NULL,
+  `service_id` int(11) DEFAULT NULL,
+  `chat_status_id` int(11) NOT NULL DEFAULT '0',
+  `chat_uniq_id` varchar(200) NOT NULL,
+  `add_date` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`chat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chatmessage`
+-- Table structure for table `chat_messages`
 --
 
-CREATE TABLE IF NOT EXISTS `chatmessage` (
-  `chatMessageId` int(11) NOT NULL AUTO_INCREMENT,
-  `chatId` int(11) DEFAULT NULL,
-  `personId` int(11) DEFAULT NULL,
-  `onlineUserId` int(11) DEFAULT NULL,
-  `chatMessageTxt` text,
-  `chatDate` date DEFAULT NULL,
-  PRIMARY KEY (`chatMessageId`)
+CREATE TABLE IF NOT EXISTS  `chat_messages` (
+  `chat_message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` int(11) DEFAULT NULL,
+  `person_id` int(11) DEFAULT NULL,
+  `online_user_id` int(11) DEFAULT NULL,
+  `chat_message` text,
+  `message_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`chat_message_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chatroom`
+-- Table structure for table `chat_rooms`
 --
 
-CREATE TABLE IF NOT EXISTS `chatroom` (
-  `chatRoomId` int(11) NOT NULL AUTO_INCREMENT,
-  `chatID` int(11) DEFAULT NULL,
-  `personId` int(11) DEFAULT NULL,
-  `personMode` int(11) DEFAULT NULL,
-  `personJoinMssgId` int(11) DEFAULT NULL,
-  `personJoinDate` date DEFAULT NULL,
-  `onlineUserDate` date DEFAULT NULL,
-  `onlineUserLeaveDate` date DEFAULT NULL,
-  PRIMARY KEY (`chatRoomId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+CREATE TABLE IF NOT EXISTS `chat_rooms` (
+  `chat_room_id` int(11) NOT NULL AUTO_INCREMENT,
+  `chat_id` int(11) DEFAULT NULL,
+  `person_id` int(11) DEFAULT NULL,
+  `person_mode` int(11) DEFAULT NULL,
+  `person_join_msg_id` int(11) DEFAULT NULL,
+  `person_join_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `online_user_date` date DEFAULT NULL,
+  `online_user_leave_date` date DEFAULT NULL,
+  `online_user_id` int(11) DEFAULT NULL,
+PRIMARY KEY (`chat_room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -114,83 +118,24 @@ CREATE TABLE IF NOT EXISTS `login_his` (
   PRIMARY KEY (` login_his_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=71 ;
 
---
--- Dumping data for table `login_his`
---
-
-INSERT INTO `login_his` (` login_his_id`, `his_person_id`, `login_his_date`, `login_his_time`) VALUES
-(17, 1, '2016-02-28', '2016-02-28 23:37:41'),
-(18, 1, '2016-03-03', '2016-03-03 18:21:20'),
-(19, 1, '2016-03-03', '2016-03-03 19:54:23'),
-(20, 1, '2016-03-03', '2016-03-03 22:26:35'),
-(21, 1, '2016-03-03', '2016-03-03 22:31:02'),
-(22, 1, '2016-03-03', '2016-03-03 22:32:55'),
-(23, 1, '2016-03-03', '2016-03-03 22:33:48'),
-(24, 1, '2016-03-03', '2016-03-03 23:42:29'),
-(25, 1, '2016-03-03', '2016-03-03 23:45:40'),
-(26, 1, '2016-03-05', '2016-03-05 12:54:05'),
-(27, 1, '2016-03-05', '2016-03-05 13:24:37'),
-(28, 1, '2016-03-05', '2016-03-05 13:24:40'),
-(29, 1, '2016-03-05', '2016-03-05 13:27:26'),
-(30, 1, '2016-03-05', '2016-03-05 13:28:37'),
-(31, 1, '2016-03-05', '2016-03-05 13:28:39'),
-(32, 1, '2016-03-05', '2016-03-05 13:30:53'),
-(33, 1, '2016-03-05', '2016-03-05 13:31:12'),
-(34, 1, '2016-03-05', '2016-03-05 13:31:30'),
-(35, 1, '2016-03-05', '2016-03-05 14:47:27'),
-(36, 1, '2016-03-05', '2016-03-05 14:47:49'),
-(37, 1, '2016-03-05', '2016-03-05 23:22:30'),
-(38, 1, '2016-03-06', '2016-03-06 10:32:05'),
-(39, 1, '2016-03-06', '2016-03-06 23:34:09'),
-(40, 1, '2016-03-07', '2016-03-07 06:15:59'),
-(41, 1, '2016-03-07', '2016-03-07 12:02:32'),
-(42, 1, '2016-03-09', '2016-03-09 07:19:59'),
-(43, 1, '2016-03-09', '2016-03-09 07:38:06'),
-(44, 1, '2016-03-10', '2016-03-10 07:12:37'),
-(45, 1, '2016-03-10', '2016-03-10 09:30:05'),
-(46, 1, '2016-03-10', '2016-03-10 09:58:10'),
-(47, 1, '2016-03-10', '2016-03-10 09:59:17'),
-(48, 1, '2016-03-10', '2016-03-10 10:21:18'),
-(49, 1, '2016-03-11', '2016-03-11 07:02:44'),
-(50, 1, '2016-03-11', '2016-03-11 09:22:16'),
-(51, 1, '2016-03-11', '2016-03-11 13:45:26'),
-(52, 1, '2016-03-21', '2016-03-21 11:18:04'),
-(53, 1, '2016-03-21', '2016-03-21 14:28:58'),
-(54, 1, '2016-03-30', '2016-03-30 07:37:14'),
-(55, 1, '2016-03-30', '2016-03-30 07:37:41'),
-(56, 1, '2016-03-30', '2016-03-30 07:38:38'),
-(57, 1, '2016-03-30', '2016-03-30 08:49:29'),
-(58, 1, '2016-03-30', '2016-03-30 10:34:41'),
-(59, 1, '2016-03-30', '2016-03-30 12:36:47'),
-(60, 1, '2016-03-30', '2016-03-30 15:03:05'),
-(61, 1, '2016-04-06', '2016-04-06 10:05:12'),
-(62, 1, '2016-04-06', '2016-04-06 10:06:39'),
-(63, 1, '2016-04-06', '2016-04-06 10:06:55'),
-(64, 1, '2016-04-18', '2016-04-18 08:10:39'),
-(65, 1, '2016-04-18', '2016-04-18 08:10:59'),
-(66, 1, '2016-04-19', '2016-04-19 14:15:43'),
-(67, 1, '2016-05-03', '2016-05-03 09:05:15'),
-(68, 1, '2016-05-03', '2016-05-03 09:06:59'),
-(69, 1, '2016-05-03', '2016-05-03 09:07:15'),
-(70, 1, '2016-05-05', '2016-05-05 14:51:10');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `onlineusers`
+-- Table structure for table `online_users`
 --
 
-CREATE TABLE IF NOT EXISTS `onlineusers` (
-  `onlineUsersId` int(11) NOT NULL AUTO_INCREMENT,
-  `firstname` varchar(45) DEFAULT NULL,
-  `lastname` varchar(45) DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS `online_users` (
+  `online_user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
-  `personalno` varchar(45) DEFAULT NULL,
+  `personal_no` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
-  `cardnumber` varchar(45) DEFAULT NULL,
-  `regDate` date DEFAULT NULL,
-  PRIMARY KEY (`onlineUsersId`)
+  `birth_date` date DEFAULT NULL,
+  `card_number` varchar(45) DEFAULT NULL,
+  `reg_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`online_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -267,8 +212,7 @@ CREATE TABLE IF NOT EXISTS `repocategories` (
 -- Dumping data for table `repocategories`
 --
 
-INSERT INTO `repocategories` (`repo_categories_id`, `repository_id`, `category_name`) VALUES
-(25, 1, 'ეროვნული არქივი');
+INSERT INTO `repocategories` (`repository_id`, `category_name`) VALUES (1, 'ეროვნული არქივი');
 
 -- --------------------------------------------------------
 
@@ -276,26 +220,26 @@ INSERT INTO `repocategories` (`repo_categories_id`, `repository_id`, `category_n
 -- Table structure for table `repository`
 --
 
-CREATE TABLE IF NOT EXISTS `repository` (
+CREATE TABLE IF NOT EXISTS `repositories` (
   `repository_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `otherName` varchar(255) DEFAULT NULL,
+  `other_name` varchar(255) DEFAULT NULL,
   `abr` varchar(45) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `phone` varchar(45) DEFAULT NULL,
   `fax` varchar(45) DEFAULT NULL,
   `rep_email` varchar(45) DEFAULT NULL,
-  `regDate` date DEFAULT NULL,
-  `expireDate` date DEFAULT NULL,
-  PRIMARY KEY (`repository_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `reg_date` date DEFAULT NULL,
+  `expire_date` date DEFAULT NULL,
+PRIMARY KEY (`repository_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- Dumping data for table `repository`
+-- Dumping data for table `repositories`
 --
 
-INSERT INTO `repository` (`repository_id`, `name`, `otherName`, `abr`, `address`, `phone`, `fax`, `rep_email`, `regDate`, `expireDate`) VALUES
-(1, 'Public Service Hall', 'PSH', 'PSH', 'tbilisi sanapiro 2', '54545335', '54654354', 'info@psh.gov.ge', '2016-03-05', '2017-03-05');
+INSERT INTO `repositories`(`name`, `other_name`, `abr`, `address`, `phone`, `fax`, `email`, `reg_date`, `expire_date`)
+VALUES ('Public Service Hall', 'PSH', 'PSH', 'tbilisi sanapiro 2', '54545335', '54654354', 'info@psh.gov.ge', '2016-03-05', '2017-03-05');
 
 -- --------------------------------------------------------
 
@@ -341,6 +285,17 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `roleName` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`rolesId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE `person_tokens` (
+  `token` varchar(100) NOT NULL,
+  `person_id` int(11) NOT NULL,
+  `add_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expire` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expired` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
