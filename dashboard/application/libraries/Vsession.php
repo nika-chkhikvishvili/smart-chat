@@ -4,7 +4,8 @@
  * GET ISAD DESCRIPTION DATE
  * 
  */
- class vsession {
+
+class Vsession {
      
      public function __construct(){	 
 	 $this->sys =& get_instance();	 
@@ -17,6 +18,4 @@
 		}
 		
      }
-     
- }
-?>
+}

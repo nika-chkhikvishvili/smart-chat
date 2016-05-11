@@ -4,7 +4,7 @@
  * GET ISAD DESCRIPTION DATE
  * 
  */
- class institutions {
+class institutions {
 	 
      protected $CI;
 	 
@@ -29,6 +29,4 @@
 		$msg = array('status' => !$error, 'msg' => 'დასახელების წაშლა წარმატებით შესრულდა');
 	    return json_encode($msg);
 	 }
-     
- }
-?>
+}
