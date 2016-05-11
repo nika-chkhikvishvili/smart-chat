@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Dashboard_model extends CI_Model {
+class DashboardModel extends CI_Model {
 
 
     public function __construct()
@@ -77,4 +77,4 @@ class Dashboard_model extends CI_Model {
 	}
 
 }
-?>
+
