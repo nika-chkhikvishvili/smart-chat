@@ -31,7 +31,7 @@ ChatServer.prototype.auth = function (socket, data) {
     }
 
     this.connection.query('SELECT p.person_id,  p.email, p.`first_name`, p.`last_name`, p.`birth_date`, ' +
-        'p.`password`, p.`phone`, p.`photo`, p.`reg_date`, p.`is_admin`, p.`last_visit` FROM `mydb`.`persons` p' +
+        'p.`password`, p.`phone`, p.`photo`, p.`reg_date`, p.`is_admin`, p.`last_visit` FROM `persons` p' +
         ' WHERE p.email =? AND p.password = ?', [data.userName, data.passwd ], function(err, rows, fields) {
         if (!err) {
             if(rows.length != 1){
@@ -215,7 +215,7 @@ ChatServer.prototype.clientCheckChatIfAvariable = function (socket, data) {
         return ;
     }
 
-    me.connection.query('SELECT * FROM  mydb.`chats` WHERE  chat_uniq_id = ?', [data.chatUniqId ],  function(err, res) {
+    me.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chatUniqId ],  function(err, res) {
         if (err) me.databaseError(socket, err);
         else {
             if(res && Array.isArray(res) && res.length == 1){
@@ -235,7 +235,7 @@ ChatServer.prototype.clientCheckChatIfAvariable = function (socket, data) {
                     };
                 }
 
-                me.connection.query('SELECT * FROM  mydb.`online_users` WHERE online_user_id = ?', [ans.online_user_id ],  function(err, res) {
+                me.connection.query('SELECT * FROM  `online_users` WHERE online_user_id = ?', [ans.online_user_id ],  function(err, res) {
                     if (err) me.databaseError(socket, err);
                     else {
                         if(res && Array.isArray(res) && res.length == 1) {

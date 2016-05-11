@@ -8,19 +8,9 @@ var connection = mysql.createConnection({
     host     : 'localhost',
     user     : 'smartchat',
     password : 'smartchat',
-    database : 'smartchat',
+    database : 'smartchat'
 });
 connection.connect();
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -39,8 +29,11 @@ var server  = require('./server.js')({mysql:mysql, connection:connection, chatRo
 
 // initialite tokens
 connection.query('SELECT `t`.`token`, `t`.`person_id`, `t`.`add_date`, `t`.`expire`, `t`.`expired` ' +
-    'FROM `mydb`.`person_tokens` t', function(err, rows, fields) {
-    if(err) process.exit(1);
+    'FROM `person_tokens` t', function(err, rows, fields) {
+    if(err) {
+        console.log(err);
+        process.exit(1);
+    }
     rows.forEach(function (row){
         onlinePersons[row.token] = {
             userId : row.person_id,
@@ -51,7 +44,10 @@ connection.query('SELECT `t`.`token`, `t`.`person_id`, `t`.`add_date`, `t`.`expi
 
 connection.query('SELECT `chat_id`, `online_user_id`, `repo_id`, `chat_uniq_id` FROM `chats` ' +
     ' where `chat_status_id` = 0', function(err, rows, fields) {
-    if(err) process.exit(1);
+    if(err) {
+        console.log(err);
+        process.exit(1);
+    }
     rows.forEach(function (row){
         chatRooms[row.chat_uniq_id] = {
             chatId : row.chat_id,

@@ -15,15 +15,17 @@ function ChatClient (data){
 }
 
 ChatClient.prototype.databaseError = function(socket, err){
-    console.log('Error while performing Query.');
-    console.log(err);
+    console.error('Error while performing Query.');
+    console.error(err);
+    console.trace();
     socket.emit('serverError');
 };
 
 ChatClient.prototype.clientGetRepositories = function (socket) {
-    this.connection.query('SELECT r.`repository_id`, r.`name`, r.`other_name` FROM `repositories` r ',
+    var me = this;
+    me.connection.query('SELECT r.`repository_id`, r.`name`, r.`other_name` FROM `repositories` r ',
         function(err, rows, fields) {
-            if (err) databaseError(err);
+            if (err) me.databaseError(socket, err);
             else {
                 socket.emit('clientGetRepositoriesResponse', rows);
             }
@@ -68,7 +70,7 @@ ChatClient.prototype.clientCheckChatIfAvariable = function (socket, data) {
         return ;
     }
 
-    me.connection.query('SELECT * FROM  mydb.`chats` WHERE  chat_uniq_id = ?', [data.chatUniqId ],  function(err, res) {
+    me.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chatUniqId ],  function(err, res) {
         if (err) me.databaseError(socket, err);
         else {
             if(res && Array.isArray(res) && res.length == 1){
@@ -88,7 +90,7 @@ ChatClient.prototype.clientCheckChatIfAvariable = function (socket, data) {
                     };
                 }
 
-                me.connection.query('SELECT * FROM  mydb.`online_users` WHERE online_user_id = ?', [ans.online_user_id ],  function(err, res) {
+                me.connection.query('SELECT * FROM  `online_users` WHERE online_user_id = ?', [ans.online_user_id ],  function(err, res) {
                     if (err) me.databaseError(socket, err);
                     else {
                         if(res && Array.isArray(res) && res.length == 1) {
