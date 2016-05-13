@@ -49,10 +49,10 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'mydb';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['username'] = 'smartchat';
+$db['default']['password'] = 'smartchat';
+$db['default']['database'] = 'smartchat';
+$db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
