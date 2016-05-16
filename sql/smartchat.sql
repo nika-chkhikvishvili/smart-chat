@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `chats` (
   `service_id` int(11) DEFAULT NULL,
   `chat_status_id` int(11) NOT NULL DEFAULT '0',
   `chat_uniq_id` varchar(200) NOT NULL,
-  `add_date` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `add_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 PRIMARY KEY (`chat_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -238,7 +238,7 @@ PRIMARY KEY (`repository_id`)
 -- Dumping data for table `repositories`
 --
 
-INSERT INTO `repositories`(`name`, `other_name`, `abr`, `address`, `phone`, `fax`, `email`, `reg_date`, `expire_date`)
+INSERT INTO `repositories`(`name`, `other_name`, `abr`, `address`, `phone`, `fax`, `rep_email`, `reg_date`, `expire_date`)
 VALUES ('Public Service Hall', 'PSH', 'PSH', 'tbilisi sanapiro 2', '54545335', '54654354', 'info@psh.gov.ge', '2016-03-05', '2017-03-05');
 
 -- --------------------------------------------------------
