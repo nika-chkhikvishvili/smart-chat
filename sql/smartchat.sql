@@ -54,6 +54,69 @@ CREATE TABLE IF NOT EXISTS `categoryservices` (
 
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `information_object` (
+  `information_object_id` int(11) NOT NULL AUTO_INCREMENT,
+  `information_object_repo` int(11) NOT NULL,
+  `information_object_table` varchar(64) NOT NULL,
+  `information_object_rowid` int(11) NOT NULL,
+  `information_object_person` int(11) NOT NULL,
+  `information_object_event` varchar(64) NOT NULL,
+  `information_object_date` datetime NOT NULL,
+  PRIMARY KEY (`information_object_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `information_object`
+--
+
+INSERT INTO `information_object` (`information_object_id`, `information_object_repo`, `information_object_table`, `information_object_rowid`, `information_object_person`, `information_object_event`, `information_object_date`) VALUES
+(6, 1, 'repocategories', 34, 1, 'insert', '2016-06-02 08:53:57'),
+(7, 1, 'repocategories', 35, 1, 'insert', '2016-06-02 08:55:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `languages`
+--
+
+CREATE TABLE IF NOT EXISTS `languages` (
+  `languages_id` int(11) NOT NULL AUTO_INCREMENT,
+  `languages_region_code` varchar(5) NOT NULL,
+  `languages_name` varchar(64) NOT NULL,
+  PRIMARY KEY (`languages_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `languages`
+--
+
+INSERT INTO `languages` (`languages_id`, `languages_region_code`, `languages_name`) VALUES
+(1, 'ka', 'georgian'),
+(2, 'ru', 'russian'),
+(3, 'en', 'english'),
+(4, 'aps', 'abkhazian');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `language_settings`
+--
+
+CREATE TABLE IF NOT EXISTS `language_settings` (
+  `language_settings_id` int(11) NOT NULL AUTO_INCREMENT,
+  `language_settings_repository` int(11) NOT NULL COMMENT 'repository id ',
+  `language_settings_lang_id` int(11) NOT NULL COMMENT 'repository languages',
+  PRIMARY KEY (`language_settings_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `language_settings`
+--
+
+INSERT INTO `language_settings` (`language_settings_id`, `language_settings_repository`, `language_settings_lang_id`) VALUES
+(1, 1, 4),
+(2, 1, 1);
+
 --
 -- Table structure for table `chats`
 --
@@ -185,15 +248,15 @@ INSERT INTO `persons` (`persons_id`, `firstname`, `lastname`, `birthday`, `phone
 -- Table structure for table `person_sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `person_sessions` (
-  `uid` int(11) NOT NULL AUTO_INCREMENT,
-  `id` varchar(40) NOT NULL,
-  `ip_address` varchar(45) NOT NULL,
-  `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
-  `data` blob NOT NULL,
-  PRIMARY KEY (`uid`),
-  KEY `ci_sessions_timestamp` (`timestamp`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=279;
+CREATE TABLE IF NOT EXISTS  `ci_sessions` (
+	session_id varchar(40) DEFAULT '0' NOT NULL,
+	ip_address varchar(45) DEFAULT '0' NOT NULL,
+	user_agent varchar(120) NOT NULL,
+	last_activity int(10) unsigned DEFAULT 0 NOT NULL,
+	user_data text NOT NULL,
+	PRIMARY KEY (session_id),
+	KEY `last_activity_idx` (`last_activity`)
+);
 
 --
 
