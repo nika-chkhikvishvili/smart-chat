@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `persons` (
 --
 
 INSERT INTO `persons` (`persons_id`, `firstname`, `lastname`, `birthday`, `phone`, `email`, `photo`, `password`, `regDate`, `isadmin`, `lastVisit`) VALUES
-(1, 'ონისე', 'გაბისონია', '2016-02-05', '555 523 400', 'mail@mail.ge', 'image.jpg', '12345', '2016-02-05', 1, NULL);
+(1, 'ონისე', 'გაბისონია', '2016-02-05', '555 523 400', 'mail@mail.ge', 'image.jpg', '8cb2237d0679ca88db6464eac60da96345513964', '2016-02-05', 1, NULL);
 
 -- --------------------------------------------------------
 
