@@ -1,0 +1,125 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Dashboard_model extends CI_Model {
+
+
+    public function __construct()
+        
+	{
+         parent::__construct();
+    }
+	
+	// institution
+	public function get_institutions($repo_id)
+	{	  
+	   $this->db->select('*');
+	   $this->db->from('repocategories');
+	   $this->db->where('repository_id',$repo_id);	  
+	   $query = $this->db->get();	   
+	   return $query->result_array();
+	  
+	}
+	
+function add_institution($data,$information_object){
+
+        $this->db->trans_begin();       
+        $this->db->insert('repocategories', $data);
+        $information_object['information_object_rowid'] = $this->db->insert_id();
+        $this->db->insert('information_object', $information_object); 
+
+        if ($this->db->trans_status() === FALSE)
+        {
+            $this->db->trans_rollback();
+        }
+        else
+        {
+            $this->db->trans_commit();
+            return $information_object['information_object_rowid'];
+        }
+ 
+}
+	
+function update_institution($id,$value)
+{
+    $this->db->set('category_name', $value);
+    $this->db->where('repo_categories_id', $id);
+    $this->db->update('repocategories'); 
+
+}
+	
+function delete_institution($id)
+{
+    $this->db->delete('repocategories', array('repo_categories_id' => $id));
+    $this->db->delete('categoryservices', array('repo_categories_id' => $id));
+}
+	// institution
+	
+	// services
+        public function get_services($repo_id){	   
+	   $this->db->select('*');
+	   $this->db->from('repocategories');
+	   $this->db->where('repository_id',$repo_id);
+	   $this->db->join('categoryservices', 'categoryservices.repo_categories_id = repocategories.repo_categories_id');
+	   $query = $this->db->get();	
+	   return $query->result_array();
+
+	}
+        
+        public function get_service($repo_id,$service_id){
+           $this->db->select('*');
+	   $this->db->from('categoryservices');
+	  # $this->db->where('repo_categories_id',$repo_id);
+           $this->db->where('category_services_id',$service_id);	  
+	   $query = $this->db->get();
+           if ($query->num_rows() > 0)
+            {
+              return $query->row_array();
+            }
+           else
+            {
+               return false;
+            }   
+	  
+        }
+        
+	function add_services($data){
+            $this->db->insert('categoryservices', $data); 
+            return $this->db->insert_id();
+        }
+	
+function update_services($id,$data,$information_object)
+{   
+    unset($data['update']);
+    $this->db->trans_begin();       
+    $this->db->update('categoryservices', $data, array('category_services_id' => $id));    
+    $this->db->insert('information_object', $information_object); 
+
+    if ($this->db->trans_status() === FALSE)
+    {
+        $this->db->trans_rollback();
+    }
+    else
+    {
+        $this->db->trans_commit();
+        return 1;
+    }
+}
+	
+	function delete_services($id)
+	{
+            $this->db->delete('categoryservices', array('category_services_id' => $id)); 
+	}
+	// services
+	
+	
+        
+	function add_login_his($add_login_his)
+	{		
+		$this->db->insert('login_his', $add_login_his); 
+		return $this->db->insert_id();
+	
+	}
+
+}
+?>
