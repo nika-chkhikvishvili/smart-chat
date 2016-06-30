@@ -48,7 +48,7 @@ class Dashboard extends CI_Controller
                 );
                 $information_object = array(
                     'information_object_repo' => $session_data['repositorypersons_repository_id'],
-                    'information_object_table' => 'repocategories',
+                    'information_object_table' => 'repo_categories',
                     'information_object_rowid' => '',
                     'information_object_person' => $session_data['persons_id'],
                     'information_object_event' => 'insert',
@@ -82,8 +82,7 @@ class Dashboard extends CI_Controller
     }
 
 // service layer
-    public function add_services()
-    {
+    public function add_services() {
 
         $session_data = $this->session->userdata('signin');
         $this->load->library('form_validation');
@@ -118,8 +117,7 @@ class Dashboard extends CI_Controller
         $this->load->view('add_services', $data);
     }
 
-    public function update_service()
-    {
+    public function update_service() {
         $session_data = $this->session->userdata('signin');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
