@@ -8,10 +8,10 @@ module.exports = ChatClient;
 
 function ChatClient (data){
     if (!(this instanceof ChatClient)) return new ChatClient(data);
-    this.connection   = data.connection;
-    this.chatRooms    = data.chatRooms;
-    this.readyForPlay = data.readyForPlay;
-    this.io           = data.io;
+    this.connection     = data.connection;
+    this.chatRooms      = data.chatRooms;
+    this.waitingClients   = data.waitingClients;
+    this.io             = data.io;
 }
 
 ChatClient.prototype.databaseError = function(socket, err){
@@ -21,13 +21,15 @@ ChatClient.prototype.databaseError = function(socket, err){
     socket.emit('serverError');
 };
 
-ChatClient.prototype.clientGetRepositories = function (socket) {
+ChatClient.prototype.clientGetServices = function (socket) {
     var me = this;
-    me.connection.query('SELECT r.`repository_id`, r.`name`, r.`other_name` FROM `repositories` r ',
+    me.connection.query('SELECT `cs`.`category_service_id`, `rc`.`repository_id`, `rc`.`category_name`, `cs`.`service_name`, `cs`.`start_time`, `cs`.`end_time` '+
+    ' FROM `category_services` cs, `repo_categories` rc '+
+    ' WHERE cs.`repo_category_id` = rc.`repo_category_id`',
         function(err, rows, fields) {
             if (err) me.databaseError(socket, err);
             else {
-                socket.emit('clientGetRepositoriesResponse', rows);
+                socket.emit('clientGetServicesResponse', rows);
             }
         });
 };
@@ -41,12 +43,18 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             var chatUniqId = randomStringGenerator.generate();
             var online_user_id = res.insertId;
             socket.onlineUserId= online_user_id;
-            var chat = { online_user_id: online_user_id , repo_id: data.repo_id, chat_uniq_id : chatUniqId };
+
+
+            if (!me.waitingClients[data.repo_id] || me.waitingClients[data.repo_id]==null){
+                me.waitingClients[data.repo_id]=fifo();
+            }
+
+            var chat = { online_user_id: online_user_id , service_id: data.repo_id, chat_uniq_id : chatUniqId };
             me.connection.query('INSERT INTO `chats` SET ? ', chat,  function(err, res) {
                 if (err) me.databaseError(socket, err);
                 else {
                     var chatRoom = { chat_id: res.insertId , online_user_id: online_user_id };
-                    me.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom,  function(err, res) {
+                    me.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom,  function(err, res1) {
                         if (err) me.databaseError(socket, err);
                         else {
                             me.chatRooms[chatUniqId] = {
@@ -54,6 +62,13 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
                                 users : [socket.id]
                             };
                             //io.emit('new', { will: 'be received by everyone'});
+
+                            me.waitingClients[data.repo_id].push({
+                                first_name: data.first_name,
+                                last_name: data.last_name,
+                                chat_uniq_id : chatUniqId
+                            });
+                            io.emit('checkClientCount');
                             socket.emit("clientInitParamsResponse",{ chatUniqId: chatUniqId });
                         }
                     });
@@ -143,3 +158,6 @@ ChatClient.prototype.clientMessageReceived = function (socket, data, sendMessage
     sendMessageReceivedToRoom(socket, data.chatUniqId, data.msgId);
 
 };
+
+
+module.exports = ChatClient

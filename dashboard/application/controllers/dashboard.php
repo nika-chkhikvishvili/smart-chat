@@ -3,29 +3,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 # string mail $this->lang->line('email')
 # string Password $this->lang->line('password')
 # დოკუმენტში გამოყენებული 
-class Dashboard extends CI_Controller
-{
+class Dashboard extends CI_Controller{
 
-    function __construct()
-    {
+    function __construct(){
         parent::__construct();
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
         $this->load->library('vsession');
         $this->vsession->check_person_sessions($session_data);
         $this->lang->load('ge');
     }
 
 
-    public function index()
-    {
-        $session_data = $this->session->userdata('signin');
+    public function index(){
+        $session_data = $this->session->userdata('user');
         $this->load->view('admin_main_dashboard');
-
-
     }
 
-    public function add_institution()
-    {
+    public function add_institution(){
         $session_data = $this->session->userdata('signin');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
@@ -65,16 +59,14 @@ class Dashboard extends CI_Controller
 
     }
 
-    public function update_institution()
-    {
+    public function update_institution(){
         if ($this->input->post('id')) {
             $this->load->library('institutions');
             echo($this->institutions->update_institution($this->input->post('id'), $this->input->post('val')));
         }
     }
 
-    public function delete_institution()
-    {
+    public function delete_institution(){
         if ($this->input->post('id')) {
             $this->load->library('institutions');
             echo($this->institutions->delete_institution($this->input->post('id')));
@@ -149,8 +141,7 @@ class Dashboard extends CI_Controller
 
     }
 
-    public function delete_service()
-    {
+    public function delete_service(){
         if ($this->input->post('id')) {
             $this->load->library('services');
             echo($this->services->delete_services($this->input->post('id')));
@@ -158,13 +149,11 @@ class Dashboard extends CI_Controller
     }
 
     // persons layer
-    public function persons()
-    {
+    public function persons(){
         $this->load->view('persons');
     }
 
-    public function add_person()
-    {
+    public function add_person(){
         $session_data = $this->session->userdata('signin');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
@@ -195,8 +184,7 @@ class Dashboard extends CI_Controller
         $this->load->view('add_persons', $data);
     }
 
-    function logout()
-    {
+    function logout(){
         redirect('logout');
     }
 }

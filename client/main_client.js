@@ -1,5 +1,5 @@
 /**
- * Created by jedi on 1/7/16.
+ * Created by jedi on 2016-07-01.
  */
 
 var first_name = '';
@@ -8,30 +8,31 @@ var msgCount = 0;
 var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
 var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
-var socket = io('http://smartchat.cloud.gov.ge:3000');
+//var socket = io('http://smartchat.cloud.gov.ge:3000');
+var socket = io(window.location.origin  + ':3000');
 
-socket.on('testResponse', function (data) {
+socket.on('testResponse', function (data){
     console.log('execute: testResponse');
     console.log(data);
 });
 
-socket.on('serverError', function (data) {
+socket.on('serverError', function (data){
     alert('Server Error');
 });
 
-socket.on('clientGetRepositoriesResponse', function (data) {
-    console.log('execute: clientGetRepositoriesResponse');
+socket.on('clientGetServicesResponse', function (data) {
+    console.log('execute: clientGetServicesResponse');
     if ($.isArray(data)){
         $.each(data, function(key, value) {
             $('#select_theme')
                 .append($("<option></option>")
-                    .attr("value",value.repository_id)
-                    .text(value.other_name));
+                    .attr("value",value.category_service_id)
+                    .text(value.category_name + ' - ' + value.service_name));
         });
     }
 });
 
-socket.on('clientInitParamsResponse', function (data){
+socket.on('clientInitParamsResponse', function (data) {
     console.log('execute: clientInitParamsResponse');
     localStorage.chatUniqId = data.chatUniqId;
     $('#saxeli_span').text(first_name + ' ' + last_name);
@@ -39,8 +40,9 @@ socket.on('clientInitParamsResponse', function (data){
     $('#wrapper').show();
 });
 
-socket.on('clientCheckChatIfAvariableResponse', function (data){
+socket.on('clientCheckChatIfAvariableResponse', function (data) {
     console.log('execute: checkChatIfAvariableResponse');
+    console.log(data);
     if(data && data.hasOwnProperty('isValid') && data.isValid){
         first_name =data.first_name || '';
         last_name =data.last_name || '';
@@ -48,7 +50,7 @@ socket.on('clientCheckChatIfAvariableResponse', function (data){
         $('#asarchevi').hide();
         $('#wrapper').show();
     } else {
-        socket.emit('clientGetRepositories');
+        socket.emit('clientGetServices');
     }
 });
 
@@ -89,12 +91,18 @@ function addMessage(id , message){
     var elChatbox = $("#chatbox");
     elChatbox.append(msg);
 
-    setTimeout(function () {
-        redAlert(id);
-    }, 3000);
+    //setTimeout(function () {
+    //    redAlert(id);
+    //}, 3000);
 
     elChatbox.animate({scrollTop: msgCount * 20}, 'normal');
 }
+
+
+socket.io.on('reconnect', function () {
+    var chatUniqId = localStorage.getItem("chatUniqId") || '';
+    socket.emit('clientCheckChatIfAvariable',{chatUniqId : chatUniqId});
+});
 
 $(document).ready(function () {
     var chatUniqId = localStorage.getItem("chatUniqId") || '';

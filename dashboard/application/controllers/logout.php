@@ -4,18 +4,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 # string Password $this->lang->line('password')
 # დოკუმენტში გამოყენებული
 
-class Logout extends CI_Controller
-{
+class Logout extends CI_Controller{
 
-    function __construct()
-    {
+    function __construct(){
         parent::__construct();
         $session_data = $this->session->userdata('signin');
     }
 
 
-    public function index()
-    {
+    public function index(){
 
         $this->session->userdata('signin');
         # სესსიის დახურვა
@@ -25,6 +22,5 @@ class Logout extends CI_Controller
         redirect('');
 
     }
-
 
 }

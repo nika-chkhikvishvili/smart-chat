@@ -3,8 +3,6 @@
 <head>
 <?php require_once ('components/main_head.php'); ?>
 </head>
-
-
     <body class="fixed-left">
         
         <!-- Begin page -->
@@ -54,8 +52,36 @@
                     <div class="container">
                         <!-- Start Widget -->
                         <div class="row">
-						soon
-                        </div>
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">რიგი</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                        <tr>
+                                                            <th width="30">კატეგორია</th>
+                                                            <th>რიგშია</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="clients_queee_body">
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div> <!--end table-responsive-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end row -->
 
                         <div class="row">
                            <div class="col-md-12">
@@ -133,15 +159,39 @@
         <!-- END wrapper -->
 
 
-    
-  
-         <script>
+
+<div class="clearfix" id="msgbox_container">
+    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">
+        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>
+        <div class="msgbox_chat_content">
+            <div class="titlebar">
+                <div class="msgbox_left">giga kokaia</div>
+                <div class="msgbox_right">
+                    <input type="checkbox">
+                    <a class="msgbox_close" href="#">x</a>
+                </div>
+            </div>
+            <div class="msgbox_chat_area scrollable">
+
+            </div>
+            <div class="msgbox_chat_">
+                <textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        <script>
             var resizefunc = [];
         </script>
 
         <!-- jQuery  -->
-        
-        <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+        <!--        <script src="--><?//=base_url();?><!--assets/js/jquery.min.js"></script>-->
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
         <script src="<?=base_url();?>assets/js/detect.js"></script>
         <script src="<?=base_url();?>assets/js/fastclick.js"></script>
@@ -152,9 +202,19 @@
         <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
 
-        <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
-     
+        <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+        <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 
+        <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
+
+        <script src="http://cdn.socket.io/socket.io-1.4.1.js"></script>
+
+        <script type="application/javascript">
+            var token = "<?=$this->session->userdata['token'] ; ?>";
+            var socketAddr = '<?=substr(base_url(),0,-1);?>';
+        </script>
+        <script src="<?=base_url();?>assets/js/socket/common.js"></script>
+        <script src="<?=base_url();?>assets/js/socket/dashboard.js"></script>
     
     </body>
 

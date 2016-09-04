@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,12 +104,12 @@
                    
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                         <input type="email" class="form-control" id="email" name="post_mail" placeholder="ელ-ფოსტა" value="<?php echo set_value('post_mail'); ?>">                                      
+                         <input type="email" class="form-control" id="email" name="post_mail" placeholder="ელ-ფოსტა" value="<?php echo set_value('post_mail'); ?>mail@mail.ge">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                         <input type="password" name="post_pass" class="form-control" id="pwd" name="post_pass" placeholder="პაროლი">
+                         <input type="password" name="post_pass" class="form-control" id="pwd" name="post_pass" placeholder="პაროლი" value="12345">
                     </div>                                                                  
 					  
                     <div class="form-group">
