@@ -161,24 +161,25 @@
 
 
 <div class="clearfix" id="msgbox_container">
-    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">
-        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>
-        <div class="msgbox_chat_content">
-            <div class="titlebar">
-                <div class="msgbox_left">giga kokaia</div>
-                <div class="msgbox_right">
-                    <input type="checkbox">
-                    <a class="msgbox_close" href="#">x</a>
-                </div>
-            </div>
-            <div class="msgbox_chat_area scrollable">
-
-            </div>
-            <div class="msgbox_chat_">
-                <textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>
-            </div>
-        </div>
-    </div>
+<!--    ONLY FOR EXAMPLE-->
+<!--    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">-->
+<!--        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>-->
+<!--        <div class="msgbox_chat_content">-->
+<!--            <div class="titlebar">-->
+<!--                <div class="msgbox_left">giga kokaia</div>-->
+<!--                <div class="msgbox_right">-->
+<!--                    <input type="checkbox">-->
+<!--                    <a class="msgbox_close" href="#">x</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="msgbox_chat_area scrollable">-->
+<!---->
+<!--            </div>-->
+<!--            <div class="msgbox_chat_">-->
+<!--                <textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 </div>
 
 
