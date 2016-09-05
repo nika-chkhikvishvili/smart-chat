@@ -23,6 +23,7 @@ socket.on('serverError', function (data){
 socket.on('clientGetServicesResponse', function (data) {
     console.log('execute: clientGetServicesResponse');
     if ($.isArray(data)){
+        $('#select_theme').html('');
         $.each(data, function(key, value) {
             $('#select_theme')
                 .append($("<option></option>")
@@ -115,7 +116,7 @@ $(document).ready(function () {
             $('#asarchevi').show();
             $('#wrapper').hide();
             $('#begin_btn').attr({disabled: false});
-            socket.emit('clientGetRepositories');
+            socket.emit('clientGetServices');
         }
         return false;
     });
