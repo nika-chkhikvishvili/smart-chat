@@ -34,6 +34,46 @@ ChatServer.prototype.getWaitingList = function (socket) {
 
 };
 
+// აბრუნებს მიმდინარეების სიას
+ChatServer.prototype.getActiveChats = function (socket) {
+    var me = this;
+    var ans=[];
+
+    me.connection.query('SELECT * FROM smartchat.chats where chat_status_id = 1 ', [ ], function(err, res) {
+        if (err) me.databaseError(socket, err);
+        else {
+            var ans = [];
+
+            res.forEach(function(item){
+                ans.push(item);
+            });
+            socket.emit('getActiveChatsResponse', ans);
+
+        }
+    });
+
+
+
+    //for (var property in me.chatRooms) {
+    //    if (me.chatRooms.hasOwnProperty(property)) {
+    //        var a = {
+    //            char_uniq_id : property,
+    //            users : []
+    //        };
+    //
+    //        var users = me.chatRooms[property].users;
+    //        users.forEach(function(item){
+    //            var s = io.sockets.connected[item];
+    //            a.users.push(s.user);
+    //        });
+    //
+    //        ans.push(a);
+    //    }
+    //}
+    //
+    //socket.emit('getActiveChatsResponse', ans);
+
+};
 
 //სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
 ChatServer.prototype.getNextWaitingClient = function (socket,data) {
@@ -100,14 +140,18 @@ ChatServer.prototype.checkToken = function (socket, data) {
         else {
             if(res && Array.isArray(res) && res.length == 1){
                 var ans = res[0];
-                me.connection.query('SELECT c.chat_uniq_id, r.* FROM chat_rooms r, chats c ' +
-                    'where c.chat_id = r.chat_id and c.chat_status_id = 1 and r.person_id = ?', [ ans.person_id ], function(err, resChat) {
+                me.connection.query('SELECT c.chat_uniq_id, r.*, o.first_name, o.last_name FROM chat_rooms r, chats c  , online_users o ' +
+                    'where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id and r.person_id = ?', [ ans.person_id ], function(err, resChat) {
                     if (err) me.databaseError(socket, err);
                     else {
                         var chatAns = [];
                         if (resChat && Array.isArray(resChat)){
                             resChat.forEach(function (row){
-                                chatAns.push({chatUniqId:row.chat_uniq_id});
+                                chatAns.push({chatUniqId:row.chat_uniq_id,
+                                first_name: row.first_name,
+                                    last_name : row.last_name
+
+                                });
                                 if (chatRooms[row.chat_uniq_id]){
                                     var isAdded = false;
                                     me.chatRooms[row.chat_uniq_id].users.forEach(function(socketId){
@@ -117,8 +161,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
                                         me.chatRooms[row.chat_uniq_id].users.push(socket.id);
                                     }
                                 }
-                            });
-
+                            })
                         }
                         socket.user= {
                             userId : ans.person_id,
@@ -156,7 +199,7 @@ ChatServer.prototype.sendMessage = function (socket, data, sendMessageToRoom) {
         if (err) me.databaseError(socket, err);
         else {
             sendMessageToRoom(socket, data.chat_uniq_id, res.insertId, data.message, data.id);
-            socket.emit("sendMessageResponse",{isValid: true});
+            socket.emit("sendMessageResponse",{isValid: true });
         }
     });
 };

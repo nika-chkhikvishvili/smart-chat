@@ -93,7 +93,7 @@
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <div class="table-responsive">
-                                                    <table class="table">
+                                                    <table class="table" id="online_chats_list">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -106,7 +106,7 @@
                                                         </thead>
                                                         <tbody>
                                                            
-															<?php
+															<?php /*
 															 for($i=1; $i <=10; $i++)
 															 {
 																echo '      <tr>
@@ -125,7 +125,7 @@
                                                             </tr>
                                                             ';
 															 }																 
-															?>
+														*/	?>
                                                             
                                                         </tbody>
                                                     </table>

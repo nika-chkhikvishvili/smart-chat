@@ -140,6 +140,7 @@ io.on('connection', function (socket) {
 
     socket.on('checkToken',      function (data) {server.checkToken   (socket, data);} );
     socket.on('getWaitingList',            function () {server.getWaitingList   (socket);} );
+    socket.on('getActiveChats',            function () {server.getActiveChats   (socket);} );
     socket.on('getNextWaitingClient',      function (data) {server.getNextWaitingClient   (socket, data);} );
     socket.on('sendMessage',     function (data) {server.sendMessage  (socket, data, sendMessageToRoom);} );
 
