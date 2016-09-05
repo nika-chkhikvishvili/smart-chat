@@ -54,17 +54,33 @@ var createChatWindowAndLoadData = function(data){
     '<span class="clearfix"></span>'+
     '</li>');
 
-    socket.emit('getWaitingList');
+
 };
 
 
 socket.on('checkTokenResponse', function (data){
     console.log('execute: checkTokenResponse');
-    console.log(data);
+    //console.log(data);
 
     if (data.isValid){
         //socket.emit('get',{token : token});
         socket.emit('getWaitingList');
+        socket.emit('getActiveChats');
+
+        if (Array.isArray(data.ans) ) {
+            data.ans.forEach(function(i){
+                console.log(i);
+
+                var d = {
+                    chat_uniq_id : i.chatUniqId,
+                    first_name : i.first_name || '',
+                    last_name : i.last_name || ''
+                };
+
+                createChatWindowAndLoadData(d)
+            })
+        }
+
     }
 });
 
@@ -201,11 +217,62 @@ socket.on('getWaitingListResponse', function (data){
     $("#clients_queee_body").html(ans);
 });
 
+
+
+socket.on('getActiveChatsResponse', function (data){
+    console.log('execute: getActiveChatsResponse');
+    console.log(data);
+
+var i = 1;
+    $('#online_chats_list tbody').html('');
+
+    data.forEach(function(item){
+        $('#online_chats_list').append(
+
+            '<tr>'+
+            '<td>'+i+++'</td>'+
+            '<td> </td>'+
+            '<td>მომხმრებელი</td>'+
+            '<td>'+services[item.service_id]+'</td>'+
+            '<td>'+item.add_date+'</td>'+
+            '<td>'+
+            '<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
+            '  <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
+            '   <a href="#" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
+            '<a href="#" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
+            '</td>'+
+            '</tr>'
+        );
+    });
+
+
+
+
+
+
+    return;
+    var ans="";
+
+    if (Array.isArray(data)){
+        $.each(data,function(key, value) {
+            if (value) {
+                ans = ans + '<tr><td><a href="#" onclick="return getNextWaitingClient('+key+');" '+ services[key]+ ">"+services[key]+"</a></a></td><td>";
+                $.each(value, function(i, val){
+                    ans = ans + val.first_name+" " + val.last_name + ", ";
+                });
+                ans = ans + "</td></tr>"
+            }
+        })
+    }
+    $("#clients_queee_body").html(ans);
+});
+
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს
 socket.on('getNextWaitingClientResponse', function (data){
     console.log('execute: getNextWaitingClientResponse');
     console.log(data);
     createChatWindowAndLoadData(data);
+    socket.emit('getWaitingList');
 });
 
 //ჩატის ფანჯარაში ტექსტის დამატების ფუნქცია
