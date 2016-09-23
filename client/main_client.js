@@ -50,6 +50,18 @@ socket.on('clientCheckChatIfAvariableResponse', function (data) {
         $('#saxeli_span').text(first_name + ' ' + last_name);
         $('#asarchevi').hide();
         $('#wrapper').show();
+        var elChatbox = $("#chatbox");
+        if (data.messages && Array.isArray(data.messages)){
+            elChatbox.html('');
+            data.messages.forEach(function(item){
+                if(item.online_user_id){
+                    elChatbox.append(meTemplate(item.chat_message_id, item.message_date.substr(11,8) , first_name +' '+ last_name , item.chat_message ));
+                } else {
+                    elChatbox.append(othTemplate(item.message_date.substr(11,8) ,'system', item.chat_message ));
+                }
+            })
+        }
+        elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     } else {
         socket.emit('clientGetServices');
     }

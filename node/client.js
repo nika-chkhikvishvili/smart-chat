@@ -90,6 +90,8 @@ ChatClient.prototype.clientCheckChatIfAvariable = function (socket, data) {
         else {
             if(res && Array.isArray(res) && res.length == 1){
                 var ans = res[0];
+                socket.onlineUserId= ans.online_user_id;
+
                 if( me.chatRooms[data.chatUniqId] && me.chatRooms[data.chatUniqId].users && me.chatRooms[data.chatUniqId].users.length>0 ){
                     var isAdded = false;
                     me.chatRooms[data.chatUniqId].users.forEach(function(socketId){
@@ -110,9 +112,14 @@ ChatClient.prototype.clientCheckChatIfAvariable = function (socket, data) {
                     else {
                         if(res && Array.isArray(res) && res.length == 1) {
                             var user = res[0];
-                            socket.emit("clientCheckChatIfAvariableResponse", {isValid: true, first_name :user.first_name,
-                                last_name :user.last_name });
-
+                            me.connection.query('SELECT m.`chat_message_id`, m.`chat_id`, m.`person_id`, m.`online_user_id`, m.`chat_message`, m.`message_date`'+
+                            'FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [ans.chat_id ],  function(err, res) {
+                                if (err) me.databaseError(socket, err);
+                                else {
+                                    socket.emit("clientCheckChatIfAvariableResponse", {isValid: true, first_name :user.first_name,
+                                        last_name :user.last_name, messages : res });
+                                }
+                            });
                         } else  socket.emit("clientCheckChatIfAvariableResponse",{isValid: false});
                     }
                 });
@@ -134,9 +141,9 @@ ChatClient.prototype.clientMessage = function (socket, data, sendMessageToRoom) 
     }
 
     var chat = me.chatRooms[data.chatUniqId];
-    var onlineUser = { chat_id: chat.chatId, online_user_id: socket.onlineUserId, chat_message: data.message };
+    var chatMessage = { chat_id: chat.chatId, online_user_id: socket.onlineUserId, chat_message: data.message };
 
-    me.connection.query('INSERT INTO `chat_messages` SET ? ', onlineUser, function(err, res) {
+    me.connection.query('INSERT INTO `chat_messages` SET ? ', chatMessage, function(err, res) {
         if (err) me.databaseError(socket, err);
         else {
             sendMessageToRoom(socket, data.chatUniqId, res.insertId, data.message, data.id );

@@ -10,10 +10,16 @@ var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0
 var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
 
+
+
+function isChatWindowHidden(id) {
+    return localStorage.getItem("hidde_chat_"+id) || false;
+}
+
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
 var createChatWindowAndLoadData = function(data){
     console.log('execute: createChatWindowAndLoadData');
-    console.log(data);
+    //console.log(data);
 
     if (!data || !data.chat_uniq_id) {
         return;
@@ -23,7 +29,7 @@ var createChatWindowAndLoadData = function(data){
         return;
     }
 
-    $('#msgbox_container').append('<div class="msgbox_chat_window" id="' + data.chat_uniq_id + '">'+
+    $('#msgbox_container').append('<div class="msgbox_chat_window" id="' + data.chat_uniq_id + '" style="display:'+(isChatWindowHidden(data.chat_uniq_id) ? 'none':'block')+';">'+
         '<div class="msgbox_chat_minimized titlebar">' + data.first_name + ' '+ data.last_name + '</div>'+
         '<div class="msgbox_chat_content">'+
         '<div class="titlebar">'+
@@ -42,9 +48,8 @@ var createChatWindowAndLoadData = function(data){
         '</div>');
 
 
-
     $('.contacts-list').append( '<li class="list-group-item">'+
-    '<a href="#" onclick=\' $("#'+data.chat_uniq_id+'").show(); return false; \'>'+
+    '<a href="#" onclick=\' localStorage.removeItem("hidde_chat_'+ data.chat_uniq_id+'");    $("#'+data.chat_uniq_id+'").show(); return false; \'>'+
     '<div class="avatar">'+
     '<img src="/assets/images/users/man.png" alt="">'+
     '</div>'+
@@ -54,9 +59,28 @@ var createChatWindowAndLoadData = function(data){
     '<span class="clearfix"></span>'+
     '</li>');
 
+    socket.emit('getAllChatMessages', { chat_uniq_id: data.chat_uniq_id});
 
 };
 
+socket.on('getAllChatMessagesResponse', function (data) {
+    console.log('execute: getAllChatMessagesResponse');
+    console.log(data);
+
+    var elChatbox = $("#"+data.chat_uniq_id +' .msgbox_chat_area');
+
+    data.messages.forEach(function(item){
+
+        if(item.online_user_id){
+            elChatbox.append(othTemplate(item.message_date.substr(11,8) , '', item.chat_message ));
+        } else {
+            addMessage(data.chat_uniq_id, item.chat_message_id, item.chat_message);
+        }
+    });
+
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
+
+});
 
 socket.on('checkTokenResponse', function (data){
     console.log('execute: checkTokenResponse');
@@ -69,7 +93,7 @@ socket.on('checkTokenResponse', function (data){
 
         if (Array.isArray(data.ans) ) {
             data.ans.forEach(function(i){
-                console.log(i);
+                //console.log(i);
 
                 var d = {
                     chat_uniq_id : i.chatUniqId,
@@ -87,7 +111,7 @@ socket.on('checkTokenResponse', function (data){
 //აქ მოდის ოპერატორის მიერ გაგზავნილ შეტყობინებაზე პასუხი
 socket.on('sendMessageResponse', function (data){
     console.log('execute: sendMessageResponse');
-    console.log(data);
+    //console.log(data);
     if (!data || !data.isValid){
         //TODO შეცდომა მესიჯის გაგზავნისას, აქ უნდა დამუშავდეს
     }
@@ -101,7 +125,7 @@ function getNextWaitingClient(data){
 
 socket.on('userDisconnect', function (data){
     console.log('execute: userDisconnect');
-    console.log(data);
+    //console.log(data);
 
    // clients_queee_body
 });
@@ -128,7 +152,9 @@ $(document).ready(function () {
 
     //სასაუბრო ფანჯრის დამალვა
     $("#msgbox_container").on('click', '.msgbox_close', function (e) {
-        $(this).parents('.msgbox_chat_window').hide();
+        var a = $(this).parents('.msgbox_chat_window');
+        localStorage.setItem("hidde_chat_"+ a.attr('id'), true);
+        a.hide();
         e.preventDefault();
     });
 
@@ -154,7 +180,7 @@ $(document).ready(function () {
 
 socket.on('message', function (data) {
     console.log('execute: message');
-    console.log(data);
+    //console.log(data);
 
     socket.emit('messageReceivedFromClient', { chatUniqId: data.chatUniqId, msgId: data.ran});
     var elChatbox = $("#"+data.chatUniqId +' .msgbox_chat_area');
@@ -201,7 +227,7 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
-    console.log(data);
+    //console.log(data);
     var ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
@@ -221,12 +247,13 @@ socket.on('getWaitingListResponse', function (data){
 
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
-    console.log(data);
+    //console.log(data);
 
 var i = 1;
     $('#online_chats_list tbody').html('');
 
     data.forEach(function(item){
+
         $('#online_chats_list').append(
 
             '<tr>'+
@@ -244,11 +271,6 @@ var i = 1;
             '</tr>'
         );
     });
-
-
-
-
-
 
     return;
     var ans="";
@@ -270,7 +292,7 @@ var i = 1;
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს
 socket.on('getNextWaitingClientResponse', function (data){
     console.log('execute: getNextWaitingClientResponse');
-    console.log(data);
+    //console.log(data);
     createChatWindowAndLoadData(data);
     socket.emit('getWaitingList');
 });
@@ -307,7 +329,7 @@ socket.io.on('reconnect', function () {
 
 socket.on('messageReceived', function (data) {
     console.log('execute: messageReceived');
-    console.log(data);
+    //console.log(data);
     var el = $('#message_' + data.msgId);
 
     el.val('submited');
@@ -316,7 +338,7 @@ socket.on('messageReceived', function (data) {
 
 socket.on('clientMessageResponse', function (data) {
     console.log('execute: clientMessageResponse');
-    console.log(data);
+    //console.log(data);
 });
 
 

@@ -34,6 +34,37 @@ ChatServer.prototype.getWaitingList = function (socket) {
 
 };
 
+ChatServer.prototype.getAllChatMessages = function (socket,data) {
+    var me = this;
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
+        socket.emit("getAllChatMessagesResponse",{messages: []});
+        return ;
+    }
+
+
+
+
+
+
+    me.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chat_uniq_id ],  function(err, res) {
+        if (err) me.databaseError(socket, err);
+        else {
+            if (res && Array.isArray(res) && res.length == 1) {
+                var chat = res[0];
+                me.connection.query('SELECT m.`chat_message_id`, m.`chat_id`, m.`person_id`, m.`online_user_id`, m.`chat_message`, m.`message_date`' +
+                    'FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [chat.chat_id], function (err, res) {
+                    if (err) me.databaseError(socket, err);
+                    else {
+                        socket.emit("getAllChatMessagesResponse", {chat_uniq_id:data.chat_uniq_id , messages: res});
+                    }
+                });
+            } else  socket.emit("getAllChatMessagesResponse",{messages: []});
+        }
+    });
+
+};
+
+
 // აბრუნებს მიმდინარეების სიას
 ChatServer.prototype.getActiveChats = function (socket) {
     var me = this;
