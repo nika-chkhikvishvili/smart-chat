@@ -130,20 +130,21 @@ var sendMessageReceivedToRoom = function (socket, chatUniqId, msgId ){
 
 io.on('connection', function (socket) {
 
-    socket.on('clientGetServices', function ()     {client.clientGetServices(socket);} );
-    socket.on('clientInitParams',      function (data) {client.clientInitParams     (socket,data);} );
-    socket.on('clientCheckChatIfAvariable',function (data) {client.clientCheckChatIfAvariable (socket,data);} );
-    socket.on('clientMessage',         function (data) {client.clientMessage        (socket,data, sendMessageToRoom);} );
-    socket.on('clientMessageReceived', function (data) {client.clientMessageReceived(socket,data, sendMessageReceivedToRoom);} );
+    socket.on('clientGetServices',         function ()     {client.clientGetServices           (socket);} );
+    socket.on('clientInitParams',          function (data) {client.clientInitParams            (socket,data);} );
+    socket.on('clientCheckChatIfAvariable',function (data) {client.clientCheckChatIfAvariable  (socket,data);} );
+    socket.on('clientMessage',             function (data) {client.clientMessage               (socket,data, sendMessageToRoom);} );
+    socket.on('clientMessageReceived',     function (data) {client.clientMessageReceived       (socket,data, sendMessageReceivedToRoom);} );
 
     socket.on('test', function(){ console.dir('test'); socket.emit('testResponse'); });
 
-    socket.on('checkToken',      function (data) {server.checkToken   (socket, data);} );
-    socket.on('getWaitingList',            function () {server.getWaitingList   (socket);} );
-    socket.on('getActiveChats',            function () {server.getActiveChats   (socket);} );
-    socket.on('getNextWaitingClient',      function (data) {server.getNextWaitingClient   (socket, data);} );
-    socket.on('getAllChatMessages',        function (data) {server.getAllChatMessages   (socket, data);} );
-    socket.on('sendMessage',               function (data) {server.sendMessage  (socket, data, sendMessageToRoom);} );
+    socket.on('checkToken',           function (data) {server.checkToken            (socket, data);} );
+    socket.on('getWaitingList',       function ()     {server.getWaitingList        (socket);} );
+    socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
+    socket.on('getNextWaitingClient', function (data) {server.getNextWaitingClient  (socket, data);} );
+    socket.on('getAllChatMessages',   function (data) {server.getAllChatMessages    (socket, data);} );
+    socket.on('sendMessage',          function (data) {server.sendMessage           (socket, data, sendMessageToRoom);} );
+    socket.on('operatorIsWorking',    function (data) {server.operatorIsWorking     (socket, data, sendMessageToRoom);} );
 
 
     socket.on('disconnect', function () {

@@ -72,7 +72,14 @@ socket.on('message', function (data) {
     socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     ++msgCount;
     var elChatbox = $("#chatbox");
-    elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
+    if(data.message = 'ping') {
+        $('#operator_is_working').show();
+
+        setTimeout(function(){
+            $('#operator_is_working').hide();
+        },3000);
+    } else elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
+
     elChatbox.animate({scrollTop: msgCount * 20}, 'normal');
 });
 

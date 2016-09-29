@@ -58,3 +58,8 @@ a:hover { text-decoration:underline; }
 .msgln { margin:0 0 2px 0; }
 
 .msglnr { margin:0 0 2px 0; text-align:right; }
+
+#operator_is_working{
+    display : none;
+    color :red;
+}

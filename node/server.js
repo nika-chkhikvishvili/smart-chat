@@ -252,3 +252,15 @@ ChatServer.prototype.messageReceived = function (socket, data, sendMessageReceiv
 };
 
 
+ChatServer.prototype.operatorIsWorking = function (socket, data, sendMessageToRoom) {
+   var me = this;
+
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
+        socket.emit("pingResponse",{isValid: false, error: 'chat_uniq_id',data:data});
+        return ;
+    }
+    var chat = me.chatRooms[data.chat_uniq_id];
+
+    sendMessageToRoom(socket, data.chat_uniq_id, 'ping', 'ping', 'ping');
+
+};

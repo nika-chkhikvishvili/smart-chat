@@ -176,6 +176,25 @@ $(document).ready(function () {
     });
 
 
+    setInterval(function(){
+
+        $('.msgbox_working_checkbox').each(function(key,val){
+            if(val.checked){
+                if(!val.hasOwnProperty('lastWorkingCount')) val.lastWorkingCount = 0;
+                ++val.lastWorkingCount;
+                if(val.lastWorkingCount>5) {
+                    val.lastWorkingCount = 0;
+                    socket.emit('operatorIsWorking',{chat_uniq_id: $(val).parents('.msgbox_chat_window').attr('id') });
+                }
+
+            } else {
+                val.lastWorkingChecked = Date();
+                val.lastWorkingCount = 0;
+            }
+
+        });
+    }, 1000);
+
 });
 
 socket.on('message', function (data) {
