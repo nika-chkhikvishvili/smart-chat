@@ -73,7 +73,7 @@ socket.on('message', function (data) {
     socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     ++msgCount;
     var elChatbox = $("#chatbox");
-    if(data.message = 'ping') {
+    if(data.message == 'ping') {
         $('#operator_is_working').show();
 
         setTimeout(function(){
