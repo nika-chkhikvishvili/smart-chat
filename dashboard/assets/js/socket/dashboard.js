@@ -19,45 +19,21 @@ function isChatWindowHidden(id) {
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
 var createChatWindowAndLoadData = function(data){
     console.log('execute: createChatWindowAndLoadData');
-    //console.log(data);
+    console.log(data);
 
     if (!data || !data.chat_uniq_id) {
         return;
     }
 
-    if ($('#' + data.chat_uniq_id).length >0) {
-        return;
-    }
 
-    $('#msgbox_container').append('<div class="msgbox_chat_window" id="' + data.chat_uniq_id + '" style="display:'+(isChatWindowHidden(data.chat_uniq_id) ? 'none':'block')+';">'+
-        '<div class="msgbox_chat_minimized titlebar">' + data.first_name + ' '+ data.last_name + '</div>'+
-        '<div class="msgbox_chat_content">'+
-        '<div class="titlebar">'+
-        '<div class="msgbox_left">' + shorter( data.first_name + ' '+ data.last_name) + '</div>'+
-        '<div class="msgbox_right">'+
-        '<input type="checkbox" class="msgbox_working_checkbox">'+
-        '<a class="msgbox_close" href="#">X</a>'+
-        '</div>'+
-        '</div>'+
-        '<div class="msgbox_chat_area scrollable">'+
-        '</div>'+
-        '<div class="msgbox_chat_">'+
-        '<textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>'+
-        '</div>'+
-        '</div>'+
-        '</div>');
-
-
-    $('.contacts-list').append( '<li class="list-group-item">'+
-    '<a href="#" onclick=\' localStorage.removeItem("hidde_chat_'+ data.chat_uniq_id+'");    $("#'+data.chat_uniq_id+'").show(); return false; \'>'+
-    '<div class="avatar">'+
-    '<img src="/assets/images/users/man.png" alt="">'+
-    '</div>'+
-    '<span class="name">' + shorter( data.first_name + ' '+ data.last_name) + '</span>'+
-    '<i class="fa fa-circle online"></i>'+
-    '</a>'+
-    '<span class="clearfix"></span>'+
+    $('.wrapper_chat .container_chat .left .people').append('<li class="person" data-chat="' + data.chat_uniq_id + '">'+
+        '<img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />'+
+        '<span class="name">'+ data.first_name + ' '+ data.last_name+'</span>'+
+    '<span class="time">2:09 PM</span>'+
+    '<span class="preview">...</span>'+
     '</li>');
+
+    $('.wrapper_chat .container_chat .right .chats_container').append(' <div class="chat" data-chat="' + data.chat_uniq_id + '"></div>');
 
     socket.emit('getAllChatMessages', { chat_uniq_id: data.chat_uniq_id});
 
@@ -65,20 +41,23 @@ var createChatWindowAndLoadData = function(data){
 
 socket.on('getAllChatMessagesResponse', function (data) {
     console.log('execute: getAllChatMessagesResponse');
-    console.log(data);
+    //console.log(data);
+    var elChatbox = $(".chat[data-chat = "+data.chat_uniq_id+"]");
 
-    var elChatbox = $("#"+data.chat_uniq_id +' .msgbox_chat_area');
+    elChatbox.append('<div class="conversation-start">'+
+        '<span>Today, 6:48 AM</span>'+
+        '</div>');
 
     data.messages.forEach(function(item){
-
         if(item.online_user_id){
-            elChatbox.append(othTemplate(item.message_date.substr(11,8) , '', item.chat_message ));
+            elChatbox.append('<div class="bubble you">'+ item.chat_message + '</div>' );
         } else {
-            addMessage(data.chat_uniq_id, item.chat_message_id, item.chat_message);
+            elChatbox.append('<div class="bubble me">'+ item.chat_message + '</div>' );
         }
     });
 
-    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
+
+    //elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 
 });
 
@@ -131,6 +110,39 @@ socket.on('userDisconnect', function (data){
 });
 
 $(document).ready(function () {
+
+    //$('.chat[data-chat=person2]').addClass('active-chat');
+    //$('.person[data-chat=person2]').addClass('active');
+
+    //$('.left .person').mousedown(function(){
+
+    $('.left').on('mousedown','.person', function(){
+        if ($(this).hasClass('.active')) {
+            return false;
+        } else {
+            var findChat = $(this).attr('data-chat');
+            var personName = $(this).find('.name').text();
+            $('.right .top .name').html(personName);
+            $('.chat').removeClass('active-chat');
+            $('.left .person').removeClass('active');
+            $(this).addClass('active');
+            $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+        }
+    });
+
+    //სასაუბრო ფანჯრის დამალვა
+    $(".wrapper_chat").on('click', '.chat_close_button', function (e) {
+        $(".container_chat").hide();
+        $(".chat_open_button").show();
+        $(".wrapper_chat").css(  {bottom: "9px",  right: "0px", width : "20px", height: "20px" });
+    });
+
+    $(".wrapper_chat").on('click', '.chat_open_button', function (e) {
+        $(".container_chat").show();
+        $(".chat_open_button").hide();
+        $(".wrapper_chat").removeAttr('style');
+    });
+
     // checks and authoriser user
 
     //ამოჭმებს ნამდვილად არის თუ არა აუტორიზებულე პიროვნება, და ასევე აბრუნებს ღია ფანჯრების სიას
@@ -175,6 +187,55 @@ $(document).ready(function () {
         }
     });
 
+    //სასაუბრო ფანჯრის დამალვა
+    $(".wrapper_chat").on('click', '.send', function (e) {
+
+        if ($('.active-chat').size() == 0) {
+            alert('არ არის არჩეული პიროვნება');
+            return ;
+        }
+
+        var message = $("div.write input").val();
+        var id = makeRandomString();
+        var chat_uniq_id = $('.active-chat').attr('data-chat');
+        socket.emit('sendMessage', {
+            chat_uniq_id:  chat_uniq_id ,
+            message: message,
+            id: id
+        });
+        $('.active-chat').append('<div class="bubble me">'+ message + '</div>' );
+        $(".write input").val('');
+    });
+
+    var dialog = $( "#template-dialog-form" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 350,
+        modal: true,
+        buttons: {
+            Cancel: function() {
+                dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+
+        }
+    });
+
+    $(".wrapper_chat").on('click', '.smiley', function (e) {
+        dialog.dialog( "open" );
+
+    });
+
+
+    $("#template-dialog-form").on('click', 'li', function (e) {
+        $("div.write input").val($(this).html());
+        dialog.dialog( "close" );
+    });
+
+
+
+
 
     setInterval(function(){
 
@@ -202,10 +263,12 @@ socket.on('message', function (data) {
     //console.log(data);
 
     socket.emit('messageReceivedFromClient', { chatUniqId: data.chatUniqId, msgId: data.ran});
-    var elChatbox = $("#"+data.chatUniqId +' .msgbox_chat_area');
 
-    elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , '', data.message ));
-    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
+    var elChatbox = $(".chat[data-chat = "+data.chatUniqId+"]");
+    elChatbox.append('<div class="bubble you">'+ data.message + '</div>' );
+
+    $(".person[data-chat = "+data.chatUniqId+"] .preview").html(shorter(data.message));
+    $(".person[data-chat = "+data.chatUniqId+"] .time").html(Date().substr(16,5));
 
 });
 
@@ -268,13 +331,12 @@ socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
     //console.log(data);
 
-var i = 1;
+    var i = 1;
     $('#online_chats_list tbody').html('');
 
     data.forEach(function(item){
 
         $('#online_chats_list').append(
-
             '<tr>'+
             '<td>'+i+++'</td>'+
             '<td> </td>'+
@@ -290,22 +352,6 @@ var i = 1;
             '</tr>'
         );
     });
-
-    return;
-    var ans="";
-
-    if (Array.isArray(data)){
-        $.each(data,function(key, value) {
-            if (value) {
-                ans = ans + '<tr><td><a href="#" onclick="return getNextWaitingClient('+key+');" '+ services[key]+ ">"+services[key]+"</a></a></td><td>";
-                $.each(value, function(i, val){
-                    ans = ans + val.first_name+" " + val.last_name + ", ";
-                });
-                ans = ans + "</td></tr>"
-            }
-        })
-    }
-    $("#clients_queee_body").html(ans);
 });
 
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს

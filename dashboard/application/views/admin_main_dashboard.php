@@ -160,7 +160,7 @@
 
 
 
-<div class="clearfix" id="msgbox_container">
+<!--<div class="clearfix" id="msgbox_container">-->
 <!--    ONLY FOR EXAMPLE-->
 <!--    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">-->
 <!--        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>-->
@@ -180,9 +180,71 @@
 <!--            </div>-->
 <!--        </div>-->
 <!--    </div>-->
+<!--</div>-->
+
+<div class="wrapper_chat">
+    <div class="chat_open_button" style="display: none; cursor: pointer; ">X</div>
+    <div class="container_chat">
+        <div class="left">
+            <div class="top">
+                <div class="chat_close_button" style="display: inline;position: relative;top: -24px;left: -208px; cursor: pointer;">X</div>
+                <input type="text" />
+                <a href="javascript:;" class="search"></a>
+            </div>
+            <ul class="people">
+                <li class="person" data-chat="person1" style="display: none;">
+                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <span class="name">Thomas Bangalter</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I was wondering...</span>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
+            <div class="top"><span>To: <span class="name"> </span></span></div>
+            <div class="chats_container">
+                <div class="chat" data-chat="person1" style="display: none;">
+                    <div class="conversation-start">
+                        <span>Monday, 1:27 PM</span>
+                    </div>
+                    <div class="bubble you">
+                        So, how's your new phone?
+                    </div>
+                    <div class="bubble you">
+                        You finally have a smartphone :D
+                    </div>
+                    <div class="bubble me">
+                        Drake?
+                    </div>
+                    <div class="bubble me">
+                        Why aren't you answering?
+                    </div>
+                    <div class="bubble you">
+                        howdoyoudoaspace
+                    </div>
+                </div>
+            </div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input type="text" />
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send"></a>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div id="template-dialog-form" title="აირჩიეთ შაბლონი">
+    <ul>
+        <li>Template 1</li>
+        <li>Template 2</li>
+        <li>Template 3</li>
+        <li>Template 4</li>
+        <li>Template 5</li>
+    </ul>
 
+
+</div>
 
         <script>
             var resizefunc = [];
@@ -191,6 +253,7 @@
         <!-- jQuery  -->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
         <!--        <script src="--><?//=base_url();?><!--assets/js/jquery.min.js"></script>-->
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
@@ -202,6 +265,8 @@
         <script src="<?=base_url();?>assets/js/wow.min.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
+
+
 
         <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
         <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>

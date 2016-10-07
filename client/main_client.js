@@ -5,7 +5,6 @@ test comment
 
 var first_name = '';
 var last_name = '';
-var msgCount = 0;
 var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
 var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
@@ -81,7 +80,7 @@ socket.on('message', function (data) {
         },3000);
     } else elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
 
-    elChatbox.animate({scrollTop: msgCount * 20}, 'normal');
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 });
 
 socket.on('messageReceived', function (data) {
@@ -107,16 +106,13 @@ function redAlert(id) {
 function addMessage(id , message){
     var msg = meTemplate(id, (new Date()).toISOString().substr(11,8) , first_name +' '+ last_name ,message );
 
-    ++msgCount;
-
-    var elChatbox = $("#chatbox");
+      var elChatbox = $("#chatbox");
     elChatbox.append(msg);
 
     //setTimeout(function () {
     //    redAlert(id);
     //}, 3000);
-
-    elChatbox.animate({scrollTop: msgCount * 20}, 'normal');
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
 
