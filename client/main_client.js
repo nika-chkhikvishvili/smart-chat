@@ -70,7 +70,6 @@ socket.on('clientCheckChatIfAvariableResponse', function (data) {
 socket.on('message', function (data) {
     console.log('execute: message');
     socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
-    ++msgCount;
     var elChatbox = $("#chatbox");
     if(data.message == 'ping') {
         $('#operator_is_working').show();
