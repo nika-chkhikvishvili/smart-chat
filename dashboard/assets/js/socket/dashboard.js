@@ -10,7 +10,42 @@ var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0
 var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
 
+function close_chat(){
 
+}
+
+function ban_person(){
+    var chat_uniq_id = $('.active-chat').attr('data-chat');
+    if (!chat_uniq_id  || chat_uniq_id == '') return;
+
+    var dialog = $( "#block-dialog" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 550,
+        modal: true,
+        buttons: {
+            Ok: function() {
+
+                var msg= $('#block-dialog textarea').val();
+                socket.emit('banPerson', {
+                    chat_uniq_id:  chat_uniq_id ,
+                    message: msg
+                });
+
+                dialog.dialog( "close" );
+                $('#block-dialog textarea').val('');
+            },
+            Cancel: function() {
+                dialog.dialog( "close" );
+            }
+        },
+        close: function() {
+
+        }
+    });
+
+    dialog.dialog( "open" );
+}
 
 function isChatWindowHidden(id) {
     return localStorage.getItem("hidde_chat_"+id) || false;

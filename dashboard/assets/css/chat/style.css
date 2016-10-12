@@ -5,10 +5,12 @@
   box-sizing: border-box;
 }
 
-
+.chat-dialog{
+  display: none;
+}
 
 #template-dialog-form{
-  display: none;
+
 }
 
 

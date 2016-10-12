@@ -236,6 +236,53 @@ ChatServer.prototype.sendMessage = function (socket, data, sendMessageToRoom) {
 };
 
 
+//ოპერატორის მიერ პიროვნების დაბლოკვა
+ChatServer.prototype.banPerson = function (socket, data) {
+    var me = this;
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
+        socket.emit("banPersonResponse",{isValid: false, error: 'chat_uniq_id',data:data});
+        return ;
+    }
+
+
+    if (!me.chatRooms || !me.chatRooms.hasOwnProperty(data.chat_uniq_id)) {
+        socket.emit("banPersonResponse", {isValid: false, error: 'chatRooms'});
+        return;
+    }
+
+    var chatId = me.chatRooms[data.chat_uniq_id].chatId;
+
+    me.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId],  function(err, res) {
+        if (err) me.databaseError(socket, err);
+        else {
+            if (res && Array.isArray(res) && res.length == 1) {
+
+            var ans = res[0];
+
+            var banlist = {
+                ban_id: null,
+                ip: 1,
+                ip_address: '',
+                chat_id: chatId,
+                online_user_id: ans.online_user_id,
+                person_id: socket.user.userId,
+                //reason_id: '',
+                ban_comment: data.message
+            };
+
+            me.connection.query('INSERT INTO `banlist` SET ? ', banlist, function (err, res) {
+                if (err) me.databaseError(socket, err);
+                else {
+
+
+                    socket.emit("banPersonResponse", {isValid: true});
+                }
+            });
+        }
+        }
+    });
+};
+
 
 ChatServer.prototype.messageReceived = function (socket, data, sendMessageReceivedToRoom) {
     var me = this;

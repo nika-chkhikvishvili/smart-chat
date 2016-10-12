@@ -201,7 +201,9 @@
             </ul>
         </div>
         <div class="right">
-            <div class="top"><span>To: <span class="name"> </span></span></div>
+            <div class="top"><span>To: <span class="name"> </span></span>
+                <span style="float:right;"><a href="javascript:close_chat();">დასრულება</a></span> <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                <span style="float:right;"><a href="javascript:ban_person();">დაბლოკვა</a></span></div>
             <div class="chats_container">
                 <div class="chat" data-chat="person1" style="display: none;">
                     <div class="conversation-start">
@@ -234,7 +236,7 @@
     </div>
 </div>
 
-<div id="template-dialog-form" title="აირჩიეთ შაბლონი">
+<div id="template-dialog-form" class="chat-dialog" title="აირჩიეთ შაბლონი">
     <ul>
         <li>Template 1</li>
         <li>Template 2</li>
@@ -245,6 +247,13 @@
 
 
 </div>
+
+<div id="block-dialog" class="chat-dialog" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
+    <textarea rows="12" cols="80">
+    </textarea>
+</div>
+
+
 
         <script>
             var resizefunc = [];

@@ -145,6 +145,7 @@ io.on('connection', function (socket) {
     socket.on('getAllChatMessages',   function (data) {server.getAllChatMessages    (socket, data);} );
     socket.on('sendMessage',          function (data) {server.sendMessage           (socket, data, sendMessageToRoom);} );
     socket.on('operatorIsWorking',    function (data) {server.operatorIsWorking     (socket, data, sendMessageToRoom);} );
+    socket.on('banPerson',            function (data) {server.banPerson             (socket, data);} );
 
 
     socket.on('disconnect', function () {
