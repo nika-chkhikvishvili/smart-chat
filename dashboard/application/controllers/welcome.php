@@ -39,8 +39,8 @@ class Welcome extends CI_Controller
         } else {
             $this->load->model('login');
             $get_user_data = $this->login->get_person_data($this->input->post('post_mail'),
-//                sha1($this->input->post('post_pass')));
-                ($this->input->post('post_pass')));
+              sha1($this->input->post('post_pass')));
+               # ($this->input->post('post_pass')));
 
             if ($get_user_data) {
                 $this->load->helper('date');
