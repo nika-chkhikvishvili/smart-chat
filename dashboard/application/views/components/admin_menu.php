@@ -21,9 +21,9 @@
         <a href="#" class="waves-effect"><i class="md md-palette"></i> <span> ადმინისტრირება </span> <span
                 class="pull-right"><i class="md md-add"></i></span></a>
         <ul class="list-unstyled">
-            <li><a href="<?= base_url(); ?>dashboard/add_institution">უწყებების მართვა</a></li>
-            <li><a href="<?= base_url(); ?>dashboard/add_services">სერვისების მართვა</a></li>
-            <li><a href="<?= base_url(); ?>dashboard/persons">მომხმარებლის მართვა</a></li>
+            <li><a href="<?= base_url(); ?>/add_institution">უწყებების მართვა</a></li>
+            <li><a href="<?= base_url(); ?>/add_services">სერვისების მართვა</a></li>
+            <li><a href="<?= base_url(); ?>/persons">მომხმარებლის მართვა</a></li>
             <li><a href="buttons.html">სისტემის მართვა</a></li>
             <li><a href="panels.html">შაბლონების მართვა</a></li>
             <li><a href="panels.html">პირადი პარამეტრები</a></li>
