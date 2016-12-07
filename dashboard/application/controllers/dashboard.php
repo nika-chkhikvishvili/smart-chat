@@ -216,6 +216,11 @@ class Dashboard extends CI_Controller{
         }
         $this->load->view('add_persons', $data);
     }
+	
+	function message_templates()
+	{
+		$this->load->view('message_templates');
+	}
 
     function logout(){
         redirect('logout');
