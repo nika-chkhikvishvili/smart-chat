@@ -1,4 +1,4 @@
-﻿<ul>
+<ul>
     <li>
         <a href="<?= base_url(); ?>dashboard" class="waves-effect active"><i class="md md-home"></i><span> მთავარი გვერდი </span></a>
     </li>
@@ -24,11 +24,13 @@
             <li><a href="<?= base_url(); ?>add_institution">უწყებების მართვა</a></li>
             <li><a href="<?= base_url(); ?>add_services">სერვისების მართვა</a></li>
             <li><a href="<?= base_url(); ?>persons">მომხმარებლის მართვა</a></li>
-            <li><a href="buttons.html">სისტემის მართვა</a></li>
-            <li><a href="panels.html">შაბლონების მართვა</a></li>
+            <li><a href="<?=base_url();?>">სისტემის მართვა</a></li>
+            <li><a href="<?=base_url();?>message_templates">შაბლონების მართვა</a></li>
             <li><a href="panels.html">პირადი პარამეტრები</a></li>
         </ul>
     </li>
 
+
+   
 </ul>
 <div class="clearfix"></div>
