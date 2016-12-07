@@ -7,9 +7,9 @@
         <a href="#" class="waves-effect"><i class="md md-mail"></i><span>შეტყობინებები</span><span class="pull-right"><i
                     class="md md-add"></i></span></a>
         <ul class="list-unstyled">
-            <li><a href="inbox.html">შემოსული</a></li>
-            <li><a href="email-compose.html">მაილის გაგზავნა</a></li>
-            <li><a href="email-read.html">შეტყობინების ნახვა</a></li>
+            <li><a href="#">შემოსული</a></li>
+            <li><a href="#">მაილის გაგზავნა</a></li>
+            <li><a href="#">შეტყობინების ნახვა</a></li>
         </ul>
     </li>
 
@@ -26,7 +26,7 @@
             <li><a href="<?= base_url(); ?>persons">მომხმარებლის მართვა</a></li>
             <li><a href="<?=base_url();?>">სისტემის მართვა</a></li>
             <li><a href="<?=base_url();?>message_templates">შაბლონების მართვა</a></li>
-            <li><a href="panels.html">პირადი პარამეტრები</a></li>
+            <li><a href="#">პირადი პარამეტრები</a></li>
         </ul>
     </li>
 
