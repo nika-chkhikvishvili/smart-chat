@@ -20,10 +20,11 @@ class Dashboard extends CI_Controller{
     }
 
     public function add_institution(){
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
+	
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
-        $data['get_institutions'] = $this->dashboard_model->get_institutions($session_data['repositorypersons_repository_id']);
+        $data['get_institutions'] = $this->dashboard_model->get_institutions($session_data->repo_id);
         $data['institution_name'] = "";
 
         if ($this->input->post('add_institution')) {
@@ -37,14 +38,14 @@ class Dashboard extends CI_Controller{
             if ($this->form_validation->run() == TRUE) {
                 $add_institution_data = array
                 (
-                    'repository_id' => $session_data['repositorypersons_repository_id'],
+                    'repository_id' => $session_data->repo_id,
                     'category_name' => $this->input->post('institution_name')
                 );
                 $information_object = array(
-                    'information_object_repo' => $session_data['repositorypersons_repository_id'],
+                    'information_object_repo' => $session_data->repo_id,
                     'information_object_table' => 'repo_categories',
                     'information_object_rowid' => '',
-                    'information_object_person' => $session_data['persons_id'],
+                    'information_object_person' => $session_data->person_id,
                     'information_object_event' => 'insert',
                     'information_object_date' => date("Y-m-d H:i:s"),
                 );
@@ -55,7 +56,7 @@ class Dashboard extends CI_Controller{
 
         }
 
-        $this->load->view('add_institution', $data);
+       $this->load->view('add_institution', $data);
 
     }
 
@@ -76,11 +77,12 @@ class Dashboard extends CI_Controller{
 // service layer
     public function add_services() {
 
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
-        $data['get_sql_services'] = $this->dashboard_model->get_services($session_data['repositorypersons_repository_id']);
-        $data['sql_institutions'] = $this->dashboard_model->get_institutions($session_data['repositorypersons_repository_id']);
+		
+        $data['get_sql_services'] = $this->dashboard_model->get_services($session_data->repo_id);
+        $data['sql_institutions'] = $this->dashboard_model->get_institutions($session_data->repo_id);
 
         if ($this->input->post('add_service')) {
             $this->form_validation->set_rules(
@@ -94,7 +96,7 @@ class Dashboard extends CI_Controller{
             if ($this->form_validation->run() == TRUE) {
                 $add_institution_data = array
                 (
-                    'repo_categories_id' => $this->input->post('repo_categories'),
+                    'repo_category_id' => $this->input->post('repo_categories'),
                     'service_name' => $this->input->post('service_name'),
                     'start_time' => $this->input->post('start_time'),
                     'end_time' => $this->input->post('end_time')
@@ -110,12 +112,12 @@ class Dashboard extends CI_Controller{
     }
 
     public function update_service() {
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
 
-        $data['sql_institutions'] = $this->dashboard_model->get_institutions($session_data['repositorypersons_repository_id']);
-        $data['service'] = $this->dashboard_model->get_service($session_data['repositorypersons_repository_id'], $this->uri->segment(3, 0));
+        $data['sql_institutions'] = $this->dashboard_model->get_institutions($session_data->repo_id);
+        $data['service'] = $this->dashboard_model->get_service($session_data->repo_id, $this->uri->segment(3, 0));
 
         if ($data['service'] == 0) {
             $data['error_code'] = "Error!";
@@ -123,16 +125,8 @@ class Dashboard extends CI_Controller{
             $data['error_description'] = "სერვისის რედაქტირებისთვის მოხდა არასწორი პარამეტრების გადმოცემა, ვერცერთი ოპერაცია ვერ შესრულდება.თქვენ შეგიძლიათ მთავარ გვერდზე დაბრუნება!";
             $this->load->view('notification', $data);
         } else {
-            if ($this->input->post('update')) {
-                $information_object = array(
-                    'information_object_repo' => $session_data['repositorypersons_repository_id'],
-                    'information_object_table' => 'categoryservices',
-                    'information_object_rowid' => $this->uri->segment(3, 0),
-                    'information_object_person' => $session_data['persons_id'],
-                    'information_object_event' => 'UPDATE',
-                    'information_object_date' => date("Y-m-d H:i:s"),
-                );
-                if ($this->dashboard_model->update_services($this->uri->segment(3, 0), $this->input->post(), $information_object)) {
+            if ($this->input->post('update')) {               
+                if ($this->dashboard_model->update_services($this->uri->segment(3, 0), $this->input->post())) {
                     echo '<meta http-equiv="refresh" content="0">';
                 }
             }
@@ -150,34 +144,73 @@ class Dashboard extends CI_Controller{
 
     // persons layer
     public function persons(){
-        $this->load->view('persons');
+		$this->load->model('dashboard_model');
+		$data['persons'] = $this->dashboard_model->get_persons();		
+        $this->load->view('persons',$data);
     }
 
     public function add_person(){
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
-        $data['get_sql_services'] = $this->dashboard_model->get_services($session_data['repositorypersons_repository_id']);
+        $data['get_sql_services'] = $this->dashboard_model->get_services($session_data->repo_id);
+		$data['zlib_roles'] = $this->dashboard_model->get_all_zlib_roles();
         if ($this->input->post('add_person')) {
             $this->form_validation->set_rules(
-                'firstname', 'მომხმარებლის სახელი',
+                'first_name', 'მომხმარებლის სახელი',
                 'required',
                 array('required' => $this->lang->line('required')));
 
             $this->form_validation->set_rules(
-                'lastname', 'მომხმარებლის გვარი',
+                'last_name', 'მომხმარებლის გვარი',
                 'required',
                 array('required' => $this->lang->line('required')));
 
-            if ($this->form_validation->run() == TRUE) {
-                $add_institution_data = array
-                (
-                    'repo_categories_id' => $this->input->post('repo_categories'),
-                    'service_name' => $this->input->post('service_name')
-                );
+                if ($this->form_validation->run() == TRUE) {
+				if($this->input->post('birthday')!=""){	
+				$birth_date = explode("-", $this->input->post('birthday'));
+				$birth_date2 = $birth_date[2]."-".$birth_date[1]."-".$birth_date[0];
+				}
+				else {
+					$birth_date2 ="";
+				}
+				$person_data = array(
+				'first_name' => $this->input->post('first_name'),
+				'last_name' => $this->input->post('last_name'),
+				'nickname' => $this->input->post('nickname'),
+				'email' => $this->input->post('person_mail'),
+				'birth_date' => $birth_date2,
+				'phone' => $this->input->post('phone')
+				);
+				
+				$person_id = $this->dashboard_model->add_person($person_data);
+				
+				foreach ($data['zlib_roles'] as $get_roles){
+					if($this->input->post($get_roles['role_id'])){
+						$person_roles = array (
+						'person_id' => $person_id,
+						'role_id' => $get_roles['role_id']
+						);
+				    $this->dashboard_model->add_person_roles($person_roles);
+					}	
+				}
+				
+				foreach ($data['get_sql_services'] as $get_service){
+					if($this->input->post($get_service['category_service_id'])){
+						$person_service = array (
+						'person_id' => $person_id,
+						'service_id' => $get_service['category_service_id']
+						);
+				    $this->dashboard_model->add_person_service($person_service);
+					}	
+				}
+				
+               
+				/*
                 if ($this->dashboard_model->add_services($add_institution_data)) {
                     echo '<meta http-equiv="refresh" content="0">';
                 }
+				*/
             }
 
         }
