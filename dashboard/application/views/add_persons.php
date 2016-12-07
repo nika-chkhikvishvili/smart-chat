@@ -168,8 +168,10 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading"><h3 class="panel-title">მომხმარებლის დამატება</h3></div>
                                     <div class="panel-body">
+									<?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-danger">', '</div></div>'); ?>
+									
                                         <div class="form">
-                                            <form class="cmxform form-horizontal tasi-form" id="commentForm" method="get" action="#" novalidate="novalidate">
+                                            <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="#" novalidate="novalidate">
                                                 <div class="form-group">
                                                     <label for="cname" class="control-label col-lg-2">სახელი (*)</label>
                                                     <div class="col-lg-10">
@@ -191,7 +193,7 @@
                                                 <div class="form-group">
                                                     <label for="cemail" class="control-label col-lg-2">ელ-ფოსტა (*)</label>
                                                     <div class="col-lg-10">
-                                                        <input class="form-control" id="cemail" type="person_mail" name="email" required="" aria-required="true">
+                                                        <input class="form-control" id="cemail" type="text" name="person_mail" required="" aria-required="true">
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
@@ -201,7 +203,7 @@
 													   <span class="help-inline">რიცხვი - თვე - წელი</span>
                                                     </div>
                                                 </div>
-						<div class="form-group">
+													<div class="form-group">
                                                     <label for="curl" class="control-label col-lg-2">ტელეფონის ნომერი</label>
                                                     <div class="col-lg-10">
                                                         <input class="form-control" id="curl" type="text" name="phone">
@@ -219,45 +221,21 @@
                                     <div class="panel-heading"> 
                                      <h3 class="panel-title">მონიშნეთ მომხმარებლის სისტემური უფლებები</h3>
                                     </div> 
-                                  <div class="panel-body"> 
+									   <div class="panel-body"> 
+									   <?php
+										if(!empty($zlib_roles)){
+											foreach ($zlib_roles as $roles):
+											
+									   ?>
 										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-12" type="checkbox" checked="checked">
-                                            <label for="checkbox-12">
-                                              პირადი საუბრის ისტორია
+                                            <input id="checkbox-<?=$roles['role_id'];?>" name="<?=$roles['role_id'];?>" value="<?=$roles['role_id'];?>" type="checkbox">
+                                            <label for="checkbox-<?=$roles['role_id'];?>">
+                                              <?=$roles['role_description'];?>
                                             </label>
                                         </div>
-										
-										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-13" type="checkbox">
-                                            <label for="checkbox-13">
-                                             სისტემაში ჩართული ყველა ოპერატორის საუბრის ისტორია
-                                            </label>
-                                        </div>
-										
-										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-14" type="checkbox">
-                                            <label for="checkbox-14">
-                                              Offline შეტყობინებების მიღება
-                                            </label>
-                                        </div>
-										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-15" type="checkbox">
-                                            <label for="checkbox-15">
-                                              სისტემაში ჩართული ოპერატორების Live Chat ის ყურება
-                                            </label>
-                                        </div>
-										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-16" type="checkbox">
-                                            <label for="checkbox-16">
-                                              Online მომხმარებლის დაბლოკვა
-                                            </label>
-                                        </div>
-										<div class="checkbox checkbox-danger checkbox-circle">
-                                            <input id="checkbox-17" type="checkbox">
-                                            <label for="checkbox-17">
-                                              სისტემაში ჩართული ოპერატორის საუბარში ჩართვა
-                                            </label>
-                                        </div>
+										<?php
+											endforeach; }
+										?>
                                     </div> 
                                 </div>
                             </div>
@@ -270,16 +248,15 @@
                                     </div> 
                                   <div class="panel-body">
 									    <?php										
-										foreach ($get_sql_services as $services):
+										foreach ($get_sql_services as $services):										
 										?>
 										<div class="checkbox checkbox-info checkbox-circle">
-                                            <input id="checkbox-<?php echo $services['category_services_id'];?>" type="checkbox">
-                                            <label for="checkbox-<?php echo $services['category_services_id'];?>">
+                                            <input id="checkbox2-<?php echo $services['category_service_id'];?>" name="<?php echo $services['category_service_id'];?>" value="<?php echo $services['category_service_id'];?>" type="checkbox">
+                                            <label for="checkbox2-<?php echo $services['category_service_id'];?>">
                                             <?php echo $services['service_name']; ?>
                                             </label>
                                         </div>
-										<?php endforeach; ?>									
-										
+										<?php endforeach; ?>
                                     </div> 
                                 </div>
                             </div>
@@ -288,7 +265,7 @@
 												</div>
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-2 col-lg-10">
-                                                        <button class="btn btn-primary waves-effect waves-light m-b-5" type="submit">მომხმარებლის დამატება</button>                                                       
+                                                        <input type="submit"  class="btn btn-primary"  name="add_person" value="მომხმარებლის დამატება">
                                                     </div>
                                                 </div>
                                             </form>
