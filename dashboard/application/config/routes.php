@@ -45,6 +45,7 @@ $route['^(add_institution)(/:any)?$'] = 'dashboard/$0';
 $route['^(add_services)(/:any)?$'] = 'dashboard/$0';
 $route['^(persons)(/:any)?$'] = 'dashboard/$0';
 $route['^(add_person)(/:any)?$'] = 'dashboard/$0';
+$route['^(message_templates)(/:any)?$'] = 'dashboard/$0';
 #$route['^(update_service)(/:any)?$'] = 'dashboard/$0';
 
 /* End of file routes.php */
