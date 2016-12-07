@@ -24,7 +24,7 @@
             <li><a href="<?= base_url(); ?>add_institution">უწყებების მართვა</a></li>
             <li><a href="<?= base_url(); ?>add_services">სერვისების მართვა</a></li>
             <li><a href="<?= base_url(); ?>persons">მომხმარებლის მართვა</a></li>
-            <li><a href="<?=base_url();?>">სისტემის მართვა</a></li>
+            <li><a href="#">სისტემის მართვა</a></li>
             <li><a href="<?=base_url();?>message_templates">შაბლონების მართვა</a></li>
             <li><a href="#">პირადი პარამეტრები</a></li>
         </ul>
