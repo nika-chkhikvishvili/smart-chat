@@ -71,7 +71,7 @@
           <?php 
                 foreach ($sql_institutions as $institutions):														  
           ?>
-          <option value="<?php echo $institutions['repo_categories_id'];?>"><?php echo $institutions['category_name'];?></option>
+          <option value="<?php echo $institutions['repo_category_id'];?>"><?php echo $institutions['category_name'];?></option>
           <?php endforeach; ?>
    </select>
     </div>
@@ -158,12 +158,12 @@
 	    <th>წაშლა</th>
 	  </tr>
 	  <?php foreach($get_sql_services as $res) :?>
-	  	 <tr data-row-id="<?php echo $res['category_services_id'];?>">
+	  	 <tr data-row-id="<?php echo $res['category_service_id'];?>">
 		 <td class="editable-col" contenteditable="true"  col-index='0' title="<?php echo $res['category_name'];?>" oldVal ="<?php echo $res['service_name'];?>"><?php echo $res['service_name'];?></td>
 		 <td class="editable-col" contenteditable="true"  col-index='1' title="<?php echo $res['start_time'];?>" oldVal ="<?php echo $res['start_time'];?>"><?php echo $res['start_time'];?></td>
 		 <td class="editable-col" contenteditable="true"  col-index='2' title="<?php echo $res['end_time'];?>" oldVal ="<?php echo $res['end_time'];?>"><?php echo $res['end_time'];?></td>
-		 <td class="edit"> <a href="<?=base_url();?>add_services/edit/<?php echo $res['category_services_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="სტატუსი"><img src='<?=base_url()."assets/images/online.png" ?>'></a></td>
-		 <td class="edit"> <a href="<?=base_url();?>dashboard/update_service/<?php echo $res['category_services_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="რედაქტირება"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+		 <td class="edit"> <a href="<?=base_url();?>add_services/edit/<?php echo $res['category_service_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="სტატუსი"><img src='<?=base_url()."assets/images/online.png" ?>'></a></td>
+		 <td class="edit"> <a href="<?=base_url();?>dashboard/update_service/<?php echo $res['category_service_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="რედაქტირება"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
 		 <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
 		 
 	  </tr>
