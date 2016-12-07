@@ -156,8 +156,7 @@
 						</div>
 					</div>
 					 <!-- modal info -->
-					<div class="md-modal md-effect-6" id="modal-6">
-					
+					<div class="md-modal md-effect-6" id="modal-6">					
 						<div class="md-content">
 							<h3>ინფორმაცია</h3>
 							<div>
@@ -173,7 +172,6 @@
                      </div>
         <!-- modal info -->
                <div class="md-modal md-effect-6" id="modal-7">
-
                <div class="md-content">
                        <h3>ინფორმაცია</h3>
                        <div>
@@ -220,71 +218,55 @@
                         </div>
                         <!-- Start Widget -->
                          <div class="row">
-                        <div class="col-sm-6 col-lg-4">
-                                <div class="panel">
-                                    <div class="panel-body">
-                                        <div class="media-main">
-                                            <a class="pull-left" href="#">
-                                                <img class="thumb-lg img-circle" src="<?=base_url();?>assets/images/users/girl.png" alt="">
-                                            </a>
-                                        
-                                            <div class="info">
-                                                <h4>ნატალია აბაშმაძე</h4>
-                                                <p class="text-muted">ადმინისტრატორი</p>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <hr>
-                                        <ul class="social-links list-inline">
-                                            <li>
-                                                <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-6">
-												<i class="fa  fa-info-circle"></i></a>
-                                            </li>
-											 <li>
-                                                <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-7">
-												<i class="fa fa-history"></i></a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div> <!-- panel-body -->
-                                </div> <!-- panel -->
-                            </div> <!-- end col -->
-							 <div class="col-sm-6 col-lg-4">
-                                <div class="panel">
-                                    <div class="panel-body">
-                                        <div class="media-main">
-                                            <a class="pull-left" href="#">
-                                                <img class="thumb-lg img-circle" src="<?=base_url();?>assets/images/users/girl.png" alt="">
-                                            </a>
-                                            <div class="pull-right btn-group-sm">
-                                                <a href="#" class="btn btn-success waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="რედაქტირება">
-                                                    <i class="fa fa-pencil"></i>
-                                                </a>
-                                                <a href="#" class="btn btn-danger waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
-                                                    <i class="fa fa-close"></i>
-                                                </a>
-                                            </div>
-                                            <div class="info">
-                                                <h4>ნატალია აბაშმაძე</h4>
-                                                <p class="text-muted">ოპერატორი</p>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <hr>
-                                        <ul class="social-links list-inline">
-                                            <li>
-                                                <a title="" data-placement="right" data-toggle="tooltip" class="tooltips" href="#" data-original-title="საკურატორო სერვისები">
-												<i class="fa  fa-info-circle"></i></a>
-                                            </li>
-											 <li>
-                                                <a title="" data-placement="right" data-toggle="tooltip" class="tooltips" href="#" data-original-title="მომხმარებლის ისტორია">
-												<i class="fa fa-history"></i></a>
-                                            </li>
-                                            
-                                        </ul>
-                                    </div> <!-- panel-body -->
-                                </div> <!-- panel -->
-                            </div> <!-- end col -->
+						 <?php
+						 if(!empty($persons)){
+							 foreach ($persons as $list):
+							# var_dump($list);
+						 ?>
+				<div class="col-sm-6 col-lg-4">
+				<div class="panel">
+					<div class="panel-body">
+						<div class="media-main">
+							<a class="pull-left" href="#">
+								<img class="thumb-lg img-circle" src="<?=base_url();?>assets/images/users/girl.png" alt="">
+							</a>
+							 <?php
+							 if($list['is_admin']==0) {
+								 $del_url  = base_url()."del_person/".$list['person_id'];
+								 $edit_url  = base_url()."edit_person/".$list['person_id'];
+								 echo '<div class="pull-right btn-group-sm">
+								<a href="'.$edit_url.'" class="btn btn-success waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="რედაქტირება">
+									<i class="fa fa-pencil"></i>
+								</a>
+								<a href="'.$del_url.'" class="btn btn-danger waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
+									<i class="fa fa-close"></i>
+								</a>
+							</div>';
+							 }
+							 ?>
+
+							<div class="info">
+								<h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
+								<p class="text-muted"><? if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+						<hr>
+						<ul class="social-links list-inline">
+							<li>
+								<a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-6">
+								<i class="fa  fa-info-circle"></i></a>
+							</li>
+							 <li>
+								<a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-7">
+								<i class="fa fa-history"></i></a>
+							</li>
+							
+						</ul>
+					</div> <!-- panel-body -->
+				</div> <!-- panel -->
+				</div> <!-- end col -->
+						 <?php endforeach; }?>
                             </div> <!-- col -->
                         <div class="row">
                           <div class="col-sm-12">
