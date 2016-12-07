@@ -14,7 +14,7 @@
     </li>
 
     <li>
-        <a href="calendar.html" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
+        <a href="#" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
     </li>
 
     <li class="has_sub">
