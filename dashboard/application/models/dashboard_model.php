@@ -23,7 +23,7 @@ class dashboard_model extends CI_Model{
         $this->db->trans_begin();
         $this->db->insert('repo_categories', $data);
         $information_object['information_object_rowid'] = $this->db->insert_id();
-        $this->db->insert('information_object', $information_object);
+        //$this->db->insert('information_object', $information_object);
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -62,7 +62,7 @@ class dashboard_model extends CI_Model{
         $this->db->select('*');
         $this->db->from('category_services');
         # $this->db->where('repo_categories_id',$repo_id);
-        $this->db->where('category_services_id', $service_id);
+        $this->db->where('category_service_id', $service_id);
         $query = $this->db->get();
         if ($query->num_rows() > 0) {
             return $query->row_array();
@@ -77,11 +77,11 @@ class dashboard_model extends CI_Model{
         return $this->db->insert_id();
     }
 
-    function update_services($id, $data, $information_object){
+    function update_services($id, $data){
         unset($data['update']);
         $this->db->trans_begin();
-        $this->db->update('category_services', $data, array('category_services_id' => $id));
-        $this->db->insert('information_object', $information_object);
+        $this->db->update('category_services', $data, array('category_service_id' => $id));
+       
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -92,7 +92,7 @@ class dashboard_model extends CI_Model{
     }
 
     function delete_services($id){
-        $this->db->delete('category_services', array('category_services_id' => $id));
+        $this->db->delete('category_services', array('category_service_id' => $id));
     }
 
     // services
@@ -100,6 +100,41 @@ class dashboard_model extends CI_Model{
 
     function add_login_his($add_login_his){
         $this->db->insert('login_his', $add_login_his);
+        return $this->db->insert_id();
+
+    }
+	
+	function get_all_zlib_roles()
+	{
+		$this->db->select('*');
+        $this->db->from('zlib_roles');      
+        $query = $this->db->get();
+        return $query->result_array();
+	}
+	
+	 public function get_persons(){
+        $this->db->select('*');
+        $this->db->from('persons');
+        #$this->db->where('is_admin', 0);
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
+	
+	function add_person($person_data){
+        $this->db->insert('persons', $person_data);
+        return $this->db->insert_id();
+
+    }
+	
+	function add_person_roles($person_roles){
+        $this->db->insert('person_roles', $person_roles);
+        return $this->db->insert_id();
+
+    }
+	
+	function add_person_service($person_service){
+        $this->db->insert('person_services', $person_service);
         return $this->db->insert_id();
 
     }
