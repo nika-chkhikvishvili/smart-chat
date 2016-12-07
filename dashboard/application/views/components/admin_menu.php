@@ -30,11 +30,5 @@
         </ul>
     </li>
 
-
-    <li class="has_sub">
-        <a href="<?= base_url(); ?>dashboard/persons" class="waves-effect"><i class="md md-share"></i><span>მომხმარებლები</span><span
-                class="pull-right"><i class="md md-add"></i></span></a>
-       
-    </li>
 </ul>
 <div class="clearfix"></div>
