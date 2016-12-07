@@ -198,7 +198,7 @@
 									<table id="employee_grid" class="table table-condensed table-hover table-striped bootgrid-table" width="60%" cellspacing="0">
 								   <tbody id="_editable_table">
 									  <?php foreach($get_institutions as $res) :?>
-									  <tr data-row-id="<?php echo $res['repo_categories_id'];?>">
+									  <tr data-row-id="<?php echo $res['repo_category_id'];?>">
 										 <td class="editable-col" contenteditable="true" col-index='0' oldVal ="<?php echo $res['category_name'];?>"><?php echo $res['category_name'];?></td>
 										  <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
 									  </tr>
