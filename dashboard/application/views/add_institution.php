@@ -182,7 +182,7 @@
 									<div class="portlet">
 										<div class="portlet-heading bg-info">
                                         <h3 class="portlet-title">
-                                           სერვისები
+                                           უწყების  
                                         </h3>
 											<div class="portlet-widgets">
 												<a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
