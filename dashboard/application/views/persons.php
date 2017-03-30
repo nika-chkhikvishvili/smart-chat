@@ -113,10 +113,10 @@
                 <div class="sidebar-inner slimscrollleft">
                     <div class="user-details">
                         <div class="pull-left">
-                            <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+                           <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
-                            <div class="dropdown">
+                          <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
@@ -143,124 +143,124 @@
             <div class="content-page">
                 <!-- Start content -->
                 <div class="content">
-                    <div class="container">
-					<div class="row">
-					<div class="col-md-12">
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<h3 class="panel-title">მომხმარებლის მართვა</h3>
-							</div>
-							<div class="panel-body">			
-								<a href="<?=base_url();?>dashboard/add_person" class="btn btn-info waves-effect waves-light m-b-5"  id="sa-params">მომხმარებლის დამატება</a>
-							</div>
-						</div>
-					</div>
-					 <!-- modal info -->
-					<div class="md-modal md-effect-6" id="modal-6">					
-						<div class="md-content">
-							<h3>ინფორმაცია</h3>
-							<div>
-								<p>ნატალია აბაშმაძეს საკურატორო სერვისები:</p>
-								<ul>
-									<li><strong>საარქივო სერვისები</strong></li>
-									<li><strong>ID ბარათი</strong> </li>
-									<li><strong>ბიზნესი</strong> </li>
-								</ul>
-								<button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
-							</div>
-						</div>
-                     </div>
+                <div class="container">
+                <div class="row">
+                <div class="col-md-12">
+                <div class="panel panel-default">
+                <div class="panel-heading">
+                <h3 class="panel-title">მომხმარებლის მართვა</h3>
+                </div>
+                <div class="panel-body">			
+                <a href="<?=base_url();?>persons/add_person" class="btn btn-info waves-effect waves-light m-b-5"  id="sa-params">მომხმარებლის დამატება</a>
+                </div>
+                </div>
+                    </div>
+            <!-- modal info -->
+           <div class="md-modal md-effect-6" id="modal-6">					
+        <div class="md-content">
+        <h3>ინფორმაცია</h3>
+        <div>
+        <p>ნატალია აბაშმაძეს საკურატორო სერვისები:</p>
+        <ul>
+                <li><strong>საარქივო სერვისები</strong></li>
+                <li><strong>ID ბარათი</strong> </li>
+                <li><strong>ბიზნესი</strong> </li>
+        </ul>
+        <button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
+        </div>
+           </div>
+             </div>
         <!-- modal info -->
                <div class="md-modal md-effect-6" id="modal-7">
                <div class="md-content">
                        <h3>ინფორმაცია</h3>
                        <div>
-                                <div class="tab-pane" id="profile-2">
-                                 <!-- Personal-Information -->
-                                 <div class="panel panel-default panel-fill">
+        <div class="tab-pane" id="profile-2">
+         <!-- Personal-Information -->
+         <div class="panel panel-default panel-fill">
 
-                                       <div class="panel-body"> 
-                                               <div class="timeline-2">
-                                               <div class="time-item">
-                                                       <div class="item-info">
-                                                               <div class="text-muted">09:00:53</div>
-                                                               <p><strong>სისტემაში ავტორიზაცია </strong></p>
-                                                       </div>
-                                               </div>
+               <div class="panel-body"> 
+                       <div class="timeline-2">
+                       <div class="time-item">
+                    <div class="item-info">
+                            <div class="text-muted">09:00:53</div>
+                            <p><strong>სისტემაში ავტორიზაცია </strong></p>
+                    </div>
+                       </div>
 
-                                               <div class="time-item">
-                                                       <div class="item-info">
-                                                               <div class="text-muted">30 minutes ago</div>
-                                                               <p><a href="#" class="text-info">Lorem</a> commented your post.</p>
+                       <div class="time-item">
+                    <div class="item-info">
+                            <div class="text-muted">30 minutes ago</div>
+                            <p><a href="#" class="text-info">Lorem</a> commented your post.</p>
 
-                                                       </div>
-                                               </div>
+                    </div>
+                       </div>
 
-                                               <div class="time-item">
-                                                       <div class="item-info">
-                                                               <div class="text-muted">59 minutes ago</div>
-                                                               <p><a href="#" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
+                       <div class="time-item">
+                        <div class="item-info">
+                                <div class="text-muted">59 minutes ago</div>
+                                <p><a href="#" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
 
-                                                       </div>
-                                               </div>
-                                       </div>
+                        </div>
+                       </div>
+               </div>
 
-                                       </div> 
-                               </div>
-                               <!-- Personal-Information -->
-                               </div> 
+               </div> 
+                </div>
+                <!-- Personal-Information -->
+                </div> 
 
-				<button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
-				</div>
-				</div>
+                 <button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
+                 </div>
+                 </div>
                      </div>
 					  <!-- end of modal info -->
                         </div>
                         <!-- Start Widget -->
                          <div class="row">
-						 <?php
-						 if(!empty($persons)){
-							 foreach ($persons as $list):
-							# var_dump($list);
-						 ?>
-				<div class="col-sm-6 col-lg-4">
-				<div class="panel">
-					<div class="panel-body">
-						<div class="media-main">
-							<a class="pull-left" href="#">
-								<img class="thumb-lg img-circle" src="<?=base_url();?>assets/images/users/girl.png" alt="">
-							</a>
-							 <?php
-							 if($list['is_admin']==0) {
-								 $del_url  = base_url()."del_person/".$list['person_id'];
-								 $edit_url  = base_url()."edit_person/".$list['person_id'];
-								 echo '<div class="pull-right btn-group-sm">
-								<a href="'.$edit_url.'" class="btn btn-success waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="რედაქტირება">
-									<i class="fa fa-pencil"></i>
-								</a>
-								<a href="'.$del_url.'" class="btn btn-danger waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
-									<i class="fa fa-close"></i>
-								</a>
-							</div>';
-							 }
-							 ?>
+                        <?php
+                        if(!empty($persons)){
+                                foreach ($persons as $list):
+                               # var_dump($list);
+                        ?>
+                        <div class="col-sm-4 col-lg-3">
+                        <div class="panel">
+                        <div class="panel-body">
+                        <div class="media-main">
+                        <a class="pull-left" href="#">
+                                <img class="thumb-lg img-circle" src="<?=base_url();?>assets/images/users/girl.png" alt="">
+                        </a>
+                         <?php
+                         if($list['is_admin']==0) {
+                                 $del_url  = base_url()."del_person/".$list['person_id'];
+                                 $edit_url  = base_url()."persons/edit_person/".$list['person_id'];
+                                 echo '<div class="pull-right btn-group-sm">
+                                <a href="'.$edit_url.'" class="btn btn-success waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="რედაქტირება">
+                                        <i class="fa fa-pencil"></i>
+                                </a>
+                                <a href="'.$del_url.'" class="btn btn-danger waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
+                                        <i class="fa fa-close"></i>
+                                </a>
+                        </div>';
+                         }
+                         ?>
 
-							<div class="info">
-								<h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
-								<p class="text-muted"><? if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
-							</div>
-						</div>
-						<div class="clearfix"></div>
-						<hr>
-						<ul class="social-links list-inline">
-							<li>
-								<a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-6">
-								<i class="fa  fa-info-circle"></i></a>
-							</li>
-							 <li>
-								<a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-7">
-								<i class="fa fa-history"></i></a>
-							</li>
+                        <div class="info">
+                                <h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
+                                <p class="text-muted"><? if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <hr>
+                        <ul class="social-links list-inline">
+                        <li>
+                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-6">
+                        <i class="fa  fa-info-circle"></i></a>
+                        </li>
+                         <li>
+                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-7">
+                        <i class="fa fa-history"></i></a>
+                        </li>
 							
 						</ul>
 					</div> <!-- panel-body -->
@@ -270,23 +270,23 @@
                             </div> <!-- col -->
                         <div class="row">
                           <div class="col-sm-12">
-                                  <ul class="pagination pull-right">
-                                          <li>
-                                            <a href="#" aria-label="Previous">
-                                                  <i class="fa fa-angle-left"></i>
-                                            </a>
-                                          </li>
-                                          <li><a href="#">1</a></li>
-                                          <li class="active"><a href="#">2</a></li>
-                                          <li><a href="#">3</a></li>
-                                          <li class="disabled"><a href="#">4</a></li>
-                                          <li><a href="#">5</a></li>
-                                          <li>
-                                            <a href="#" aria-label="Next">
-                                                  <i class="fa fa-angle-right"></i>
-                                            </a>
-                                          </li>
-                                  </ul>
+                        <ul class="pagination pull-right">
+                                <li>
+                                  <a href="#" aria-label="Previous">
+                                        <i class="fa fa-angle-left"></i>
+                                  </a>
+                                </li>
+                                <li><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li class="disabled"><a href="#">4</a></li>
+                                <li><a href="#">5</a></li>
+                                <li>
+                                  <a href="#" aria-label="Next">
+                                        <i class="fa fa-angle-right"></i>
+                                  </a>
+                                </li>
+                        </ul>
                           </div>
                   </div>
                         </div>

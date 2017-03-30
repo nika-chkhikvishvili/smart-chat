@@ -116,7 +116,7 @@
                             <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
-                            <div class="dropdown">
+                           <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
@@ -144,38 +144,56 @@
                 <!-- Start content -->
                 <div class="content">
                     <div class="container">
-					<div class="row">
-					<div class="col-md-12">
-						<div class="panel panel-default">
+                    <div class="row">
+                    <div class="col-md-12">
+                    <div class="panel panel-default">
 		<div class="panel-heading"><h3 class="panel-title">ახალი შაბლონის დამატება</h3></div>
 		<div class="panel-body">
-<div class="form">
+<?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-warning">', '</div></div>'); ?>
+<?php if(!empty($error_message)) {  echo '<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-warning">'.$error_message.'</div></div>'; }?> 
+
+
+                    
+                    <div class="form"> 
+  
  <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="">
   <div class="form-group">
     <label for="cname" class="control-label col-lg-2">სერვისის დასახელება</label>
     <div class="col-lg-9">
-       <select class="select2 form-control" data-placeholder="Choose a Country..." name="repo_categories">
-        <option value="#">აირჩიეთ სერვისი</option>
+       <select class="select2 form-control" data-placeholder="Choose a Country..." name="service_id">
+        <option value="0">ყველა სერვისისთვის</option>
           <?php 
-                foreach ($sql_institutions as $institutions):														  
+                foreach ($get_sql_services as $institutions):														  
           ?>
-          <option value="<?php echo $institutions['repo_category_id'];?>"><?php echo $institutions['category_name'];?></option>
+          <option value="<?php echo $institutions['repo_category_id'];?>"><?php echo $institutions['service_name_geo'];?></option>
           <?php endforeach; ?>
    </select>
     </div>
   </div>
-    <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">შაბლონური შეტყობინება</label>
-    <div class="col-lg-9">
-            <input class="form-control" id="cname" name="service_name" type="text" required="" aria-required="true">
-    </div>
-    </div>
+<div class="form-group">
+<label for="cname" class="control-label col-lg-2">შაბლონის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="template_text_ge" type="text">
+</div>
+</div>
+<div class="form-group">
+<label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="template_text_ru" type="text" >
+</div>
+</div>
+<div class="form-group">
+<label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="template_text_en" type="text" >
+</div>
+</div>  
 
 		
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
-   <input type="submit" class="btn btn-primary" type="submit" name="add_service" value="შენახვა" />
-   <input type="reset" class="btn btn-danger" type="submit"  value="გასუფთავება" />
+   <input type="submit" class="btn btn-primary" type="submit" name="add_tem" value="შენახვა" />
+   <input type="reset" class="btn btn-danger" type="submit"   value="გასუფთავება" />
 </div>
 </div>
 </form>
@@ -240,34 +258,48 @@
                                     <div class="panel-heading">
                                         <h3 class="panel-title">შაბლონები</h3>
                                     </div>
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <div class="table-responsive">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>                                                               
-                                                                <th>შაბლონური შეტყობინება</th>
-                                                                <th>კატეგორია</th>
-                                                                <th>ენა</th>                                                                
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                
-                                                                <td>მოგესალმებით რით შემიძლია დაგეხმაროთ?</td>
-                                                                <td>ყველა</td>
-                                                                <td>ქართული</td>
-                                                                
-                                                            </tr>
-                                                           
-                                                            
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>                                                               
+                                        <th>ქართული</th>
+                                        <th>რუსული</th>
+                                        <th>ინგლისური</th>
+                                        <th>კატეგორია</th>
+                                        <th>ქმედება</th>                                                                
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                      <?php
+                                        if(!empty($get_sql_templates))
+                                        {                                           
+                                            foreach ($get_sql_templates as $templates):
+                                        
+                                    ?>
+                                    <tr>                                                                
+                                        <td><?php echo $templates['template_text_ge']; ?></td>
+                                        <td><?php echo $templates['template_text_ru']; ?></td>
+                                        <td><?php echo $templates['template_text_en']; ?></td>                                        
+                                        <td><?php echo $templates['service_name_geo']; ?></td>
+                                        <td>
+                                            <a href="<?php echo $templates['message_templates_id']; ?>">რედაქტირება</a>
+                                            <a href="<?php echo $templates['message_templates_id']; ?>">წაშლა</a>
+                                        </td>
+                                         
+                                    </tr>
+                                    <?php
+                                    endforeach; }
+                                    ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
                                 </div>
                             </div>
                         </div> <!-- End row -->
@@ -324,6 +356,10 @@
         <!-- Modal-Effect -->
         <script src="<?=base_url();?>assets/plugins/modal-effect/js/classie.js"></script>
         <script src="<?=base_url();?>assets/plugins/modal-effect/js/modalEffects.js"></script>
+        
+        <script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/notifications/notify-metro.js"></script>
+        <script src="<?=base_url();?>assets/plugins/notifications/notifications.js"></script>
     
     </body>
 

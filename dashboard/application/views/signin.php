@@ -9,7 +9,7 @@
 		<link href="<?=base_url();?>resources/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
     body {
-    background-color: white;
+    background-color:	#808080;
 }
 
 #loginbox {
@@ -74,8 +74,8 @@
   height: 100%;
 }
     </style>
-    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="<?=base_url();?>assets/singin/jquery-1.10.2.min.js"></script>
+    <script src="<?=base_url();?>assets/singin/bootstrap.min.js"></script>
 
 </head>
 <body>

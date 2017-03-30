@@ -23,16 +23,16 @@
 <div class="sidebar-inner slimscrollleft">
 <div class="user-details">
 <div class="pull-left">
-        <img src="<?=base_url();?>assets/images/users/avatar-1.jpg" alt="" class="thumb-md img-circle">
+       <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
 </div>
 <div class="user-info">
 <div class="dropdown">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
 <ul class="dropdown-menu">
-        <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
-        <li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>
-        <li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>
-        <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> Logout</a></li>
+    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
+    <li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>
+    <li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>
+    <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> Logout</a></li>
 </ul>
 </div>
 
@@ -78,9 +78,21 @@
 		<div class="form-group">
                 <label for="cname" class="control-label col-lg-2">სერვისის დასახელება</label>
                 <div class="col-lg-9">
-                        <input class="form-control" id="cname" name="service_name" value="<?=$service['service_name']?>" type="text" required="" aria-required="true">
+                        <input class="form-control" id="cname" name="service_name_geo" value="<?=$service['service_name_geo']?>" type="text" required="" aria-required="true">
                 </div>
 		</div>
+                <div class="form-group">
+                <label for="cname" class="control-label col-lg-2">სერვისის დასახელება <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
+                <div class="col-lg-9">
+                        <input class="form-control" id="cname" name="service_name_rus" value="<?=$service['service_name_rus']?>" type="text" >
+                </div>
+                </div>
+                <div class="form-group">
+                <label for="cname" class="control-label col-lg-2">სერვისის დასახელება <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
+                <div class="col-lg-9">
+                        <input class="form-control" id="cname" name="service_name_eng" value="<?=$service['service_name_eng']?>"  type="text" >
+                </div>
+                </div>  
 		 <div class="form-group">
                 <label for="cname" class="control-label col-lg-2" data-toggle="tooltip" data-placement="top" title="სამუშაო საათები 00:00 დან 00:00 მდე იგულისხმება 24 საათიანი მომსახურება">სამუშაო საათები</label>
                 <div class="col-lg-3">

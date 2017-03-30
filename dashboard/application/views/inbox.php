@@ -113,15 +113,16 @@
                 <div class="sidebar-inner slimscrollleft">
                     <div class="user-details">
                         <div class="pull-left">
-                            <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+                          <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
-                          <div class="dropdown">
+                           <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> პროფილი<div class="ripple-wrapper"></div></a></li>
-                                    
-                                    <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> გასვლა</a></li>
+                                    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
+                                    <li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>
+                                    <li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>
+                                    <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> Logout</a></li>
                                 </ul>
                             </div>
                             
@@ -144,80 +145,124 @@
                 <div class="content">
                     <div class="container">
                         <!-- Start Widget -->
-                         <div class="row">
+                         <!-- Page-Title -->
+                        <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title">უწყების მართვა</h3></div>
-                                    <div class="panel-body">									
-                                    <?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-danger">', '</div></div>'); ?>
-																	
-                                    <div class="form">
-                                    <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="" ">
-                                            <div class="form-group">
-                                                    <label for="cname" class="control-label col-lg-2">უწყების დასახელება</label>
-                                                    <div class="col-lg-9">
-                                                            <input class="form-control" id="cname" name="institution_name" type="text" required="" aria-required="true">
-                                                    </div>
-                                            </div>
-                                            <div class="form-group">
-                                                    <div class="col-lg-offset-2 col-lg-9">
-                                                    <input type="submit" class="btn btn-primary" type="submit" name="add_institution" value="შენახვა" />
-                                                    <input type="reset" class="btn btn-danger" type="submit"  value="გასუფთავება" />
-                                                    </div>
-                                            </div>
-                                            <div class="col-lg-offset-2 col-lg-9"><div id="msg" class="alert">                                         
+                                <h4 class="pull-left page-title">შეტყობინებები</h4>
+                             
+                            </div>
+                        </div>
 
-                                    </div></div>		
-                                    </form>
-										 
-                                        </div> <!-- .form -->
-                                    </div> <!-- panel-body -->
-                                </div> <!-- panel -->
-                            </div> <!-- col -->
-							 <div class="col-md-12">
-                                <div class="panel panel-default">
-                                 
-                                    <div class="panel-body">
-									<div class="portlet">
-										<div class="portlet-heading bg-info">
-                                        <h3 class="portlet-title">
-                                        ჩართული უწყებები
-                                        </h3>
-											<div class="portlet-widgets">
-												<a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
-												<span class="divider"></span>
-												<a data-toggle="collapse" data-parent="#accordion1" href="#bg-success"><i class="ion-minus-round"></i></a>
-												<span class="divider"></span>
-												<a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
-											</div>
-											<div class="clearfix"></div>
-										</div>
-									   <div id="bg-success" class="panel-collapse collapse in">
-									   <div class="portlet-body">
-									<table id="employee_grid" class="table table-condensed table-hover table-striped bootgrid-table" width="60%" cellspacing="0">
-								   <tbody id="_editable_table">
-									  <?php foreach($get_institutions as $res) :?>
-									  <tr data-row-id="<?php echo $res['repo_category_id'];?>">
-										 <td class="editable-col" contenteditable="true" col-index='0' oldVal ="<?php echo $res['category_name'];?>"><?php echo $res['category_name'];?></td>
-										  <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
-									  </tr>
-									<?php endforeach;?>
-									   </tbody>
-									</table>
-									</div>
-									</div>
-									</div>
-                                        <div class="dd" id="nestable_list_3">
-                                              <ol class="dd-list">
-											 
-										  
-                                              </ol>
-                                          </div>
+                        <div class="row">
+                        
+                            <!-- Left sidebar -->
+                            <div class="col-lg-3 col-md-4">
+                                <a href="email-compose.html" class="btn btn-danger waves-effect waves-light btn-block">ახალი შეტყობინება</a>
+                                <div class="panel panel-default p-0 m-t-20">
+                                    <div class="panel-body p-0">
+                                        <div class="list-group mail-list">
+                                          <a href="#" class="list-group-item no-border active"><i class="fa fa-download m-r-5"></i>სულ შემოსული <b>(8)</b></a>
+                                          <a href="#" class="list-group-item no-border"><i class="fa fa-star-o m-r-5"></i>პასუხის მოლოდინში</a>                                          
+                                          <a href="#" class="list-group-item no-border"><i class="fa fa-paper-plane-o m-r-5"></i>გაგზავნილი</a>                                         
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-						<!-- end row -->
+                            <!-- End Left sidebar -->
+                        
+                            <!-- Right Sidebar -->
+                            <div class="col-lg-9 col-md-8">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="btn-toolbar" role="toolbar">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-inbox"></i></button>                                                
+                                                <button type="button" class="btn btn-primary waves-effect waves-light"><i class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- End row -->
+                                
+<div class="panel panel-default m-t-20">
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-hover mails">
+                <tbody>
+                    <tr>
+                        <td class="mail-select">
+                            <div class="checkbox checkbox-primary">
+                                <input id="checkbox1" type="checkbox" checked="checked">
+                                <label for="checkbox1">
+
+                                </label>
+                            </div>
+                        </td>
+                        <td class="mail-rateing">
+                            <i class="fa fa-star"></i>
+                        </td>
+                        <td>
+                            <a href="#">სულხან-საბა ორბელიანი</a>
+                        </td>
+                        <td>
+                            <a href="#"><i class="fa fa-circle text-info m-r-15"></i>მოგზაურობა ევროპაში</a>
+                        </td>
+                        <td>
+                            
+                        </td>
+                        <td class="text-right">
+                            07:23 AM
+                        </td>
+                    </tr>
+                    <tr class="active">
+                        <td class="mail-select">
+                            <div class="checkbox checkbox-primary">
+                                <input id="checkbox3" type="checkbox">
+                                <label for="checkbox3">
+
+                                </label>
+                            </div>
+                        </td>
+                        <td class="mail-rateing">
+                            <i class="fa fa-star"></i>
+                        </td>
+                        <td>
+                            <a href="<?=base_url();?>dashboard/read_inbox">ლუკა რაზიკაშვილი</a>
+                        </td>
+                        <td>
+                            <a href="<?=base_url();?>dashboard/read_inbox"><i class="fa fa-circle text-purple m-r-15"></i>ზოგი რამ ფიქრებიდან</a>
+                        </td>
+                        <td>
+                           
+                        </td>
+                        <td class="text-right">
+                            03:00 AM
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+                                        
+                                        <hr>
+                                        
+                                        <div class="row">
+                                            <div class="col-xs-7">
+                                                
+                                            </div>
+                                            <div class="col-xs-5">
+                                                <div class="btn-group pull-right">
+                                                  <button type="button" class="btn btn-default waves-effect"><i class="fa fa-chevron-left"></i></button>
+                                                  <button type="button" class="btn btn-default waves-effect"><i class="fa fa-chevron-right"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                    </div> <!-- panel body -->
+                                </div> <!-- panel -->
+                            </div> <!-- end Col-9 -->
+                        
+                        </div><!-- End row -->
+                     <!-- end row -->
 
                     </div> <!-- container -->
                                

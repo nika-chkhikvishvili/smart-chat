@@ -19,7 +19,7 @@
                 <div class="sidebar-inner slimscrollleft">
                     <div class="user-details">
                         <div class="pull-left">
-                            <img src="assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+                           <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
                             <div class="dropdown">

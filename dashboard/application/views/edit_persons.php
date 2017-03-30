@@ -50,7 +50,7 @@
                            <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
-                            <div class="dropdown">
+                           <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
@@ -101,51 +101,58 @@
     <?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-danger">', '</div></div>'); ?>
 
        <div class="form">
-           <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="#" novalidate="novalidate">
+           <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="" novalidate="novalidate">
                <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">სახელი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="first_name" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="first_name" type="text" value="<?php echo $edit_person['first_name'];?>" required="" aria-required="true">
                    </div>
                </div>
-                                                                <div class="form-group">
+                   <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">გვარი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="last_name" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="last_name" value="<?php echo $edit_person['last_name'];?>" type="text" required="" aria-required="true">
                    </div>
                </div>
-                                                               <div class="form-group">
+                   <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">მეტსახელი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="nickname" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="nickname" value="<?php echo $edit_person['nickname'];?>" type="text" required="" aria-required="true">
                    </div>
                </div>
                <div class="form-group">
                    <label for="cemail" class="control-label col-lg-2">ელ-ფოსტა (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cemail" type="text" name="person_mail" required="" aria-required="true">
+                       <input class="form-control" id="cemail" type="text" name="person_mail" value="<?php echo $edit_person['email'];?>" required="" aria-required="true">
                    </div>
                </div>
                <div class="form-group">
                    <label for="curl" class="control-label col-lg-2">დაბადების თარიღი</label>
                    <div class="col-lg-10">
-                      <input type="text" placeholder="" name="birthday" data-mask="99-99-9999" class="form-control">
-                                                                          <span class="help-inline">რიცხვი - თვე - წელი</span>
+                       <?php
+                        $birth_date2 = "";
+                        if(!empty($edit_person['birth_date'])){
+                        $birth_date = explode("-", $edit_person['birth_date']);
+                        $birth_date2 = $birth_date[2]."-".$birth_date[1]."-".$birth_date[0];
+                        }
+                       ?>
+                      <input type="text" placeholder="" name="birthday" data-mask="99-99-9999" value="<?php echo $birth_date2;?>" class="form-control">
+                      <span class="help-inline">რიცხვი - თვე - წელი</span>
                    </div>
                </div>
-                                                                       <div class="form-group">
+                   <div class="form-group">
                    <label for="curl" class="control-label col-lg-2">ტელეფონის ნომერი</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="curl" type="text" name="phone">
+                   <input class="form-control" id="curl" type="text" name="phone" value="<?php echo $edit_person['phone'];?>">
                    </div>
-               </div>
+                    </div>
 
                    <div class="form-group">
                    <label for="ccomment" class="control-label col-lg-2"></label>
                    <div class="col-lg-10">
                    <div class="panel-heading"> 
                    </div>
-                                       <!-- სისტემური პარამეტრები -->
+                   <!-- სისტემური პარამეტრები -->
                    <div class="col-md-6">
                     <div class="panel panel-border  panel-danger">
                         <div class="panel-heading"> 
@@ -153,25 +160,31 @@
                         </div> 
                         <div class="panel-body"> 
                         <?php
-                             if(!empty($zlib_roles)){
-                                     foreach ($zlib_roles as $roles):
-
+                     
+                       if(!empty($zlib_roles)){
+                       
+                       foreach ($zlib_roles as $roles):
+                          
                         ?>
                         <div class="checkbox checkbox-danger checkbox-circle">
-                                <input id="checkbox-<?=$roles['role_id'];?>" name="<?=$roles['role_id'];?>" value="<?=$roles['role_id'];?>" type="checkbox">
-                                <label for="checkbox-<?=$roles['role_id'];?>">
-                                  <?=$roles['role_description'];?>
-                                </label>
+                        <input id="checkbox-<?=$roles['role_id'];?>" name="roles[<?=$roles['role_id'];?>]" value="<?=$roles['role_id'];?>" type="checkbox" <?php foreach ($edit_person_role as $sel) {
+                            if ($roles['role_id']==$sel['role_id'])
+                            {
+                               echo  "checked";
+                        }} ?> > 
+                         <label for="checkbox-<?=$roles['role_id'];?>">
+                           <?=$roles['role_description'];?>
+                         </label>
                             </div>
-                                                                    <?php
-                                                                            endforeach; }
-                                                                    ?>
+                            <?php
+                                      endforeach; }
+                            ?>
                         </div> 
                     </div>
                 </div>
                                     <!-- სისტემური პარამეტრები -->
                                     <!-- საკურატორო სერვისები -->
-<div class="col-md-6">
+                                <div class="col-md-6">
                                 <div class="panel panel-border panel-info">
                                     <div class="panel-heading"> 
                                         <h3 class="panel-title">მონიშნეთ მომხმარებლის საკურატორო სერვისები</h3> 
@@ -181,7 +194,11 @@
                                             foreach ($get_sql_services as $services):										
                                             ?>
                                             <div class="checkbox checkbox-info checkbox-circle">
-                                            <input id="checkbox2-<?php echo $services['category_service_id'];?>" name="<?php echo $services['category_service_id'];?>" value="<?php echo $services['category_service_id'];?>" type="checkbox">
+                                            <input id="checkbox2-<?php echo $services['category_service_id'];?>" name="service[<?php echo $services['category_service_id'];?>]" value="<?php echo $services['category_service_id'];?>" type="checkbox" <?php foreach ($edit_person_services as $sel) {
+                            if ($services['category_service_id']==$sel['service_id'])
+                            {
+                               echo  "checked";
+                        }} ?>>
                                             <label for="checkbox2-<?php echo $services['category_service_id'];?>">
                                             <?php echo $services['service_name_geo']; ?>
                                             </label>
@@ -195,7 +212,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-lg-offset-2 col-lg-10">
-                                <input type="submit"  class="btn btn-primary"  name="add_person" value="მომხმარებლის დამატება">
+                                <input type="submit"  class="btn btn-primary"  name="update_person" value="ინფორმაციის განახლება">
                             </div>
                         </div>
                     </form>
