@@ -41,11 +41,29 @@
 $route['default_controller'] = "welcome";
 $route['404_override'] = '';
 $route['resetpass'] = 'welcome/resetpass';
-$route['^(add_institution)(/:any)?$'] = 'dashboard/$0';
-$route['^(add_services)(/:any)?$'] = 'dashboard/$0';
-$route['^(persons)(/:any)?$'] = 'dashboard/$0';
-$route['^(add_person)(/:any)?$'] = 'dashboard/$0';
 $route['^(message_templates)(/:any)?$'] = 'dashboard/$0';
+$route['^(system)(/:any)?$'] = 'dashboard/$0';
+$route['^(inbox)(/:any)?$'] = 'dashboard/$0';
+$route['^(read_inbox)(/:any)?$'] = 'dashboard/$0';
+
+
+
+
+// institution routes
+$route['^()(/:any)?$'] = 'istitution/$0';
+$route['^(update_institution)(/:any)?$'] = 'istitution/$0';
+$route['^(delete_institution)(/:any)?$'] = 'istitution/$0';
+
+// service routes
+$route['^()(/:any)?$'] = 'services/$0';
+$route['^(delete_service)(/:any)?$'] = 'istitution/$0';
+$route['^(delete_institution)(/:any)?$'] = 'istitution/$0';
+// persons routes
+$route['^()(/:any)?$'] = 'persons/$0';
+
+// institution routes
+$route['^()(/:any)?$'] = 'messagetemplate/$0';
+
 #$route['^(update_service)(/:any)?$'] = 'dashboard/$0';
 
 /* End of file routes.php */
