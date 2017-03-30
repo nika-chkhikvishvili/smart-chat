@@ -8,7 +8,7 @@ class dashboard_model extends CI_Model{
         parent::__construct();
     }
 
-    // institution
+// institution
     public function get_institutions($repo_id){
         $this->db->select('*');
         $this->db->from('repo_categories');
@@ -36,16 +36,16 @@ class dashboard_model extends CI_Model{
 
     function update_institution($id, $value){
         $this->db->set('category_name', $value);
-        $this->db->where('repo_categories_id', $id);
+        $this->db->where('repo_category_id', $id);
         $this->db->update('repo_categories');
 
     }
 
     function delete_institution($id){
-        $this->db->delete('repo_categories', array('repo_categories_id' => $id));
-        $this->db->delete('category_services', array('repo_categories_id' => $id));
+        $this->db->delete('repo_categories', array('repo_category_id' => $id));
+        $this->db->delete('category_services', array('repo_category_id' => $id));
     }
-    // institution
+// end of  institution
 
     // services
     public function get_services($repo_id){
@@ -94,7 +94,7 @@ class dashboard_model extends CI_Model{
     function delete_services($id){
         $this->db->delete('category_services', array('category_service_id' => $id));
     }
-
+    
     // services
 
 
@@ -106,19 +106,48 @@ class dashboard_model extends CI_Model{
 	
 	function get_all_zlib_roles()
 	{
-		$this->db->select('*');
+	$this->db->select('*');
         $this->db->from('zlib_roles');      
         $query = $this->db->get();
         return $query->result_array();
 	}
 	
-	 public function get_persons(){
+    // persons    
+    public function get_persons(){
         $this->db->select('*');
         $this->db->from('persons');
         #$this->db->where('is_admin', 0);
         $query = $this->db->get();
         return $query->result_array();
 
+    }
+    
+    function get_one_preson($person_id)
+    {
+        $this->db->select('*');
+        $this->db->from('persons');       
+        $this->db->where('person_id', $person_id);
+        $query = $this->db->get();
+        return $query->row_array();
+        
+    }
+    
+    function get_one_preson_role($person_id)
+    {
+        $this->db->select('*');
+        $this->db->from('person_roles');       
+        $this->db->where('person_id', $person_id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
+    function get_one_preson_services($person_id)
+    {
+        $this->db->select('*');
+        $this->db->from('person_services');       
+        $this->db->where('person_id', $person_id);
+        $query = $this->db->get();
+        return $query->result_array();
     }
 	
 	function add_person($person_data){
@@ -138,5 +167,41 @@ class dashboard_model extends CI_Model{
         return $this->db->insert_id();
 
     }
-
+    
+    function update_person($id,$data)
+    {
+        $this->db->where('person_id', $id);
+        $this->db->update('persons', $data);
+    }
+    
+    function delete_person_role($id)
+    {
+        $this->db->where('person_id', $id);
+        $this->db->delete('person_roles'); 
+    }
+    
+    function delete_person_service($id)
+    {
+        $this->db->where('person_id', $id);
+        $this->db->delete('person_services'); 
+    }
+   // end of persons
+    
+    
+    // message templates
+    function add_message_template($data)
+    {
+       $this->db->insert('message_templates', $data);
+       return $this->db->insert_id();
+    }
+    
+    function get_message_templates()
+    {
+        $this->db->select('*');
+        $this->db->from('message_templates');
+        $this->db->join('category_services', 'category_services.category_service_id = message_templates.service_id');        
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    // end of message templates
 }
