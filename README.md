@@ -1,5 +1,5 @@
 #smartchat
-
+|...|
 
 ## nodeJS setup instruction
 `$ cd /var/www/`
