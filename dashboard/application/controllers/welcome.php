@@ -91,6 +91,18 @@ class Welcome extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('resetpass');
         }
+ else {
+     echo $this->input->post('post_mail');
+    
+    $this->load->library('email');
+    $this->email->from('your@example.com', 'Res Password!');
+    $this->email->to($this->input->post('post_mail'));   
+
+    $this->email->subject('Email Test');
+    $this->email->message('Testing the email class.');
+
+    $this->email->send();
+ }
 
     }
 }
