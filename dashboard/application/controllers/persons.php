@@ -65,8 +65,8 @@ class Persons extends CI_Controller{
                 'repo_id' => $session_data->repo_id
                 );
                 $this->load->library('email');
-                $this->email->from('your@example.com', 'Your Name');
-                $this->email->to('someone@example.com');
+                $this->email->from('smartchat@cloud.gov.ge', 'SMARTCHAT');
+                $this->email->to($this->input->post('person_mail'));
 
                 $this->email->subject('SmartChat Account Activation');
                 $this->email->message('თქვენი ანგარიში გააქტიურებულია სისტემაში, მისამართი https://dashboard-smartchat.cloud.gov.ge \n'
