@@ -54,12 +54,13 @@ class Persons extends CI_Controller{
                         $birth_date2 ="";
                 }
                 $password = self::randomPassword(6,1,"lower_case,upper_case,numbers");
+                $pass = $password[0];
                 $person_data = array(
                 'first_name' => $this->input->post('first_name'),
                 'last_name' => $this->input->post('last_name'),
                 'nickname' => $this->input->post('nickname'),
                 'email' => $this->input->post('person_mail'),
-                'person_password' => md5($password[0]),    
+                'person_password' => md5($pass),    
                 'birth_date' => $birth_date2,
                 'repo_id' => $session_data->repo_id
                 );
@@ -69,7 +70,7 @@ class Persons extends CI_Controller{
 
                 $this->email->subject('SmartChat Account Activation');
                 $this->email->message('თქვენი ანგარიში გააქტიურებულია სისტემაში, მისამართი https://dashboard-smartchat.cloud.gov.ge \n'
-                        . ' მომხმარებელი : $this->input->post("person_mail") \n პაროლი : '.$password[0].' ');
+                        . ' მომხმარებელი : $this->input->post("person_mail") \n პაროლი : '.$pass.' ');
                 $this->email->send();
                 
                 
