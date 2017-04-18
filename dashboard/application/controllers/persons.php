@@ -40,7 +40,7 @@ class Persons extends CI_Controller{
                 'required',
                 array('required' => $this->lang->line('required')));
             
-            $this->form_validation->set_rules(
+                $this->form_validation->set_rules(
                 'person_mail', 'ელ-ფოსტა',
                 'required|valid_email',
                 array('required' => $this->lang->line('required')));
@@ -53,15 +53,27 @@ class Persons extends CI_Controller{
                 else {
                         $birth_date2 ="";
                 }
+                $password = self::randomPassword(6,1,"lower_case,upper_case,numbers");
+                $pass = $password[0];
                 $person_data = array(
                 'first_name' => $this->input->post('first_name'),
                 'last_name' => $this->input->post('last_name'),
                 'nickname' => $this->input->post('nickname'),
                 'email' => $this->input->post('person_mail'),
+                'person_password' => md5($pass),    
                 'birth_date' => $birth_date2,
                 'repo_id' => $session_data->repo_id
                 );
+                $this->load->library('email');
+                $this->email->from('your@example.com', 'Your Name');
+                $this->email->to($this->input->post('person_mail'));
 
+                $this->email->subject('SmartChat Account Activation');
+                $this->email->message('თქვენი ანგარიში გააქტიურებულია სისტემაში, მისამართი https://dashboard-smartchat.cloud.gov.ge \n'
+                        . ' მომხმარებელი : $this->input->post("person_mail") \n პაროლი : '.$pass.' ');
+                $this->email->send();
+                
+                
                 $person_id = $this->dashboard_model->add_person($person_data);
 
                 foreach ($data['zlib_roles'] as $get_roles){
@@ -117,7 +129,7 @@ class Persons extends CI_Controller{
         'last_name' => $this->input->post('last_name'),
         'nickname' => $this->input->post('nickname'),
         'phone' => $this->input->post('phone'),
-        'email' => $this->input->post('person_mail'),
+        'email' => $this->input->post('person_mail'),        
         'birth_date' => $birth_date2        
         );
         $this->dashboard_model->update_person($edit_person_id,$person_data);
@@ -152,6 +164,40 @@ class Persons extends CI_Controller{
      }    
      $this->load->view('edit_persons', $data);
     }
+    
+public function randomPassword($length,$count, $characters) {
+ 
+ 
+// define variables used within the function    
+    $symbols = array();
+    $passwords = array();
+    $used_symbols = '';
+    $pass = '';
+ 
+// an array of different character types    
+    $symbols["lower_case"] = 'abcdefghijklmnopqrstuvwxyz';
+    $symbols["upper_case"] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $symbols["numbers"] = '1234567890';
+    $symbols["special_symbols"] = '!?~@#-_+<>[]{}';
+ 
+    @$characters = split(",",$characters); // get characters types to be used for the passsword
+    foreach ($characters as $key=>$value) {
+        $used_symbols .= $symbols[$value]; // build a string with all characters
+    }
+    $symbols_length = strlen($used_symbols) - 1; //strlen starts from 0 so to get number of characters deduct 1
+     
+    for ($p = 0; $p < $count; $p++) {
+        $pass = '';
+        for ($i = 0; $i < $length; $i++) {
+            $n = rand(0, $symbols_length); // get a random character from the string with all characters
+            $pass .= $used_symbols[$n]; // add the character to the password string
+        }
+        $passwords[] = $pass;
+    }
+     
+    return $passwords; // return the generated password
+}
+    
 
     function logout(){
         redirect('logout');
