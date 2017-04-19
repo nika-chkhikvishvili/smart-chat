@@ -60,7 +60,6 @@ var createChatWindowAndLoadData = function(data){
         return;
     }
 
-
     $('.wrapper_chat .container_chat .left .people').append('<li class="person" data-chat="' + data.chat_uniq_id + '">'+
         '<img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />'+
         '<span class="name">'+ data.first_name + ' '+ data.last_name+'</span>'+
@@ -68,7 +67,7 @@ var createChatWindowAndLoadData = function(data){
     '<span class="preview">...</span>'+
     '</li>');
 
-    $('.wrapper_chat .container_chat .right .chats_container').append(' <div class="chat" data-chat="' + data.chat_uniq_id + '"></div>');
+    $('.wrapper_chat .container_chat .right .chats_container').append('<div> <div class="chat" data-chat="' + data.chat_uniq_id + '"></div></div>');
 
     socket.emit('getAllChatMessages', { chat_uniq_id: data.chat_uniq_id});
 
@@ -90,8 +89,6 @@ socket.on('getAllChatMessagesResponse', function (data) {
             elChatbox.append('<div class="bubble me">'+ item.chat_message + '</div>' );
         }
     });
-
-    //elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 
 });
 
@@ -159,6 +156,9 @@ $(document).ready(function () {
             $('.left .person').removeClass('active');
             $(this).addClass('active');
             $('.chat[data-chat = '+findChat+']').addClass('active-chat');
+
+            var elChatbox = $('.active-chat');
+            elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
         }
     });
 
@@ -222,21 +222,25 @@ $(document).ready(function () {
     //სასაუბრო ფანჯრის დამალვა
     $(".wrapper_chat").on('click', '.send', function (e) {
 
-        if ($('.active-chat').size() == 0) {
+        var elChatbox = $('.active-chat');
+
+        if (elChatbox.size() == 0) {
             alert('არ არის არჩეული პიროვნება');
             return ;
         }
 
         var message = $("div.write input").val();
         var id = makeRandomString();
-        var chat_uniq_id = $('.active-chat').attr('data-chat');
+        var chat_uniq_id = elChatbox.attr('data-chat');
         socket.emit('sendMessage', {
             chat_uniq_id:  chat_uniq_id ,
             message: message,
             id: id
         });
-        $('.active-chat').append('<div class="bubble me">'+ message + '</div>' );
+        elChatbox.append('<div class="bubble me">'+ message + '</div>' );
         $(".write input").val('');
+
+        elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });
 
     var dialog = $( "#template-dialog-form" ).dialog({
@@ -321,7 +325,7 @@ socket.on('message', function (data) {
 
     $(".person[data-chat = "+data.chatUniqId+"] .preview").html(shorter(data.message));
     $(".person[data-chat = "+data.chatUniqId+"] .time").html(Date().substr(16,5));
-
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 });
 
 
@@ -366,7 +370,7 @@ socket.on('getWaitingListResponse', function (data){
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
             if (value) {
-                ans = ans + '<tr><td><a href="#" onclick="return getNextWaitingClient('+key+');" '+ services[key]+ ">"+services[key]+"</a></a></td><td>";
+                ans = ans + '<tr><td>'+services[key]+"</td><td>";
                 $.each(value, function(i, val){
                     ans = ans + val.first_name+" " + val.last_name + ", ";
                 });
@@ -408,8 +412,10 @@ function addMessage(chat_uniq_id, id, message){
     var elChatbox = $("#"+chat_uniq_id + ' .msgbox_chat_area');
     elChatbox.append(msg);
 
-    var height = elChatbox[0].scrollHeight;
-    elChatbox.scrollTop(height);
+    // var height = elChatbox[0].scrollHeight;
+    // elChatbox.scrollTop(height);
+
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
 function makeRandomString() {

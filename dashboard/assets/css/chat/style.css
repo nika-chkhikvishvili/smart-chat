@@ -235,8 +235,8 @@
 .container_chat .right .chat.active-chat {
     height: 481px;
   display: block;
-  display: -webkit-flex;
-  display: flex;
+  /*display: -webkit-flex;*/
+  /*display: flex;*/
 }
 .container_chat .right .chat.active-chat .bubble {
   -moz-transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);

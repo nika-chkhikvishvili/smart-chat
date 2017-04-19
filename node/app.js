@@ -247,36 +247,20 @@ me.checkAvailableOperatorForService = function (socket, serviceId) {
 
 me.io.on('connection', function (socket) {
 
-    socket.on('clientGetServices', function () {
-        client.clientGetServices(socket);
-    });
-    socket.on('clientInitParams', function (data) {
-        client.clientInitParams(socket, data);
-    });
-    socket.on('clientCheckChatIfAvailable', function (data) {
-        client.clientCheckChatIfAvailable(socket, data);
-    });
-    socket.on('clientMessage', function (data) {
-        client.clientMessage(socket, data);
-    });
-    socket.on('clientMessageReceived', function (data) {
-        client.clientMessageReceived(socket, data);
-    });
-    socket.on('clientCloseChat', function (data) {
-        client.clientCloseChat(socket, data);
-    });
+    socket.on('clientGetServices',          function ()     {client.clientGetServices(socket);});
+    socket.on('clientInitParams',           function (data) {client.clientInitParams(socket, data);});
+    socket.on('clientCheckChatIfAvailable', function (data) {client.clientCheckChatIfAvailable(socket, data);});
+    socket.on('clientMessage',              function (data) {client.clientMessage(socket, data);});
+    socket.on('clientMessageReceived',      function (data) {client.clientMessageReceived(socket, data);});
+    socket.on('clientCloseChat',            function (data) {client.clientCloseChat(socket, data);});
 
     socket.on('test', function () {
         console.dir('test');
         socket.emit('testResponse');
     });
 
-    socket.on('checkToken', function (data) {
-        server.checkToken(socket, data);
-    });
-    socket.on('getWaitingList', function () {
-        server.getWaitingList(socket);
-    });
+    socket.on('checkToken',     function (data) {server.checkToken(socket, data);});
+    socket.on('getWaitingList', function ()     {server.getWaitingList(socket);});
     // socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
     // socket.on('getNextWaitingClient', function (data) {
     //     server.getNextWaitingClient(socket, data);
@@ -299,7 +283,6 @@ me.io.on('connection', function (socket) {
         if (socket.hasOwnProperty('user')) {
             delete me.onlineUsers[socket.user.userId].sockets[socket.id];
         }
-
         me.io.emit('userDisconnect', {
             id: socket.id
         });

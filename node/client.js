@@ -64,20 +64,23 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             var chat = {online_user_id: online_user_id, service_id: data.service_id, chat_uniq_id: chatUniqId};
             app.connection.query('INSERT INTO `chats` SET ? ', chat, function (err, res) {
                 if (err) return me.databaseError(socket, err);
+                var chatId= res.insertId;
 
-                var chatRoom = {chat_id: res.insertId, online_user_id: online_user_id};
+                var chatRoom = {chat_id: chatId, online_user_id: online_user_id};
                 app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom, function (err, res1) {
                     if (err) return me.databaseError(socket, err);
 
                     app.chatRooms[chatUniqId] = {
-                        chatId: res.insertId,
+                        chatId: chatId,
                         users : [],
                         guests: [socket.id]
                     };
                     app.waitingClients[data.service_id].push({
                         first_name: data.first_name,
                         last_name: data.last_name,
-                        chat_uniq_id: chatUniqId
+                        chat_uniq_id: chatUniqId,
+                        chat_id: chatId,
+                        online_user_id: online_user_id, service_id: data.service_id
                     });
                     //შეამოწმებს ვის შეუძლია უპასუხოს ამ კლიენტს და ავტომატურად დაამატებს ჩატში
                     app.checkAvailableOperatorForService(socket, data.service_id);

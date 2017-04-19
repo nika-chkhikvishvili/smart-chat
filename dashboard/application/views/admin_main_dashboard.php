@@ -301,12 +301,8 @@
             var socketAddr = '<?=substr(base_url(),0,-1);?>';
         </script>
         <script src="<?=base_url();?>assets/js/socket/common.js"></script>
-        <script>
-            var s = document.createElement("script");
-            s.type = "text/javascript";
-            s.src = "<?=base_url();?>assets/js/socket/dashboard.js?"+Math.random();
-            $("body").append(s);
-        </script>
+
+        <script type = "text/javascript" src="<?=base_url();?>assets/js/socket/dashboard.js?<?=rand(); ?>"></script>
     
     </body>
 

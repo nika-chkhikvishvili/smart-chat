@@ -129,7 +129,6 @@ ChatServer.prototype.checkToken = function (socket, data) {
             if (err) return app.databaseError(socket, err);
 
             var chatAns = [];
-            console.log(resChat);
             if (resChat && Array.isArray(resChat)) {
 
                 resChat.forEach(function (row) {
