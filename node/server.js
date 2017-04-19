@@ -3,62 +3,47 @@
  */
 
 var randomStringGenerator = require("randomstring");
+var log;
+var app;
 
 module.exports = ChatServer;
 
-function ChatServer (data){
+function ChatServer(data) {
     if (!(this instanceof ChatServer)) return new ChatServer(data);
-    this.connection = data.connection;
-    this.chatRooms  = data.chatRooms;
-    this.waitingClients  = data.waitingClients;
-    this.onlinePersons  = data.onlinePersons;
+    app = data;
+    log = data.log;
 }
-
-// ბაზის შეცდომის დროს
-ChatServer.prototype.databaseError = function(socket, err){
-    console.log('Error while performing Query.');
-    console.log(err);
-    socket.emit('serverError');
-};
 
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 ChatServer.prototype.getWaitingList = function (socket) {
-    var me = this;
-    var ans=[];
-    if ( me.waitingClients &&  Array.isArray(me.waitingClients)) {
-        for (i = 0; i < me.waitingClients.length; ++i) {
-            if(me.waitingClients[i]) ans[i] = me.waitingClients[i].toArray();
+    var ans = [];
+    if (app.waitingClients && Array.isArray(app.waitingClients)) {
+        for (i = 0; i < app.waitingClients.length; ++i) {
+            if (app.waitingClients[i]) ans[i] = app.waitingClients[i].toArray();
         }
     }
     socket.emit('getWaitingListResponse', ans);
-
 };
 
-ChatServer.prototype.getAllChatMessages = function (socket,data) {
-    var me = this;
-    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
-        socket.emit("getAllChatMessagesResponse",{messages: []});
-        return ;
+ChatServer.prototype.getAllChatMessages = function (socket, data) {
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
+        socket.emit("getAllChatMessagesResponse", {messages: []});
+        return;
     }
 
-
-
-
-
-
-    me.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chat_uniq_id ],  function(err, res) {
-        if (err) me.databaseError(socket, err);
+    app.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chat_uniq_id], function (err, res) {
+        if (err) app.databaseError(socket, err);
         else {
             if (res && Array.isArray(res) && res.length == 1) {
                 var chat = res[0];
-                me.connection.query('SELECT m.`chat_message_id`, m.`chat_id`, m.`person_id`, m.`online_user_id`, m.`chat_message`, m.`message_date`' +
+                app.connection.query('SELECT m.`chat_message_id`, m.`chat_id`, m.`person_id`, m.`online_user_id`, m.`chat_message`, m.`message_date`' +
                     'FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [chat.chat_id], function (err, res) {
-                    if (err) me.databaseError(socket, err);
+                    if (err) app.databaseError(socket, err);
                     else {
-                        socket.emit("getAllChatMessagesResponse", {chat_uniq_id:data.chat_uniq_id , messages: res});
+                        socket.emit("getAllChatMessagesResponse", {chat_uniq_id: data.chat_uniq_id, messages: res});
                     }
                 });
-            } else  socket.emit("getAllChatMessagesResponse",{messages: []});
+            } else  socket.emit("getAllChatMessagesResponse", {messages: []});
         }
     });
 
@@ -66,23 +51,21 @@ ChatServer.prototype.getAllChatMessages = function (socket,data) {
 
 
 // აბრუნებს მიმდინარეების სიას
-ChatServer.prototype.getActiveChats = function (socket) {
-    var me = this;
-    var ans=[];
-
-    me.connection.query('SELECT * FROM smartchat.chats where chat_status_id = 1 ', [ ], function(err, res) {
-        if (err) me.databaseError(socket, err);
-        else {
-            var ans = [];
-
-            res.forEach(function(item){
-                ans.push(item);
-            });
-            socket.emit('getActiveChatsResponse', ans);
-
-        }
-    });
-
+// ChatServer.prototype.getActiveChats = function (socket) {
+//     var app = this.app;
+//     var ans = [];
+//     app.connection.query('SELECT * FROM smartchat.chats where chat_status_id = 1 ', [], function (err, res) {
+//         if (err) app.databaseError(socket, err);
+//         else {
+//             var ans = [];
+//
+//             res.forEach(function (item) {
+//                 ans.push(item);
+//             });
+//             socket.emit('getActiveChatsResponse', ans);
+//
+//         }
+//     });
 
 
     //for (var property in me.chatRooms) {
@@ -104,133 +87,104 @@ ChatServer.prototype.getActiveChats = function (socket) {
     //
     //socket.emit('getActiveChatsResponse', ans);
 
-};
-
-//სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
-ChatServer.prototype.getNextWaitingClient = function (socket,data) {
-    var me = this;
-    var ans = {};
-    var serviceId = parseInt(data.serviceId);
-    if (isNaN(serviceId)
-        || !me.waitingClients
-        || !Array.isArray(me.waitingClients)
-        || !me.waitingClients[serviceId]
-        || me.waitingClients[serviceId].isEmpty()
-        || !socket.user
-        || !socket.user.isValid
-        || !socket.user.userId
-    ) {
-        socket.emit('getNextWaitingClientResponse', ans);
-        return ;
-    }
-
-    var waiting = me.waitingClients[serviceId].shift();
-
-    me.connection.query('UPDATE `smartchat`.`chats` SET `chat_status_id` = 1 WHERE `chat_id` = ?',[ waiting.chat_id], function(err, res) {
-        if (err)  { me.waitingClients[serviceId].unshift(waiting); me.databaseError(socket, err);  }
-        else {
-            var chatRoom = { chat_id: waiting.chat_id , person_id: socket.user.userId };
-            me.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom,  function(err, res1) {
-                if (err) me.databaseError(socket, err);
-                else {
-                    var isAdded = false;
-                    me.chatRooms[waiting.chat_uniq_id].users.forEach(function(socketId){
-                        isAdded = isAdded || ( socketId == socket.id);
-                    });
-                    if(!isAdded) {
-                        me.chatRooms[waiting.chat_uniq_id].users.push(socket.id);
-                    }
-                    ans = {
-                        chat_uniq_id : waiting.chat_uniq_id,
-                        first_name : waiting.first_name,
-                        last_name : waiting.last_name
-                    };
-
-                    socket.emit('getNextWaitingClientResponse', ans);
-                }
-            });
-        }
-    });
-
-};
+// };
 
 //ოპერატორის იდენტიფიკაცია
 ChatServer.prototype.checkToken = function (socket, data) {
-    var me = this;
     socket.user = {
         isValid: false
     };
 
-    if (!data || !data.hasOwnProperty('token') || !data.token || data.token.length <10){
-        socket.emit("checkTokenResponse",{isValid: false});
-        return ;
+    if (!data || !data.hasOwnProperty('token') || !data.token || data.token.length < 10) {
+        socket.emit("checkTokenResponse", {isValid: false});
+        return;
     }
 
-    me.connection.query('SELECT * FROM person_tokens WHERE token = ?', [data.token ],  function(err, res) {
-        if (err) me.databaseError(socket, err);
-        else {
-            if(res && Array.isArray(res) && res.length == 1){
-                var ans = res[0];
-                me.connection.query('SELECT c.chat_uniq_id, r.*, o.first_name, o.last_name FROM chat_rooms r, chats c  , online_users o ' +
-                    'where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id and r.person_id = ?', [ ans.person_id ], function(err, resChat) {
-                    if (err) me.databaseError(socket, err);
-                    else {
-                        var chatAns = [];
-                        if (resChat && Array.isArray(resChat)){
-                            resChat.forEach(function (row){
-                                chatAns.push({chatUniqId:row.chat_uniq_id,
-                                first_name: row.first_name,
-                                    last_name : row.last_name
 
-                                });
-                                if (chatRooms[row.chat_uniq_id]){
-                                    var isAdded = false;
-                                    me.chatRooms[row.chat_uniq_id].users.forEach(function(socketId){
-                                        isAdded = isAdded || ( socketId == socket.id);
-                                    });
-                                    if(!isAdded) {
-                                        me.chatRooms[row.chat_uniq_id].users.push(socket.id);
-                                    }
-                                }
-                            })
-                        }
-                        socket.user= {
-                            userId : ans.person_id,
-                            isValid: true
-                        };
-                        socket.emit("checkTokenResponse",{isValid: true, ans: chatAns});
-                    }
-                });
-            } else   socket.emit("checkTokenResponse",{isValid: false});
+    app.connection.query('SELECT history_person_id as person_id  FROM xlog_login_history WHERE php_session_id = ?', [data.token], function (err, res) {
+        if (err) return app.databaseError(socket, err);
+
+        if (!(res && Array.isArray(res) && res.length == 1)) {
+            socket.emit("checkTokenResponse", {isValid: false});
+            return;
         }
+
+        var ans = res[0];
+
+        if (!app.onlineUsers.hasOwnProperty(ans.person_id)) {
+            app.onlineUsers[ans.person_id] = {
+                isAdmin : false,
+                sockets : {},
+                tokens : { }
+            };
+        }
+
+        var user = app.onlineUsers[ans.person_id];
+
+        if (!user.sockets.hasOwnProperty(socket.id)) user.sockets[socket.id] = null;
+        if (!user.tokens.hasOwnProperty(data.token)) user.tokens[data.token] = null;
+
+        app.connection.query('SELECT c.chat_uniq_id, r.*, o.first_name, o.last_name FROM chat_rooms r, chats c  , online_users o ' +
+            'where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id and r.person_id = ?', [ans.history_person_id], function (err, resChat) {
+            if (err) return app.databaseError(socket, err);
+
+            var chatAns = [];
+            if (resChat && Array.isArray(resChat)) {
+                resChat.forEach(function (row) {
+                    chatAns.push({
+                        chatUniqId: row.chat_uniq_id,
+                        first_name: row.first_name,
+                        last_name: row.last_name
+
+                    });
+
+                    if (app.chatRooms[row.chat_uniq_id]) {
+                        var isAdded = false;
+                        app.chatRooms[row.chat_uniq_id].users.forEach(function (socketId) {
+                            isAdded = isAdded || ( socketId == socket.id);
+                        });
+                        if (!isAdded) {
+                            app.chatRooms[row.chat_uniq_id].users.push(socket.id);
+                        }
+                    }
+                })
+            }
+            socket.user = {
+                userId: ans.person_id,
+                isValid: true
+            };
+            socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
+
+        });
+
+
     });
 };
 
 
 //ოპერატორის მიერ აკრეფილი ტექსტი, გაეგზავნება ყველას ოთახში ვინც არის
-ChatServer.prototype.sendMessage = function (socket, data, sendMessageToRoom) {
-    var me = this;
-    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
-        socket.emit("sendMessageResponse",{isValid: false, error: 'chat_uniq_id',data:data});
-        return ;
+ChatServer.prototype.sendMessage = function (socket, data) {
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
+        socket.emit("sendMessageResponse", {isValid: false, error: 'chat_uniq_id', data: data});
+        return;
     }
 
 
-    if (!me.chatRooms || !me.chatRooms.hasOwnProperty(data.chat_uniq_id)) {
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chat_uniq_id)) {
         socket.emit("sendMessageResponse", {isValid: false, error: 'chatRooms'});
         return;
     }
 
 
-    var chat = me.chatRooms[data.chat_uniq_id];
+    var chat = app.chatRooms[data.chat_uniq_id];
 
-    var chatMessage = { chat_id: chat.chatId, person_id: socket.user.userId, chat_message: data.message };
+    var chatMessage = {chat_id: chat.chatId, person_id: socket.user.userId, chat_message: data.message};
 
-    me.connection.query('INSERT INTO `chat_messages` SET ? ', chatMessage, function(err, res) {
-        if (err) me.databaseError(socket, err);
+    me.connection.query('INSERT INTO `chat_messages` SET ? ', chatMessage, function (err, res) {
+        if (err) app.databaseError(socket, err);
         else {
-            sendMessageToRoom(socket, data.chat_uniq_id, res.insertId, data.message, data.id);
-            socket.emit("sendMessageResponse",{isValid: true });
+            app.sendMessageToRoom(socket, data.chat_uniq_id, res.insertId, data.message, data.id);
+            socket.emit("sendMessageResponse", {isValid: true});
         }
     });
 };
@@ -238,76 +192,73 @@ ChatServer.prototype.sendMessage = function (socket, data, sendMessageToRoom) {
 
 //ოპერატორის მიერ პიროვნების დაბლოკვა
 ChatServer.prototype.banPerson = function (socket, data) {
-    var me = this;
-    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
-        socket.emit("banPersonResponse",{isValid: false, error: 'chat_uniq_id',data:data});
-        return ;
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
+        socket.emit("banPersonResponse", {isValid: false, error: 'chat_uniq_id', data: data});
+        return;
     }
 
 
-    if (!me.chatRooms || !me.chatRooms.hasOwnProperty(data.chat_uniq_id)) {
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chat_uniq_id)) {
         socket.emit("banPersonResponse", {isValid: false, error: 'chatRooms'});
         return;
     }
 
     var chatId = me.chatRooms[data.chat_uniq_id].chatId;
 
-    me.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId],  function(err, res) {
+    me.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
         if (err) me.databaseError(socket, err);
         else {
             if (res && Array.isArray(res) && res.length == 1) {
 
-            var ans = res[0];
+                var ans = res[0];
 
-            var banlist = {
-                ban_id: null,
-                ip: 1,
-                ip_address: '',
-                chat_id: chatId,
-                online_user_id: ans.online_user_id,
-                person_id: socket.user.userId,
-                //reason_id: '',
-                ban_comment: data.message
-            };
+                var banlist = {
+                    ban_id: null,
+                    ip: 1,
+                    ip_address: '',
+                    chat_id: chatId,
+                    online_user_id: ans.online_user_id,
+                    person_id: socket.user.userId,
+                    //reason_id: '',
+                    ban_comment: data.message
+                };
 
-            me.connection.query('INSERT INTO `banlist` SET ? ', banlist, function (err, res) {
-                if (err) me.databaseError(socket, err);
-                else {
-
-
-                    socket.emit("banPersonResponse", {isValid: true});
-                }
-            });
-        }
+                me.connection.query('INSERT INTO `banlist` SET ? ', banlist, function (err, res) {
+                    if (err) me.databaseError(socket, err);
+                    else {
+                        socket.emit("banPersonResponse", {isValid: true});
+                    }
+                });
+            }
         }
     });
 };
 
 
-ChatServer.prototype.messageReceived = function (socket, data, sendMessageReceivedToRoom) {
-    var me = this;
-    if (!data || !data.hasOwnProperty('msgId') || !data.msgId || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId ){
-        return ;
+ChatServer.prototype.messageReceived = function (socket, data) {
+    var app = this.app;
+    if (!data || !data.hasOwnProperty('msgId') || !data.msgId || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId) {
+        return;
     }
 
-    if (!me.chatRooms || !me.chatRooms.hasOwnProperty(data.chatUniqId)){
-        return ;
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chatUniqId)) {
+        return;
     }
 
-    sendMessageReceivedToRoom(socket, data.chatUniqId, data.msgId);
+    app.sendMessageReceivedToRoom(socket, data.chatUniqId, data.msgId);
 
 };
 
 
-ChatServer.prototype.operatorIsWorking = function (socket, data, sendMessageToRoom) {
-   var me = this;
+ChatServer.prototype.operatorIsWorking = function (socket, data) {
+    var app = this.app;
 
-    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length <10){
-        socket.emit("pingResponse",{isValid: false, error: 'chat_uniq_id',data:data});
-        return ;
+    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
+        socket.emit("pingResponse", {isValid: false, error: 'chat_uniq_id', data: data});
+        return;
     }
-    var chat = me.chatRooms[data.chat_uniq_id];
+    var chat = app.chatRooms[data.chat_uniq_id];
 
-    sendMessageToRoom(socket, data.chat_uniq_id, 'ping', 'ping', 'ping');
+    app.sendMessageToRoom(socket, data.chat_uniq_id, 'ping', 'ping', 'ping');
 
 };
