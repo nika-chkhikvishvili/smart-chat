@@ -59,7 +59,7 @@ a:hover { text-decoration:underline; }
 
 .msglnr { margin:0 0 2px 0; text-align:right; }
 
-#operator_is_working{
+#operator_is_working, #operator_is_writing{
     display : none;
     color :red;
 }

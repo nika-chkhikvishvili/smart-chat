@@ -22,28 +22,48 @@ socket.on('serverError', function (data){
 
 socket.on('clientGetServicesResponse', function (data) {
     console.log('execute: clientGetServicesResponse');
+    // console.log(data);
     if ($.isArray(data)){
         $('#select_theme').html('');
         $.each(data, function(key, value) {
             $('#select_theme')
                 .append($("<option></option>")
                     .attr("value",value.category_service_id)
-                    .text(value.category_name + ' - ' + value.service_name));
+                    .text(value.category_name + ' - ' + value.service_name_geo));
         });
     }
 });
 
 socket.on('clientInitParamsResponse', function (data) {
     console.log('execute: clientInitParamsResponse');
+
+    if (!data) {
+        alert('Error');
+        return ;
+    }
+
+    if (data.hasOwnProperty('isValid')) {
+        alert('Wrong Params');
+        return ;
+    }
+
+    if (data.hasOwnProperty('serviceIsOffline')) {
+        alert('Service Is Offline');
+        $('#begin_btn').attr({disabled: false});
+        window.location = 'offline.html';
+        return ;
+    }
+
+    $('#chatbox').html('');
     localStorage.chatUniqId = data.chatUniqId;
     $('#saxeli_span').text(first_name + ' ' + last_name);
     $('#asarchevi').hide();
     $('#wrapper').show();
 });
 
-socket.on('clientCheckChatIfAvariableResponse', function (data) {
-    console.log('execute: checkChatIfAvariableResponse');
-    console.log(data);
+socket.on('clientCheckChatIfAvailableResponse', function (data) {
+    console.log('execute: clientCheckChatIfAvailableResponse');
+    // console.log(data);
     if(data && data.hasOwnProperty('isValid') && data.isValid){
         first_name =data.first_name || '';
         last_name =data.last_name || '';
@@ -77,8 +97,16 @@ socket.on('message', function (data) {
         setTimeout(function(){
             $('#operator_is_working').hide();
         },3000);
-    } else elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
 
+
+    } else if(data.message == 'writing') {
+        $('#operator_is_writing').show();
+
+        setTimeout(function(){
+            $('#operator_is_writing').hide();
+        },3000);
+
+    } else elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
     elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 });
 
@@ -93,13 +121,13 @@ socket.on('messageReceived', function (data) {
 
 socket.on('clientMessageResponse', function (data) {
     console.log('execute: clientMessageResponse');
-    console.log(data);
+    // console.log(data);
 });
 
 
 function redAlert(id) {
     var el = $('#message_' + id);
-    if (el.val() != 'submited') el.css({'background-color': 'red'});
+    if (el.val() !== 'submited') el.css({'background-color': 'red'});
 }
 
 function addMessage(id , message){
@@ -117,12 +145,12 @@ function addMessage(id , message){
 
 socket.io.on('reconnect', function () {
     var chatUniqId = localStorage.getItem("chatUniqId") || '';
-    socket.emit('clientCheckChatIfAvariable',{chatUniqId : chatUniqId});
+    socket.emit('clientCheckChatIfAvailable',{chatUniqId : chatUniqId});
 });
 
 $(document).ready(function () {
     var chatUniqId = localStorage.getItem("chatUniqId") || '';
-    socket.emit('clientCheckChatIfAvariable',{chatUniqId : chatUniqId});
+    socket.emit('clientCheckChatIfAvailable',{chatUniqId : chatUniqId});
 
     $("#exit").click(function () {
         var exit = confirm("Are you sure you want to end the session?");
@@ -131,6 +159,7 @@ $(document).ready(function () {
             $('#asarchevi').show();
             $('#wrapper').hide();
             $('#begin_btn').attr({disabled: false});
+            socket.emit('clientCloseChat', {chatUniqId : chatUniqId});
             socket.emit('clientGetServices');
         }
         return false;
@@ -141,9 +170,10 @@ $(document).ready(function () {
         var select_theme = $('#select_theme').val();
         first_name = $('#first_name').val();
         last_name = $('#last_name').val();
+        var personal_no = $('#personal_no').val();
 
         if (!select_theme || select_theme == '') {
-            alert('choose repo');
+            alert('choose service');
             return;
         }
 
@@ -157,7 +187,7 @@ $(document).ready(function () {
             return;
         }
 
-        socket.emit('clientInitParams', {repo_id: select_theme, first_name: first_name, last_name: last_name});
+        socket.emit('clientInitParams', {service_id: select_theme, first_name: first_name, last_name: last_name, personal_no:personal_no});
     });
 
     $("#usermsg").keyup(function (event) {
@@ -167,11 +197,11 @@ $(document).ready(function () {
     });
 
     $("#submitmsg").click(function () {
-        var message = $('#usermsg').val();
+        var usermsg = $('#usermsg');
+        var message = usermsg.val();
         var ran = Math.floor(Math.random() * 10000000);
         socket.emit('clientMessage', {chatUniqId: localStorage.getItem("chatUniqId") , message: message, id: ran});
-        $('#usermsg').val('');
+        usermsg.val('');
         addMessage(ran, message);
     });
-
 });
