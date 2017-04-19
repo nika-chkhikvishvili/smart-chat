@@ -91,7 +91,6 @@ socket.on('getAllChatMessagesResponse', function (data) {
         }
     });
 
-
     //elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 
 });
@@ -117,7 +116,6 @@ socket.on('checkTokenResponse', function (data){
                 createChatWindowAndLoadData(d)
             })
         }
-
     }
 });
 

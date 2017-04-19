@@ -125,11 +125,13 @@ ChatServer.prototype.checkToken = function (socket, data) {
         if (!user.tokens.hasOwnProperty(data.token)) user.tokens[data.token] = null;
 
         app.connection.query('SELECT c.chat_uniq_id, r.*, o.first_name, o.last_name FROM chat_rooms r, chats c  , online_users o ' +
-            'where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id and r.person_id = ?', [ans.history_person_id], function (err, resChat) {
+            'where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id and r.person_id = ?', [ans.person_id], function (err, resChat) {
             if (err) return app.databaseError(socket, err);
 
             var chatAns = [];
+            console.log(resChat);
             if (resChat && Array.isArray(resChat)) {
+
                 resChat.forEach(function (row) {
                     chatAns.push({
                         chatUniqId: row.chat_uniq_id,
