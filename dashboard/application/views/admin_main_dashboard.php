@@ -237,23 +237,37 @@
 </div>
 
 <div id="template-dialog-form" class="chat-dialog" title="აირჩიეთ შაბლონი">
-    <ul>
-        <li>Template 1</li>
-        <li>Template 2</li>
-        <li>Template 3</li>
-        <li>Template 4</li>
-        <li>Template 5</li>
-    </ul>
+    <select name="template_lang" id="template_lang">
+        <option value="ka">Georgian</option>
+        <option value="en">English</option>
+        <option value="ru">Russian</option>
+    </select>
 
+    <select name="template_service" id="template_service" onchange="">
+        <option value="0">All</option>
+        <option value="1">service 1</option>
+        <option value="2">service 2</option>
+        <option value="3">service 3</option>
+    </select>
+
+    <ul id="template_dialog_form_ul">
+        <?php
+
+        foreach ($get_sql_templates as $key => $val) {
+            echo "<li data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
+        }
+        ?>
+    </ul>
+    <script>
+        var resizefunc =[];
+        var messageTemplates =<?php echo json_encode($get_sql_templates, JSON_UNESCAPED_UNICODE); ?>
+    </script>
 
 </div>
-
 <div id="block-dialog" class="chat-dialog" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
     <textarea rows="12" cols="80">
     </textarea>
 </div>
-
-
 
         <script>
             var resizefunc = [];
@@ -275,21 +289,24 @@
         <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
 
-
-
         <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
         <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
 
-        <script src="http://cdn.socket.io/socket.io-1.4.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 
         <script type="application/javascript">
             var token = "<?=$this->session->userdata['token'] ; ?>";
             var socketAddr = '<?=substr(base_url(),0,-1);?>';
         </script>
         <script src="<?=base_url();?>assets/js/socket/common.js"></script>
-        <script src="<?=base_url();?>assets/js/socket/dashboard.js"></script>
+        <script>
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.src = "<?=base_url();?>assets/js/socket/dashboard.js?"+Math.random();
+            $("body").append(s);
+        </script>
     
     </body>
 

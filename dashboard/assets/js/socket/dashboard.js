@@ -98,12 +98,12 @@ socket.on('getAllChatMessagesResponse', function (data) {
 
 socket.on('checkTokenResponse', function (data){
     console.log('execute: checkTokenResponse');
-    //console.log(data);
+    console.log(data);
 
     if (data.isValid){
         //socket.emit('get',{token : token});
         socket.emit('getWaitingList');
-        socket.emit('getActiveChats');
+        // socket.emit('getActiveChats');
 
         if (Array.isArray(data.ans) ) {
             data.ans.forEach(function(i){
@@ -114,7 +114,6 @@ socket.on('checkTokenResponse', function (data){
                     first_name : i.first_name || '',
                     last_name : i.last_name || ''
                 };
-
                 createChatWindowAndLoadData(d)
             })
         }
@@ -269,11 +268,31 @@ $(document).ready(function () {
     });
 
 
+    $("#template_service, #template_lang").change(function (e) {
+        var template_service = $("#template_service");
+        var template_lang    = $("#template_lang");
+        var ul = $("#template_dialog_form_ul");
 
+        var service = template_service.val();
+        var lang    = template_lang.val() || 'ka';
+        var field_name = 'template_text_ge';
+        if (lang === 'en' ) {
+            field_name = 'template_text_en';
+        }
+        if (lang === 'ru' ) {
+            field_name = 'template_text_ru';
+        }
 
+        ul.html('');
+
+        messageTemplates.forEach(function(tmpl){
+            if (service == 0 || service === tmpl.service_id) {
+                ul.append('<li data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
+            }
+        });
+    });
 
     setInterval(function(){
-
         $('.msgbox_working_checkbox').each(function(key,val){
             if(val.checked){
                 if(!val.hasOwnProperty('lastWorkingCount')) val.lastWorkingCount = 0;
@@ -284,7 +303,7 @@ $(document).ready(function () {
                 }
 
             } else {
-                val.lastWorkingChecked = Date();
+                val.lastWorkingChecked = new Date();
                 val.lastWorkingCount = 0;
             }
 
@@ -335,7 +354,7 @@ socket.on('clientGetServicesResponse', function (data) {
     console.log('execute: clientGetServicesResponse');
     if ($.isArray(data)){
         $.each(data, function(key, value) {
-            services[value.category_service_id] = value.service_name;
+            services[value.category_service_id] = value.service_name_geo;
 
         });
     }
@@ -344,7 +363,7 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
-    //console.log(data);
+    console.log(data);
     var ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
@@ -362,32 +381,19 @@ socket.on('getWaitingListResponse', function (data){
 
 
 
-socket.on('getActiveChatsResponse', function (data){
-    console.log('execute: getActiveChatsResponse');
-    //console.log(data);
-
-    var i = 1;
-    $('#online_chats_list tbody').html('');
-
-    data.forEach(function(item){
-
-        $('#online_chats_list').append(
-            '<tr>'+
-            '<td>'+i+++'</td>'+
-            '<td> </td>'+
-            '<td>მომხმრებელი</td>'+
-            '<td>'+services[item.service_id]+'</td>'+
-            '<td>'+item.add_date+'</td>'+
-            '<td>'+
-            '<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
-            '  <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
-            '   <a href="#" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
-            '<a href="#" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
-            '</td>'+
-            '</tr>'
-        );
-    });
-});
+// socket.on('getActiveChatsResponse', function (data){
+//     console.log('execute: getActiveChatsResponse');
+//     return ;
+//     console.log(data);
+//
+//     var i = 1;
+//     $('#online_chats_list tbody').html('');
+//
+//     data.forEach(function(item){
+//         console.log(item);
+//         createChatWindowAndLoadData(item);
+//     });
+// });
 
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს
 socket.on('getNextWaitingClientResponse', function (data){
@@ -447,3 +453,9 @@ function redAlert(id) {
     if (el.val() != 'submited') el.css({'background-color': 'red'});
 }
 
+
+socket.on('newChatWindow', function (data) {
+    console.log('execute: newChatWindow');
+    console.log(data);
+    createChatWindowAndLoadData(data);
+});
