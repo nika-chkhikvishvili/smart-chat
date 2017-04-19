@@ -278,9 +278,9 @@ me.io.on('connection', function (socket) {
         server.getWaitingList(socket);
     });
     // socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
-    socket.on('getNextWaitingClient', function (data) {
-        server.getNextWaitingClient(socket, data);
-    });
+    // socket.on('getNextWaitingClient', function (data) {
+    //     server.getNextWaitingClient(socket, data);
+    // });
     socket.on('getAllChatMessages', function (data) {
         server.getAllChatMessages(socket, data);
     });
