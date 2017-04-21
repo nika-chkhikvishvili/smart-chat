@@ -159,7 +159,7 @@ img:hover {
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
    <input type="submit" class="btn btn-primary" type="submit" name="save_answering" value="შენახვა" />
-   <input type="reset" class="btn btn-danger" type="submit"  value="გასუფთავება" />
+   
 </div>
 </div>
 </form>
