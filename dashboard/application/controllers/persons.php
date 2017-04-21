@@ -65,7 +65,7 @@ class Persons extends CI_Controller{
                 'repo_id' => $session_data->repo_id
                 );
                 $this->load->library('email');
-                $this->email->from('your@example.com', 'Your Name');
+                $this->email->from('info@psh.gov.ge', 'Your Name');
                 $this->email->to($this->input->post('person_mail'));
 
                 $this->email->subject('SmartChat Account Activation');
