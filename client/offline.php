@@ -70,19 +70,7 @@
      
       
       <!-- Select Basic -->
-      
-      <div class="form-group">
-        <label class="col-md-4 control-label">სერვისი</label>
-        <div class="col-md-6 selectContainer">
-          <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-            <select name="state" class="form-control selectpicker" >
-              <option value=" " >აირჩიეთ სერვისი</option>
-              <option>Alabama</option>
-            
-            </select>
-          </div>
-        </div>
-      </div>
+
       
   
       
@@ -115,7 +103,8 @@
       <div class="form-group">
         <label class="col-md-4 control-label"></label>
         <div class="col-md-4">
-          <button type="buttom" class="btn btn-warning" id="Send" >გაგზავნა <span class="glyphicon glyphicon-send"></span></button>
+          <button type="buttom" class="btn btn-success" id="Send" >გაგზავნა <span class="glyphicon glyphicon-send"></span></button>
+		  <input type="reset" class="btn btn-warning" name="res" value="უარყოფა" />
         </div>
       </div>
     </fieldset>
@@ -194,52 +183,22 @@ $(document).ready(function() {
 					 
                 }
             },
-            address: {
-                validators: {
-                     stringLength: {
-                        min: 8,
-                    },
-                    notEmpty: {
-                        message: 'Please supply your street address'
-                    }
-                }
-            },
-            city: {
-                validators: {
-                     stringLength: {
-                        min: 4,
-                    },
-                    notEmpty: {
-                        message: 'Please supply your city'
-                    }
-                }
-            },
-            state: {
-                validators: {
-                    notEmpty: {
-                        message: 'Please select your state'
-                    }
-                }
-            },
+     
            
 		comment: {
-                validators: {
-                      stringLength: {
-                        
-                        message:'Please enter at least 10 characters and no more than 200'
-                    },
+                validators: {                    
                     notEmpty: {
-                        message: 'Please supply a description about yourself'
+                        message: 'შეტყობინების ტექსტი'
                     }
                     }
                  },	
 	 email: {
                 validators: {
                     notEmpty: {
-                        message: 'Please supply your email address'
+                        message: 'ელ-ფოსტის ველი ცარიელია'
                     },
                     emailAddress: {
-                        message: 'Please supply a valid email address'
+                        message: 'ელ-ფოსტის ფორმატი არასწორია'
                     }
                 }
             },
