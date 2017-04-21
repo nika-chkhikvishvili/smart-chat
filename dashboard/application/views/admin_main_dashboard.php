@@ -258,6 +258,7 @@
 
         ?>
     </select>
+    <input type="text"><br>
 
     <ul id="template_dialog_form_ul">
         <?php
