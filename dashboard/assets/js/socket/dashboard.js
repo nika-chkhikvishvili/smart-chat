@@ -54,7 +54,7 @@ function isChatWindowHidden(id) {
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
 var createChatWindowAndLoadData = function(data){
     console.log('execute: createChatWindowAndLoadData');
-    console.log(data);
+    // console.log(data);
 
     if (!data || !data.chat_uniq_id) {
         return;
@@ -94,12 +94,12 @@ socket.on('getAllChatMessagesResponse', function (data) {
 
 socket.on('checkTokenResponse', function (data){
     console.log('execute: checkTokenResponse');
-    console.log(data);
+    // console.log(data);
 
     if (data.isValid){
         //socket.emit('get',{token : token});
         socket.emit('getWaitingList');
-        // socket.emit('getActiveChats');
+        socket.emit('getActiveChats');
 
         if (Array.isArray(data.ans) ) {
             data.ans.forEach(function(i){
@@ -365,7 +365,7 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
-    console.log(data);
+    // console.log(data);
     var ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
@@ -383,19 +383,39 @@ socket.on('getWaitingListResponse', function (data){
 
 
 
-// socket.on('getActiveChatsResponse', function (data){
-//     console.log('execute: getActiveChatsResponse');
-//     return ;
-//     console.log(data);
-//
-//     var i = 1;
-//     $('#online_chats_list tbody').html('');
-//
-//     data.forEach(function(item){
-//         console.log(item);
-//         createChatWindowAndLoadData(item);
-//     });
-// });
+socket.on('getActiveChatsResponse', function (data){
+    console.log('execute: getActiveChatsResponse');
+    console.log(data);
+
+    var i = 1;
+    var tableBody = $('#online_chats_list').find('tbody').html('');
+
+    data.forEach(function(item){
+        console.log(item);
+        var operator = 'ჯერ არ შესულა ოპერატორი';
+        if (item.users && Array.isArray(item.users)) {
+            operator = item.users[0].firstName + ' ' + item.users[0].firstName;
+        }
+
+
+        tableBody.append(
+            '<tr>'+
+            '<td>'+ item.chat_id +'</td>'+
+            ' <td>' + operator + '</td>'+
+            ' <td>'+ item.user_first_name + ' ' + item.user_last_name +'</td>'+
+        ' <td>' + item.service_name_geo + '</td>'+
+        ' <td>' + item.add_date + '</td>'+
+        ' <td>'+
+        ' <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
+        ' <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
+        ' <a href="#" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
+        ' <a href="#" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
+        ' </td>'+
+        '</tr>'
+        );
+
+    });
+});
 
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს
 socket.on('getNextWaitingClientResponse', function (data){
@@ -454,7 +474,7 @@ socket.on('clientMessageResponse', function (data) {
 
 function redAlert(id) {
     var el = $('#message_' + id);
-    if (el.val() != 'submited') el.css({'background-color': 'red'});
+    if (el.val() !== 'submited') el.css({'background-color': 'red'});
 }
 
 

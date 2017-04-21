@@ -2,6 +2,7 @@
  * Created by jedi on 2/23/16.
  */
 
+var Message = require('./models/Message');
 var randomStringGenerator = require("randomstring");
 var log;
 var app;

@@ -1,6 +1,6 @@
 var me = {};
 
-
+require('./models/User.js');
 me.log = require('npmlog');
 var app = require('express')();
 var http_server = require('http').createServer(app);
@@ -142,7 +142,7 @@ me.sendMessageToRoomUsers = function (socket, chatUniqId, msgId, msg, ran) {
         if (user && user.sockets) {
 
             Object.keys(user.sockets).forEach(function (socketId) {
-                if (socketId != socket.id) {
+                if (socketId !== socket.id) {
                     socket.broadcast.to(socketId).emit('message', {message: msg, msgId: msgId, sender: 'system', ran: ran, chatUniqId: chatUniqId
                     });
                 }
@@ -173,13 +173,13 @@ me.sendMessageToRoom = function (socket, chatUniqId, msgId, msg, ran) {
 };
 
 me.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
-    var chat = me.chatRooms[chatUniqId];
-    var users = chat.users;
-    users.forEach(function (socketId) {
-        if (socketId != socket.id) {
-            socket.broadcast.to(socketId).emit('messageReceived', {msgId: msgId});
-        }
-    });
+    // var chat = me.chatRooms[chatUniqId];
+    // var users = chat.users;
+    // users.forEach(function (socketId) {
+    //     if (socketId != socket.id) {
+    //         socket.broadcast.to(socketId).emit('messageReceived', {msgId: msgId});
+    //     }
+    // });
 };
 
 
@@ -259,9 +259,9 @@ me.io.on('connection', function (socket) {
         socket.emit('testResponse');
     });
 
-    socket.on('checkToken',     function (data) {server.checkToken(socket, data);});
-    socket.on('getWaitingList', function ()     {server.getWaitingList(socket);});
-    // socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
+    socket.on('checkToken',           function (data) {server.checkToken(socket, data);});
+    socket.on('getWaitingList',       function ()     {server.getWaitingList(socket);});
+    socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
     // socket.on('getNextWaitingClient', function (data) {
     //     server.getNextWaitingClient(socket, data);
     // });
