@@ -54,7 +54,7 @@
         <label class="col-md-4 control-label">ტელეფონი #</label>
         <div class="col-md-6  inputGroupContainer">
           <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
-            <input name="phone" placeholder="+995 55 523 400" class="form-control" type="text">
+            <input name="phone" placeholder="+995 555 xxxxxx" class="form-control" type="text">
           </div>
         </div>
       </div>
