@@ -72,6 +72,7 @@ ChatServer.prototype.getActiveChats = function (socket) {
                     var chatRoom = app.chatRooms[item.chat_uniq_id];
                     if (chatRoom.users && Array.isArray(chatRoom.users)) {
                         chatRoom.users.forEach(function (userId) {
+                            if (app.onlineUsers[userId])
                             item.users.push(app.onlineUsers[userId].getLimited());
                         });
                     }

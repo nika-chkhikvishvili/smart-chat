@@ -241,13 +241,22 @@
         <option value="ka">Georgian</option>
         <option value="en">English</option>
         <option value="ru">Russian</option>
-    </select>
+    </select><br>
 
     <select name="template_service" id="template_service" onchange="">
         <option value="0">All</option>
-        <option value="1">service 1</option>
-        <option value="2">service 2</option>
-        <option value="3">service 3</option>
+        <?php
+        $services = [];
+
+        foreach ($get_sql_templates as $key => $val) {
+            $services[$val['service_id']] = $val['service_name_geo'];
+        }
+
+        foreach ($services as $key => $val) {
+           echo "<option value='{$key}'>{$val}</option>";
+        }
+
+        ?>
     </select>
 
     <ul id="template_dialog_form_ul">
