@@ -26,7 +26,10 @@
         </ul>
     </li>
     <li>
-<a href="#" class="waves-effect"><i class="md md-cast-connected"></i><span> ავტომოპასუხე </span></a>
+<a href="<?= base_url(); ?>dashboard/answering" class="waves-effect"><i class="md md-cast-connected"></i><span> ავტომოპასუხე </span></a>
+</li>
+    <li>
+<a href="<?= base_url(); ?>dashboard/blacklist" class="waves-effect"><i class="md md-block"></i><span> შავი სია </span></a>
 </li>
  <li>
 <a href="#" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>

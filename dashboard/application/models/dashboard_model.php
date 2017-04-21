@@ -204,4 +204,21 @@ class dashboard_model extends CI_Model{
         return $query->result_array();
     }
     // end of message templates
+    
+    // update answering
+    
+    function get_answering()
+    {
+        $this->db->select('*');
+        $this->db->from('auto_answering');           
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    
+    
+    function update_answering($id,$data)
+    {
+        $this->db->where('auto_answering_id', $id);
+        $this->db->update('auto_answering', $data);
+    }
 }
