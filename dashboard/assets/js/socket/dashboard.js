@@ -316,12 +316,17 @@ $(document).ready(function () {
 
 socket.on('message', function (data) {
     console.log('execute: message');
-    //console.log(data);
+    console.log(data);
 
     socket.emit('messageReceivedFromClient', { chatUniqId: data.chatUniqId, msgId: data.ran});
 
     var elChatbox = $(".chat[data-chat = "+data.chatUniqId+"]");
-    elChatbox.append('<div class="bubble you">'+ data.message + '</div>' );
+
+    if(data.guestId){
+        elChatbox.append('<div class="bubble you">'+ data.message + '</div>' );
+    } else {
+        elChatbox.append('<div class="bubble me">'+ data.message + '</div>' );
+    }
 
     $(".person[data-chat = "+data.chatUniqId+"] .preview").html(shorter(data.message));
     $(".person[data-chat = "+data.chatUniqId+"] .time").html(Date().substr(16,5));
