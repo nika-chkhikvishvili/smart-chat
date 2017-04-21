@@ -63,7 +63,7 @@
         <label class="col-md-4 control-label">ელ-ფოსტა</label>
         <div class="col-md-6  inputGroupContainer">
           <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
-            <input name="email" placeholder="E-Mail Address" class="form-control"  type="text">
+            <input name="email" placeholder="ელ-ფოსტა" class="form-control"  type="text">
           </div>
         </div>
       </div>
