@@ -63,7 +63,20 @@ class Dashboard extends CI_Controller{
     
     public function blacklist()
     {
-        $this->load->view('blacklist');
+        $this->load->model('dashboard_model');
+        $data['get_banlist'] = $this->dashboard_model->get_banlist();
+        $data['get_blocklist'] = $this->dashboard_model->get_blocklist();
+       
+        $this->load->view('blacklist',$data);
+    }
+    
+    public function blacklist_chat()
+    {
+        $chat_id =  $this->uri->segment(3);
+        $this->load->model('dashboard_model');
+        $data['get_chat'] = $this->dashboard_model->get_chat_history(1);
+        var_dump($data['get_chat']);
+        $this->load->view('blacklist_chat',$data);
     }
     
     public function answering()

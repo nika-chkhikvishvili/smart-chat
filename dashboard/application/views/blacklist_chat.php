@@ -146,54 +146,50 @@
                         <!-- Start Widget -->
  <div class="row">
 <div class="col-md-12">
-    <div class="panel panel-default">
-        <div class="panel-heading bg-warning">
-            <h3 class="panel-title">დასტურის მოლოდინში</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>მომხმარებელი</th>
-                                    <th>ოპერატორი</th>
-                                    <th>შენიშვნა</th>
-                                    <th>ქმედება</th>
-                                   
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if(!empty($get_banlist))
-                                {
-                                    foreach ($get_banlist as $banlist):
-                                      
-                                
-                                ?>
-                                <tr>
-                                    <td></td>
-                                    <td><?=$banlist['first_name'];?>&nbsp;<?=$banlist['last_name'];?></td>
-                                    <td><?=$banlist['nickname'];?></td>
-                                    <td><?=$banlist['ban_comment'];?></td>
-                                    <td>
-                                    <a href="<?=base_url();?>dashboard/blacklist_chat/<?=$banlist['chat_id'];?>" class="btn btn-primary btn-rounded waves-effect waves-light m-b-5">საუბრის ისტორია</a>
-                                    <a href="" type="button" class="btn btn-success btn-rounded waves-effect waves-light m-b-5">ბანის დადასტურება</a>
-                                    </td>
-                                   
-                                </tr>
-                               <?php
-                                    endforeach; }
-                               ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="col-md-9"> 
+   
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"> 
+                                        <h3 class="panel-title">Chat</h3> 
+                                    </div> 
+                                    <div class="panel-body"> 
+                                        <div class="chat-conversation">
+                                            <ul class="conversation-list nicescroll">
+                                                <?php
+                                                var_dump($get_chat);
+                                                foreach ($get_chat as $his):
+                                                echo $his['online_user_id'];
+                                                ?>
+                                                    <li class="clearfix <?php if($his['online_user_id']>=1) 
+                                                     {
+                                                          echo "odd";
+                                                     }
+                                                    else {
+                                                        echo "";
+                                                    } ?>">
+                                                    <div class="chat-avatar">
+                                                       
+                                                        <i>10:00</i>
+                                                    </div>
+                                                    <div class="conversation-text">
+                                                        <div class="ctext-wrap">
+                                                            <i>John Deo</i>
+                                                            <p>
+                                                                Hello!
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                               
+                                                 <?php
+                                                 endforeach ;
+                                                 ?>
+                                            </ul>
+                                           
+                                        </div>
+                                    </div> 
+                                  </div> 
+                            </div> <!-- end col-->
 </div>
 </div> <!-- End row -->
  <div class="row">
@@ -287,7 +283,7 @@
         <script src="<?=base_url();?>assets/js/wow.min.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
-
+         <script src="<?=base_url();?>assets/pages/jquery.chat.js"></script>
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
      
 		<script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>

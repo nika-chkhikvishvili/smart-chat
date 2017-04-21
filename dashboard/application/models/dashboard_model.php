@@ -221,4 +221,40 @@ class dashboard_model extends CI_Model{
         $this->db->where('auto_answering_id', $id);
         $this->db->update('auto_answering', $data);
     }
+    
+    //get ban list
+    function get_banlist()
+    {
+        $this->db->select('*');
+        $this->db->from('banlist');
+        $this->db->where('status', 0);
+        $this->db->join('persons', 'persons.person_id = banlist.person_id'); 
+        $this->db->join('online_users', 'online_users.online_user_id = banlist.online_user_id'); 
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
+    function get_blocklist()
+    {
+        $this->db->select('*');
+        $this->db->from('banlist');
+        $this->db->where('status', 1);
+        $this->db->join('persons', 'persons.person_id = banlist.person_id'); 
+        $this->db->join('online_users', 'online_users.online_user_id = banlist.online_user_id'); 
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+    
+    //
+    
+   function get_chat_history($chat_id)
+   {
+        $this->db->select('*');
+        $this->db->from('chat_messages');
+        $this->db->where('chat_id', $chat_id);
+        $this->db->join('persons', 'persons.person_id = chat_messages.person_id'); 
+        $this->db->join('online_users', 'online_users.online_user_id = chat_messages.online_user_id'); 
+        $query = $this->db->get();
+        return $query->result_array();
+   }
 }
