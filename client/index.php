@@ -32,6 +32,6 @@
 <script src="http://cdn.socket.io/socket.io-1.4.1.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-<script src="main_client.js?wertwert"></script>
+<script src="main_client.js?<?=rand(); ?>"></script>
 </body>
 </html>

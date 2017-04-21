@@ -180,9 +180,18 @@ ChatServer.prototype.sendMessage = function (socket, data) {
 
     me.connection.query('INSERT INTO `chat_messages` SET ? ', chatMessage, function (err, res) {
         if (err) return app.databaseError(socket, err);
+        var message = new Message(chatMessage);
+        // console.log(message);
 
+        message.chatUniqId = data.chat_uniq_id;
+        message.chatId     =  res.insertId;
+        message.message    = data.message;
+        message.messageUniqId = data.id;
+        message.sender = app.onlineUsers[socket.user.userId].firstName;
 
-            app.sendMessageToRoom(socket, data.chat_uniq_id, res.insertId, data.message, data.id);
+        // console.log(message);
+
+        app.sendMessageToRoom(socket, message);
             socket.emit("sendMessageResponse", {isValid: true});
 
     });
@@ -207,7 +216,7 @@ ChatServer.prototype.banPerson = function (socket, data) {
     me.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
         if (err) me.databaseError(socket, err);
         else {
-            if (res && Array.isArray(res) && res.length == 1) {
+            if (res && Array.isArray(res) && res.length === 1) {
 
                 var ans = res[0];
 

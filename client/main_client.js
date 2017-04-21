@@ -89,6 +89,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
 
 socket.on('message', function (data) {
     console.log('execute: message');
+    console.log(data);
     socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     var elChatbox = $("#chatbox");
     if(data.message == 'ping') {
@@ -106,7 +107,21 @@ socket.on('message', function (data) {
             $('#operator_is_writing').hide();
         },3000);
 
-    } else elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
+    }  else if(data.message == 'close') {
+        delete localStorage['chatUniqId'];
+        $('#asarchevi').show();
+        $('#wrapper').hide();
+        $('#begin_btn').attr({disabled: false});
+        socket.emit('clientGetServices');
+
+    } else {
+        if (data.guestId) {
+            elChatbox.append( meTemplate(data.messageUniqId, (new Date()).toISOString().substr(11,8) , first_name +' '+ last_name , data.message ));
+        } else {
+            elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
+        }
+
+    }
     elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 });
 

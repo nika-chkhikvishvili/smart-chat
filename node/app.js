@@ -103,7 +103,7 @@ me.connection.query('SELECT `chat_id`, `online_user_id`, `repo_id`, `chat_uniq_i
                     me.chatRooms[chatRow.chat_uniq_id].users.push(chatRoomRow.person_id);
                 });
             }
-            console.log(me.chatRooms[chatRow.chat_uniq_id]);
+            // console.log(me.chatRooms[chatRow.chat_uniq_id]);
         });
     });
 });
@@ -130,8 +130,8 @@ me.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`serv
         });
     });
 
-me.sendMessageToRoomUsers = function (socket, chatUniqId, msgId, msg, ran) {
-    var chat = me.chatRooms[chatUniqId];
+me.sendMessageToRoomUsers = function (socket, message) {
+    var chat = me.chatRooms[message.chatUniqId];
     if (!chat) return;
     var users = chat.users;
 
@@ -140,11 +140,9 @@ me.sendMessageToRoomUsers = function (socket, chatUniqId, msgId, msg, ran) {
     Object.keys(chat.users).forEach(function (key) {
         var user = me.onlineUsers[chat.users[key]];
         if (user && user.sockets) {
-
             Object.keys(user.sockets).forEach(function (socketId) {
                 if (socketId !== socket.id) {
-                    socket.broadcast.to(socketId).emit('message', {message: msg, msgId: msgId, sender: 'system', ran: ran, chatUniqId: chatUniqId
-                    });
+                    socket.broadcast.to(socketId).emit('message', message);
                 }
             });
         }
@@ -152,24 +150,24 @@ me.sendMessageToRoomUsers = function (socket, chatUniqId, msgId, msg, ran) {
 };
 
 
-me.sendMessageToRoomGuests = function (socket, chatUniqId, msgId, msg, ran) {
-    var chat = me.chatRooms[chatUniqId];
+me.sendMessageToRoomGuests = function (socket, message) {
+    var chat = me.chatRooms[message.chatUniqId];
     if (!chat) return;
     var guests = chat.guests;
     guests.forEach(function (socketId) {
         if (socketId != socket.id) {
-            socket.broadcast.to(socketId).emit('message', {message: msg, msgId: msgId, sender: 'system', ran: ran, chatUniqId: chatUniqId
-            });
+            socket.broadcast.to(socketId).emit('message', message);
         }
     });
 };
 
 
-me.sendMessageToRoom = function (socket, chatUniqId, msgId, msg, ran) {
-    var chat = me.chatRooms[chatUniqId];
+me.sendMessageToRoom = function (socket, message) {
+    if (!message) return ;
+    var chat = me.chatRooms[message.chatUniqId];
     if (!chat) return;
-    me.sendMessageToRoomUsers(socket, chatUniqId, msgId, msg, ran);
-    me.sendMessageToRoomGuests(socket, chatUniqId, msgId, msg, ran);
+    me.sendMessageToRoomUsers (socket, message);
+    me.sendMessageToRoomGuests(socket, message);
 };
 
 me.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {

@@ -169,11 +169,22 @@ ChatClient.prototype.clientMessage = function (socket, data) {
     var chatMessage = {chat_id: chat.chatId, online_user_id: socket.onlineUserId, chat_message: data.message};
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', chatMessage, function (err, res) {
-        if (err) me.databaseError(socket, err);
-        else {
-            app.sendMessageToRoom(socket, data.chatUniqId, res.insertId, data.message, data.id);
-            socket.emit("clientMessageResponse", res);
-        }
+        if (err) return me.databaseError(socket, err);
+
+        var message = new Message(chatMessage);
+        // console.log(message);
+
+        message.chatUniqId = data.chatUniqId;
+        message.chatId     =  res.insertId;
+        message.message    = data.message;
+        message.guestId    =  socket.onlineUserId;
+        message.messageUniqId = data.id;
+
+        // console.log(message);
+
+        app.sendMessageToRoom(socket, message);
+        socket.emit("clientMessageResponse", res);
+
     });
 };
 
