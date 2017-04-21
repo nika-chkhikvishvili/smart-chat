@@ -61,6 +61,25 @@ class Dashboard extends CI_Controller{
         $this->load->view('read_inbox');
     }
     
+    public function blacklist()
+    {
+        $this->load->view('blacklist');
+    }
+    
+    public function answering()
+    {
+        $this->load->model('dashboard_model');
+        $data['get_answering'] = $this->dashboard_model->get_answering();
+        if($this->input->post('save_answering'))
+        {
+           unset($_POST['save_answering']);
+           	
+           $this->dashboard_model->update_answering(1,$_POST);
+          echo '<meta http-equiv="refresh" content="0">';
+        }
+         $this->load->view('answering',$data);
+    }
+    
     function logout(){
         redirect('logout');
     }
