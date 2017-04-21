@@ -60,7 +60,7 @@ class Persons extends CI_Controller{
                 'last_name' => $this->input->post('last_name'),
                 'nickname' => $this->input->post('nickname'),
                 'email' => $this->input->post('person_mail'),
-                'person_password' => md5($pass),    
+                'person_password' => sha1($pass),    
                 'birth_date' => $birth_date2,
                 'repo_id' => $session_data->repo_id
                 );
