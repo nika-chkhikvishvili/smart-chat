@@ -105,35 +105,35 @@
                <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">სახელი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="first_name" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="first_name" type="text" value="<?php echo set_value('first_name');?>"  required="" aria-required="true">
                    </div>
                </div>
-                                                                <div class="form-group">
+                   <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">გვარი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="last_name" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="last_name" type="text" value="<?php  echo set_value('last_name');?>" required="" aria-required="true">
                    </div>
                </div>
                                                                <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">მეტსახელი (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cname" name="nickname" type="text" required="" aria-required="true">
+                       <input class="form-control" id="cname" name="nickname"  value="<?php echo set_value('nickname');?>" type="text" required="" aria-required="true">
                    </div>
                </div>
                <div class="form-group">
                    <label for="cemail" class="control-label col-lg-2">ელ-ფოსტა (*)</label>
                    <div class="col-lg-10">
-                       <input class="form-control" id="cemail" type="text" name="person_mail" required="" aria-required="true">
+                       <input class="form-control" id="cemail" type="text" name="person_mail" value="<?php echo set_value('person_mail');?>" required="" aria-required="true">
                    </div>
                </div>
                <div class="form-group">
                    <label for="curl" class="control-label col-lg-2">დაბადების თარიღი</label>
                    <div class="col-lg-10">
-                      <input type="text" placeholder="" name="birthday" data-mask="99-99-9999" class="form-control">
-                                                                          <span class="help-inline">რიცხვი - თვე - წელი</span>
+                      <input type="text" placeholder="" name="birthday" data-mask="99-99-9999" value="<?php echo set_value('birthday');?>" class="form-control">
+                      <span class="help-inline">რიცხვი - თვე - წელი</span>
                    </div>
                </div>
-                                                                       <div class="form-group">
+                   <div class="form-group">
                    <label for="curl" class="control-label col-lg-2">ტელეფონის ნომერი</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="curl" type="text" name="phone">

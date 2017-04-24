@@ -106,13 +106,19 @@ img:hover {
 <div class="row">
 <div class="col-sm-12">
 	<div class="panel panel-default">
-		<div class="panel-heading"><h3 class="panel-title">სერვისის დამატება</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">ავტომოპასუხე</h3></div>
 		<div class="panel-body">
 
                 
 <div class="form">
 <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="">
 
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-2">მისასალმებელი ტექსტი</label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="start_chating" value="<?=$get_answering['start_chating'];?>" type="text">
+</div>
+</div>    
 
 <div class="form-group">
     <label for="cname" class="control-label col-lg-2">მეილი, რომელზეც offline მიღებული შეტყობინებები მოვა</label>

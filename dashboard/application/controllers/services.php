@@ -74,7 +74,7 @@ class Services extends CI_Controller{
         } else {
             if ($this->input->post('update')) {               
                 if ($this->dashboard_model->update_services($this->uri->segment(3, 0), $this->input->post())) {
-                    echo '<meta http-equiv="refresh" content="0">';
+                    echo '<meta http-equiv="refresh" content="3">';
                 }
             }
             $this->load->view('update_services', $data);

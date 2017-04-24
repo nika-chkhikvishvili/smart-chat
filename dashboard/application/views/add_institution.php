@@ -41,7 +41,7 @@
                          {
                           $.ajax({
                           type: "POST",  
-                          url: "http://localhost/chat/institution/update_institution",  
+                          url: "<?=base_url()."institution/update_institution";?>",  
                           cache:false,  
                           data: data,
                           dataType: "json",       
@@ -68,7 +68,7 @@
                          {
                          $.ajax({
                                 type: "POST",  
-                                  url: "http://localhost/chat/institution/delete_institution",  
+                                  url: "<?=base_url()."institution/delete_institution";?>",  
                                   cache:false,  
                                   data: data,
                                   dataType: "json",   
@@ -183,30 +183,30 @@
                                         <h3 class="portlet-title">
                                         ჩართული უწყებები
                                         </h3>
-											<div class="portlet-widgets">
-												<a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
-												<span class="divider"></span>
-												<a data-toggle="collapse" data-parent="#accordion1" href="#bg-success"><i class="ion-minus-round"></i></a>
-												<span class="divider"></span>
-												<a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
-											</div>
-											<div class="clearfix"></div>
-										</div>
-									   <div id="bg-success" class="panel-collapse collapse in">
-									   <div class="portlet-body">
-									<table id="employee_grid" class="table table-condensed table-hover table-striped bootgrid-table" width="60%" cellspacing="0">
-								   <tbody id="_editable_table">
-									  <?php foreach($get_institutions as $res) :?>
-									  <tr data-row-id="<?php echo $res['repo_category_id'];?>">
-										 <td class="editable-col" contenteditable="true" col-index='0' oldVal ="<?php echo $res['category_name'];?>"><?php echo $res['category_name'];?></td>
-										  <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
-									  </tr>
-									<?php endforeach;?>
-									   </tbody>
-									</table>
-									</div>
-									</div>
-									</div>
+                                        <div class="portlet-widgets">
+                                                <a href="javascript:;" data-toggle="reload"><i class="ion-refresh"></i></a>
+                                                <span class="divider"></span>
+                                                <a data-toggle="collapse" data-parent="#accordion1" href="#bg-success"><i class="ion-minus-round"></i></a>
+                                                <span class="divider"></span>
+                                                <a href="#" data-toggle="remove"><i class="ion-close-round"></i></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                </div>
+                           <div id="bg-success" class="panel-collapse collapse in">
+                           <div class="portlet-body">
+                        <table id="employee_grid" class="table table-condensed table-hover table-striped bootgrid-table" width="60%" cellspacing="0">
+                   <tbody id="_editable_table">
+                          <?php foreach($get_institutions as $res) :?>
+                          <tr data-row-id="<?php echo $res['repo_category_id'];?>">
+                                 <td class="editable-col" contenteditable="true" col-index='0' oldVal ="<?php echo $res['category_name'];?>"><?php echo $res['category_name'];?></td>
+                                  <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
+                          </tr>
+                        <?php endforeach;?>
+                           </tbody>
+                        </table>
+                        </div>
+                        </div>
+                        </div>
                                         <div class="dd" id="nestable_list_3">
                                               <ol class="dd-list">
 											 
@@ -261,7 +261,7 @@
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
      
-		<script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>
+	<script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>
         <script src="<?=base_url();?>assets/plugins/notifications/notify-metro.js"></script>
         <script src="<?=base_url();?>assets/plugins/notifications/notifications.js"></script>
       
