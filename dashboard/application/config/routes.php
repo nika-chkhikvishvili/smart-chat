@@ -43,8 +43,7 @@ $route['404_override'] = '';
 $route['resetpass'] = 'welcome/resetpass';
 $route['^(message_templates)(/:any)?$'] = 'dashboard/$0';
 $route['^(system)(/:any)?$'] = 'dashboard/$0';
-$route['^(inbox)(/:any)?$'] = 'dashboard/$0';
-$route['^(read_inbox)(/:any)?$'] = 'dashboard/$0';
+
 
 
 
@@ -61,8 +60,29 @@ $route['^(delete_institution)(/:any)?$'] = 'istitution/$0';
 // persons routes
 $route['^()(/:any)?$'] = 'persons/$0';
 
+// templates routes
+$route['^()(/:any)?$'] = 'templates/$0';
+
 // institution routes
-$route['^()(/:any)?$'] = 'messagetemplate/$0';
+
+$route['^()(/:any)?$'] = 'pm/$0';
+$route['^(pm)(/:any)?$'] = 'pm/$0';
+$route['^(read_pm)(/:any)?$'] = 'pm/$0';
+
+// institution routes
+
+$route['^()(/:any)?$'] = 'profile/$0';
+
+// persons routes
+$route['^()(/:any)?$'] = 'blacklist/$0';
+$route['^(reconfirm_banlist)(/:any)?$'] = 'blacklist/$0';
+
+// file managament
+$route['^()(/:any)?$'] = 'files/$0';
+
+
+
+$route['^()(/:any)?$'] = 'logout/$0';
 
 #$route['^(update_service)(/:any)?$'] = 'dashboard/$0';
 
