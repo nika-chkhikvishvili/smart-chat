@@ -1,6 +1,11 @@
 var me = {};
 
-require('./models/User.js');
+var User      = require('./models/User.js');
+var Message   = require('./models/Message');
+var GuestUser = require('./models/GuestUser');
+var Chat      = require('./models/Chat');
+var ChatRoom  = require('./models/ChatRoom');
+
 me.log = require('npmlog');
 var app = require('express')();
 var http_server = require('http').createServer(app);
@@ -50,7 +55,7 @@ var server = require('./server.js')(me);
 
 
 // for debug
-global.me = me;
+global.app = me;
 
 
 me.databaseError = function (socket, err) {
@@ -60,7 +65,7 @@ me.databaseError = function (socket, err) {
     if (socket) socket.emit('serverError');
 };
 
-// initialite tokens
+// initialite services
 /*me.connection.query('SELECT `t`.`token`, `t`.`person_id`, `t`.`add_date`, `t`.`expire`, `t`.`expired` ' +
  'FROM `person_tokens` t', function(err, rows, fields) {
  if(err) {
@@ -79,54 +84,43 @@ me.databaseError = function (socket, err) {
  });
  });*/
 
-me.connection.query('SELECT `chat_id`, `online_user_id`, `repo_id`, `chat_uniq_id` FROM `chats` ' +
-    ' where `chat_status_id` = 1 or `chat_status_id` = 0', function (err, chatRows, fields) {
-    if (err) {
-        console.log(err);
-        process.exit(1);
-    }
-
-    chatRows.forEach(function (chatRow) {
-        me.chatRooms[chatRow.chat_uniq_id] = {
-            chatId: chatRow.chat_id,
-            guests: [],
-            users: []
-        };
-
-        me.connection.query('SELECT person_id FROM chat_rooms where person_id is not null and chat_id = ?', [chatRow.chat_id], function (err, chatRoomRows, fields) {
-            if (err) {
-                console.log(err);
-                process.exit(1);
-            }
-            if (chatRoomRows !== null && Array.isArray(chatRoomRows)) {
-                chatRoomRows.forEach(function (chatRoomRow) {
-                    me.chatRooms[chatRow.chat_uniq_id].users.push(chatRoomRow.person_id);
-                });
-            }
-            // console.log(me.chatRooms[chatRow.chat_uniq_id]);
-        });
-    });
-});
-
-me.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`service_id`,    `c`.`chat_uniq_id`,    `u`.`first_name`,    `u`.`last_name` ' +
-    'FROM `smartchat`.`chats` c, smartchat.online_users u where c.online_user_id = u.online_user_id and c.`chat_status_id` = 0 order by  c.`add_date` asc ',
+//დაუსრულებელი ჩატების და  რიგში მდგომი სტუმრების ინიციალიზაცია
+me.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`service_id`,    `c`.`chat_uniq_id`,  c.`chat_status_id`, ' +
+    ' u.online_user_id,  `u`.online_users_name as first_name,    `u`.online_users_lastname as last_name ' +
+    ' FROM chats c, online_users u where c.online_user_id = u.online_user_id and c.`chat_status_id` in ( 0,1) order by  c.`add_date` asc ',
     function (err, rows, fields) {
         if (err) {
             console.log(err);
             process.exit(1);
         }
         rows.forEach(function (row) {
-            if (!me.waitingClients[row.service_id] || me.waitingClients[row.service_id] == null) {
-                me.waitingClients[row.service_id] = fifo();
-            }
-            me.waitingClients[row.service_id].push({
-                chat_id: row.chat_id,
-                online_user_id: row.online_user_id,
-                service_id: row.service_id,
-                chat_uniq_id: row.chat_uniq_id,
-                first_name: row.first_name,
-                last_name: row.last_name
+
+            var guestUser = new GuestUser({guestUserId: row.online_user_id, firstName: row.first_name, lastName: row.last_name});
+            var chat = new Chat({chatId : row.chat_id, serviceId: row.service_id, guestUser : guestUser, guestUserId: guestUser.guestUserId});
+            var chatRoom = new ChatRoom({chat: chat});
+
+            me.chatRooms[row.chat_uniq_id] = chatRoom;
+
+            me.connection.query('SELECT person_id FROM chat_rooms where person_id is not null and person_mode in (1,2,7) and chat_id = ? ', [row.chat_id], function (err, chatRoomRows, fields) {
+                if (err) {
+                    console.log(err);
+                    process.exit(1);
+                }
+                if (chatRoomRows !== null && Array.isArray(chatRoomRows)) {
+                    chatRoomRows.forEach(function (chatRoomRow) {
+                        me.chatRooms[row.chat_uniq_id].users.push(chatRoomRow.person_id);
+                    });
+                }
+                // console.log(me.chatRooms[chatRow.chat_uniq_id]);
             });
+
+
+            if (row.chat_status_id === 0) {
+                if (!me.waitingClients[row.service_id] || me.waitingClients[row.service_id] === null) {
+                    me.waitingClients[row.service_id] = fifo();
+                }
+                me.waitingClients[row.service_id].push(chatRoom);
+            }
         });
     });
 
@@ -141,33 +135,28 @@ me.sendMessageToRoomUsers = function (socket, message) {
         var user = me.onlineUsers[chat.users[key]];
         if (user && user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
-                if (socketId !== socket.id) {
-                    socket.broadcast.to(socketId).emit('message', message);
-                }
+                socket.broadcast.to(socketId).emit('message', message);
             });
         }
     });
 };
-
 
 me.sendMessageToRoomGuests = function (socket, message) {
     var chat = me.chatRooms[message.chatUniqId];
     if (!chat) return;
     var guests = chat.guests;
     guests.forEach(function (socketId) {
-        if (socketId != socket.id) {
-            socket.broadcast.to(socketId).emit('message', message);
-        }
+        socket.broadcast.to(socketId).emit('message', message);
     });
 };
 
-
-me.sendMessageToRoom = function (socket, message) {
+me.sendMessageToRoom = function (socket, message, sendToMe) {
     if (!message) return ;
     var chat = me.chatRooms[message.chatUniqId];
     if (!chat) return;
     me.sendMessageToRoomUsers (socket, message);
     me.sendMessageToRoomGuests(socket, message);
+    if (sendToMe)  socket.emit('message', message);
 };
 
 me.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
@@ -206,33 +195,29 @@ me.checkAvailableOperatorForService = function (socket, serviceId) {
         var userId = res[0].person_id;
 
         var waiting = me.waitingClients[serviceId].shift();
+        var chatRoom ;  // =  waiting ;//new ChatRoom({chat: waiting.chat, userId: userId});
+        if (me.chatRooms.hasOwnProperty(waiting.chatUniqId)){
+            chatRoom = me.chatRooms[waiting.chatUniqId];
+        } else {
+            me.chatRooms[waiting.chatUniqId] = waiting;
+            chatRoom = me.chatRooms[waiting.chatUniqId];
+        }
 
-        me.connection.query('UPDATE `smartchat`.`chats` SET `chat_status_id` = 1 WHERE `chat_id` = ?', [waiting.chat_id], function (err, res) {
+        me.connection.query('UPDATE `smartchat`.`chats` SET `chat_status_id` = 1 WHERE `chat_id` = ?', [waiting.chatId], function (err, res) {
             if (err) {
                 me.waitingClients[serviceId].unshift(waiting);
                 me.databaseError(null, err);
                 return;
             }
 
-            var chatRoom = {chat_id: waiting.chat_id, person_id: userId};
-
-            me.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom, function (err, res1) {
+            me.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(userId, 1), function (err, res1) {
                 if (err) return me.databaseError(null, err);
-
-                var isAdded = false;
-
-                me.chatRooms[waiting.chat_uniq_id].users.forEach(function (chatUserId) {
-                    isAdded = isAdded || ( userId === chatUserId);
-                });
-                if (!isAdded) {
-                    me.chatRooms[waiting.chat_uniq_id].users.push(userId);
-                }
+                chatRoom.addUser(userId);
 
                 var user = me.onlineUsers[userId];
                 if (user && user.sockets) {
-
                     Object.keys(user.sockets).forEach(function (socketId) {
-                        socket.broadcast.to(socketId).emit('newChatWindow', waiting );
+                        socket.broadcast.to(socketId).emit('newChatWindow', chatRoom );
                     });
                 }
             });
@@ -242,6 +227,7 @@ me.checkAvailableOperatorForService = function (socket, serviceId) {
 
 
 //6 17:08
+
 
 me.io.on('connection', function (socket) {
 
@@ -257,24 +243,17 @@ me.io.on('connection', function (socket) {
         socket.emit('testResponse');
     });
 
-    socket.on('checkToken',           function (data) {server.checkToken(socket, data);});
-    socket.on('getWaitingList',       function ()     {server.getWaitingList(socket);});
-    socket.on('getActiveChats',       function ()     {server.getActiveChats        (socket);} );
-    // socket.on('getNextWaitingClient', function (data) {
-    //     server.getNextWaitingClient(socket, data);
-    // });
-    socket.on('getAllChatMessages', function (data) {
-        server.getAllChatMessages(socket, data);
-    });
-    socket.on('sendMessage', function (data) {
-        server.sendMessage(socket, data);
-    });
-    socket.on('operatorIsWorking', function (data) {
-        server.operatorIsWorking(socket, data);
-    });
-    socket.on('banPerson', function (data) {
-        server.banPerson(socket, data);
-    });
+    socket.on('checkToken',             function (data) {server.checkToken(socket, data);});
+    socket.on('getWaitingList',         function ()     {server.getWaitingList(socket);});
+    socket.on('getActiveChats',         function ()     {server.getActiveChats        (socket);} );
+    socket.on('joinToRoom',             function (data) {server.joinToRoom(socket, data);});
+    socket.on('redirectToPerson',       function (data) {server.redirectToPerson(socket, data);});
+    socket.on('redirectToService',      function (data) {server.redirectToService(socket, data);});
+    socket.on('getPersonsForRedirect',  function (data) {server.getPersonsForRedirect(socket, data);});
+    socket.on('getAllChatMessages',     function (data) {server.getAllChatMessages(socket, data);});
+    socket.on('sendMessage',            function (data) {server.sendMessage(socket, data);});
+    socket.on('operatorIsWorking',      function (data) {server.operatorIsWorking(socket, data);});
+    socket.on('banPerson',              function (data) {server.banPerson(socket, data);});
 
 
     socket.on('disconnect', function () {

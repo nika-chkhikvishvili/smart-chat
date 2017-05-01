@@ -4,13 +4,15 @@
 
 
 function User(user) {
+
+    user = user || {};
     if (!(this instanceof User)) return new User(user);
-    this.personId  = user && user.hasOwnProperty('person_id')  ? user.person_id : null;
-    this.firstName = user && user.hasOwnProperty('first_name') ? user.first_name : null;
-    this.lastName  = user && user.hasOwnProperty('last_name')  ? user.last_name : null;
-    this.photo     = user && user.hasOwnProperty('photo')      ? user.photo : null;
-    this.isAdmin   = user && user.hasOwnProperty('is_admin')   ? user.is_admin : null;
-    this.statusId  = user && user.hasOwnProperty('status_id')  ? user.status_id : null;
+    this.userId    = user.hasOwnProperty('userId')    ? user.userId    : null;
+    this.firstName = user.hasOwnProperty('firstName') ? user.firstName : null;
+    this.lastName  = user.hasOwnProperty('lastName')  ? user.lastName  : null;
+    this.photo     = user.hasOwnProperty('photo')     ? user.photo     : null;
+    this.isAdmin   = user.hasOwnProperty('isAdmin')   ? user.isAdmin   : null;
+    this.statusId  = user.hasOwnProperty('statusId')  ? user.statusId  : null;
     this.sockets = {};
     this.tokens = {};
 }

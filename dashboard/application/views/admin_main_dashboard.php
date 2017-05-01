@@ -193,8 +193,13 @@
         </div>
         <div class="right">
             <div class="top"><span>To: <span class="name"> </span></span>
-                <span style="float:right;"><a href="javascript:close_chat();">დასრულება</a></span> <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                <span style="float:right;"><a href="javascript:ban_person();">დაბლოკვა</a></span></div>
+                <span style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="https://bounty.github.com/images/badges/A10-1.png"></a></span>
+                <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                <span style="float:right;"><a href="javascript:close_chat();"><img width="30" src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/32/Actions-window-close-icon.png"></a></span>
+                <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                <span style="float:right;"><a href="javascript:ban_person();"><img width="30" src="http://www.fastkashmir.com/wp-content/uploads/2017/03/ban-2.png"></a></span>
+                <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                <span style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>            </div>
             <div class="chats_container">
                 <div class="chat" data-chat="person1" style="display: none;">
                     <div class="conversation-start">
@@ -249,7 +254,7 @@
 
         ?>
     </select>
-    <input type="text"><br>
+    <input type="text" id="template_dialog_form_search_field"><br>
 
     <ul id="template_dialog_form_ul">
         <?php
@@ -259,20 +264,66 @@
         }
         ?>
     </ul>
-    <script>
-        var resizefunc =[];
-        var messageTemplates =<?php echo json_encode($get_sql_templates, JSON_UNESCAPED_UNICODE); ?>
-    </script>
-
 </div>
+
+<script>
+    var resizefunc =[];
+    var messageTemplates =<?php echo json_encode($get_sql_templates, JSON_UNESCAPED_UNICODE); ?>
+</script>
+
 <div id="block-dialog" class="chat-dialog" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
-    <textarea rows="12" cols="80">
-    </textarea>
+    <textarea rows="12" cols="50"></textarea>
 </div>
 
-        <script>
-            var resizefunc = [];
-        </script>
+<div id="chat-redirect-type-dialog" class="chat-redirect-type-dialog" title="აირჩიეთ ქმედება">
+    <a href="javascript:choose_redirect_group();">გადამისამართება ჯგუფზე</a><br>
+    <a href="javascript:choose_redirect_person_dialog(1);">გადამისამართება პიროვნებაზე</a><br>
+    <a href="javascript:choose_redirect_person_dialog(2);">conference call</a>
+
+</div>
+
+<div id="chat-redirect-group-dialog" class="chat-dialog" title="აირჩიეთ ჯგუფი">
+    <table width="500">
+        <tr>
+            <th width="10%">id</th>
+            <th width="30%">repository_name</th>
+            <th width="30%">category_name</th>
+            <th width="30%">სერვისი</th>
+        </tr>
+        <tbody>
+        <?php
+        foreach ($all_services as $key => $val) {
+            echo "<tr>
+        <td>{$val['category_service_id']}</td>
+        <td>{$val['repository_name']}</td>
+        <td>{$val['category_name']}</td>
+        <td><a href='javascript:redirect_to_service({$val['category_service_id']});'>{$val['service_name_geo']}</a></td>
+    </tr>";
+        }
+
+        ?>
+
+        </tbody>
+    </table>
+
+</div>
+
+<div id="chat-redirect-person-dialog" class="chat-dialog" title="აირჩიეთ პიროვნება">
+    <table width="500">
+        <thead>
+        <tr>
+            <th width="20%">id</th>
+            <th width="80%">სახელი, გვარი</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+
+
 
         <!-- jQuery  -->
 

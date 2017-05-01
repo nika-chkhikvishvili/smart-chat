@@ -50,7 +50,7 @@ socket.on('clientInitParamsResponse', function (data) {
     if (data.hasOwnProperty('serviceIsOffline')) {
         alert('Service Is Offline');
         $('#begin_btn').attr({disabled: false});
-        window.location = 'offline.html';
+        window.location = 'offline.php';
         return ;
     }
 
@@ -63,7 +63,7 @@ socket.on('clientInitParamsResponse', function (data) {
 
 socket.on('clientCheckChatIfAvailableResponse', function (data) {
     console.log('execute: clientCheckChatIfAvailableResponse');
-    // console.log(data);
+    console.log(data);
     if(data && data.hasOwnProperty('isValid') && data.isValid){
         first_name =data.first_name || '';
         last_name =data.last_name || '';
@@ -92,7 +92,7 @@ socket.on('message', function (data) {
     console.log(data);
     socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     var elChatbox = $("#chatbox");
-    if(data.message == 'ping') {
+    if(data.messageType === 'ping') {
         $('#operator_is_working').show();
 
         setTimeout(function(){
@@ -100,22 +100,26 @@ socket.on('message', function (data) {
         },3000);
 
 
-    } else if(data.message == 'writing') {
+    } else if(data.messageType === 'writing') {
         $('#operator_is_writing').show();
 
         setTimeout(function(){
             $('#operator_is_writing').hide();
         },3000);
 
-    }  else if(data.message == 'close') {
+    }  else if(data.messageType === 'ban') {
+        window.location = 'blocked.php';
+
+    } else if(data.messageType === 'close') {
         delete localStorage['chatUniqId'];
+        $('#chatbox').html('');
         $('#asarchevi').show();
         $('#wrapper').hide();
         $('#begin_btn').attr({disabled: false});
         socket.emit('clientGetServices');
 
     } else {
-        if (data.guestId) {
+        if (data.guestUserId) {
             elChatbox.append( meTemplate(data.messageUniqId, (new Date()).toISOString().substr(11,8) , first_name +' '+ last_name , data.message ));
         } else {
             elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
@@ -169,13 +173,9 @@ $(document).ready(function () {
 
     $("#exit").click(function () {
         var exit = confirm("Are you sure you want to end the session?");
-        if (exit == true) {
-            delete localStorage['chatUniqId'];
-            $('#asarchevi').show();
-            $('#wrapper').hide();
-            $('#begin_btn').attr({disabled: false});
+        if (exit === true) {
+            var chatUniqId = localStorage.getItem("chatUniqId") || '';
             socket.emit('clientCloseChat', {chatUniqId : chatUniqId});
-            socket.emit('clientGetServices');
         }
         return false;
     });

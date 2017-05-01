@@ -18,6 +18,7 @@ class Dashboard extends CI_Controller{
         $session_data = $this->session->userdata('user');
         $this->load->model('dashboard_model');
         $data['get_sql_templates'] = $this->dashboard_model->get_message_templates();
+        $data['all_services'] = $this->dashboard_model->get_all_full_services();
         $this->load->view('admin_main_dashboard',$data);
     }
     
