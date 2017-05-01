@@ -10,6 +10,9 @@ class Welcome extends CI_Controller
     {
         parent::__construct();
         $this->lang->load('ge');
+        $session_data = $this->session->userdata('user');
+        $this->load->library('vsession');
+      //  $this->vsession->is_login ($session_data);
     }
 
 
@@ -75,34 +78,4 @@ class Welcome extends CI_Controller
 
     }
 
-
-    public function resetpass()
-    {
-        $this->load->library('form_validation');
-
-        // ვამოწმებთ მომხმარებლის ელ-ფოსტას
-        $this->form_validation->set_rules(
-            'post_mail', $this->lang->line('email'),
-            'required|min_length[5]|valid_email',
-            array(
-                'required'    => $this->lang->line('required'),
-                'valid_email' => $this->lang->line('valid_email')
-            ));
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('resetpass');
-        }
- else {
-     echo $this->input->post('post_mail');
-    
-    $this->load->library('email');
-    $this->email->from('your@example.com', 'Res Password!');
-    $this->email->to($this->input->post('post_mail'));   
-
-    $this->email->subject('Email Test');
-    $this->email->message('Testing the email class.');
-
-    $this->email->send();
- }
-
-    }
 }

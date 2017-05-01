@@ -9,10 +9,8 @@
         <div id="wrapper">
         
             <!-- Top Bar Start -->
-			<?php require_once('components/admin_topbar.php');?>
+            <?php require_once('components/admin_topbar.php');?>
             <!-- Top Bar End -->
-
-
             <!-- ========== Left Sidebar Start ========== -->
 
             <div class="left side-menu">
@@ -23,21 +21,14 @@
                         </div>
                         <div class="user-info">
                             <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> Profile<div class="ripple-wrapper"></div></a></li>
-                                    <li><a href="javascript:void(0)"><i class="md md-settings"></i> Settings</a></li>
-                                    <li><a href="javascript:void(0)"><i class="md md-lock"></i> Lock screen</a></li>
-                                    <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> Logout</a></li>
-                                </ul>
-                            </div>
-                            
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია</a>                                
+                            </div>                            
                             <p class="text-muted m-0">ადმინისტრატორი</p>
                         </div>
                     </div>
                     <!--- Divider -->
                     <div id="sidebar-menu">
-						<?php require_once('components/admin_menu.php');?>
+                    <?php require_once('components/admin_menu.php');?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -106,26 +97,26 @@
                                                         </thead>
                                                         <tbody>
                                                            
-															<?php /*
-															 for($i=1; $i <=10; $i++)
-															 {
-																echo '      <tr>
-                                                                <td>'.$i.'</td>
-                                                                <td>თამარ თეთრაძე</td>
-                                                                <td>მომხმრებელი</td>
-                                                                <td>არქივის სერვისები</td>
-                                                                <td>3.03.2015</td>
-                                                                <td>
-																	<a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
-																	<a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
-																	<a href="#" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;
-																	<a href="#" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>
-																	
-																</td>
-                                                            </tr>
-                                                            ';
-															 }																 
-														*/	?>
+                                    <?php /*
+                                     for($i=1; $i <=10; $i++)
+                                     {
+                                            echo '      <tr>
+                                        <td>'.$i.'</td>
+                                        <td>თამარ თეთრაძე</td>
+                                        <td>მომხმრებელი</td>
+                                        <td>არქივის სერვისები</td>
+                                        <td>3.03.2015</td>
+                                        <td>
+                                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>
+                                        <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>
+                                        <a href="#" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;
+                                        <a href="#" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>
+
+                                </td>
+                                    </tr>
+                                    ';
+                                    }																 
+                           */	?>
                                                             
                                                         </tbody>
                                                     </table>
@@ -152,7 +143,7 @@
 
 
             <!-- Right Sidebar -->
-			<?php require_once('components/admin_online_chatlist.php');?>
+            <?php require_once('components/admin_online_chatlist.php');?>
             <!-- /Right-bar -->
 
         </div>

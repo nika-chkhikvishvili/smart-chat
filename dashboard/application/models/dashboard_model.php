@@ -17,6 +17,15 @@ class dashboard_model extends CI_Model{
         return $query->result_array();
 
     }
+    
+   public function get_one_institutions($cat_id){
+        $this->db->select('*');
+        $this->db->from('repo_categories');
+        $this->db->where('repo_category_id', $cat_id);
+        $query = $this->db->get();
+        return $query->row_array();
+
+    }
 
     function add_institution($data, $information_object){
 
@@ -195,13 +204,35 @@ class dashboard_model extends CI_Model{
        return $this->db->insert_id();
     }
     
+    
+    function update_message_template($id,$data)
+    {
+        unset($data['update']);
+        $this->db->update('message_templates', $data, array('message_templates_id' => $id));
+    }
+    
     function get_message_templates()
     {
         $this->db->select('*');
         $this->db->from('message_templates');
-        $this->db->join('category_services', 'category_services.category_service_id = message_templates.service_id');        
+        $this->db->join('category_services', 'category_services.category_service_id = message_templates.service_id','LEFT');
+        $this->db->order_by("message_templates_id", "asc");
         $query = $this->db->get();
         return $query->result_array();
+    }
+    
+    function get_one_message_templates($templates_id)
+    {
+        $this->db->select('*');
+        $this->db->from('message_templates');
+        $this->db->where('message_templates_id',$templates_id);
+        $this->db->join('category_services', 'category_services.category_service_id = message_templates.service_id');        
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    
+     function delete_message_templates($id){
+        $this->db->delete('message_templates', array('message_templates_id' => $id));       
     }
     // end of message templates
     
@@ -230,6 +261,7 @@ class dashboard_model extends CI_Model{
         $this->db->where('status', 0);
         $this->db->join('persons', 'persons.person_id = banlist.person_id'); 
         $this->db->join('online_users', 'online_users.online_user_id = banlist.online_user_id'); 
+        $this->db->order_by("ban_id", "asc");
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -239,12 +271,34 @@ class dashboard_model extends CI_Model{
         $this->db->select('*');
         $this->db->from('banlist');
         $this->db->where('status', 1);
-        $this->db->join('persons', 'persons.person_id = banlist.person_id'); 
-        $this->db->join('online_users', 'online_users.online_user_id = banlist.online_user_id'); 
+        $this->db->join('persons', 'persons.person_id = banlist.person_id','LEFT'); 
+        $this->db->join('online_users', 'online_users.online_user_id = banlist.online_user_id','LEFT'); 
         $query = $this->db->get();
         return $query->result_array();
     }
     
+    function get_one_banlist($chat_id)
+    {
+        $this->db->select('*');
+        $this->db->from('banlist');
+        $this->db->where('chat_id', $chat_id);
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+    
+    function confutation_banlist($chat_id)
+    {
+      $this->db->set('status', 2);  
+      $this->db->where('chat_id', $chat_id);
+      $this->db->update('banlist');  
+    }
+    
+    function reconfirm_banlist($chat_id)
+    {
+      $this->db->set('status', 1);  
+      $this->db->where('chat_id', $chat_id);
+      $this->db->update('banlist');  
+    }
     //
     
    function get_chat_history($chat_id)
@@ -252,9 +306,54 @@ class dashboard_model extends CI_Model{
         $this->db->select('*');
         $this->db->from('chat_messages');
         $this->db->where('chat_id', $chat_id);
-        $this->db->join('persons', 'persons.person_id = chat_messages.person_id'); 
-        $this->db->join('online_users', 'online_users.online_user_id = chat_messages.online_user_id'); 
+        $this->db->join('persons', 'persons.person_id = chat_messages.person_id','LEFT'); 
+        $this->db->join('online_users', 'online_users.online_user_id = chat_messages.online_user_id','LEFT');
+        $this->db->order_by("message_date", "asc");
         $query = $this->db->get();
         return $query->result_array();
+   }
+   
+ // user profile
+   
+   function get_profile_services($user_id)
+   {
+      $this->db->select('*');
+      $this->db->from('person_services');
+      $this->db->where('person_id', $user_id);
+      $this->db->join('category_services', 'category_services.category_service_id = person_services.service_id','LEFT');
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+   
+   function profile_person_data($user_id)
+   {
+      $this->db->select('*');
+      $this->db->from('persons');
+      $this->db->where('person_id', $user_id); 
+      $query = $this->db->get();
+      return $query->row_array();
+   }
+   
+   function update_password($user_id,$password)
+   {
+     $this->db->set('person_password', $password);
+     $this->db->where('person_id', $user_id);
+     $this->db->update('persons');  
+   }
+   
+   // files
+   function add_files($data)
+   {
+     $this->db->insert('files', $data);
+     return $this->db->insert_id();
+   }
+   
+   function get_files($repo_id)
+   {
+      $this->db->select('*');
+      $this->db->from('files');
+      $this->db->where('files_repo_id', $repo_id); 
+      $query = $this->db->get();
+      return $query->result_array();
    }
 }

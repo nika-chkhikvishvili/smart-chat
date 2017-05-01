@@ -8,18 +8,18 @@ class Logout extends CI_Controller{
 
     function __construct(){
         parent::__construct();
-        $session_data = $this->session->userdata('signin');
+        $session_data = $this->session->userdata('user');
     }
 
 
     public function index(){
-
-        $this->session->userdata('signin');
+        
+        $this->session->userdata('user');
+        $this->session->userdata('roles');     
         # სესსიის დახურვა
-        session_unset();
-        # session_destroy();
+        $this->session->sess_destroy();  
         # ავტორიზაციის გვერდზე გადასვლა
-        redirect('');
+        redirect('welcome');
 
     }
 

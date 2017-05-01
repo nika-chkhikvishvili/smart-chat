@@ -19,6 +19,7 @@ class Persons extends CI_Controller{
     }
 
     public function add_person(){
+        $data['notify']=0;
         $session_data = $this->session->userdata('user');        
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
@@ -95,9 +96,9 @@ class Persons extends CI_Controller{
                     $this->dashboard_model->add_person_service($person_service);
                         }	
                 }
-
+                $data['notify']=1;
             }
-
+          
         }
         $this->load->view('add_persons', $data);
     }
@@ -197,9 +198,5 @@ public function randomPassword($length,$count, $characters) {
      
     return $passwords; // return the generated password
 }
-    
 
-    function logout(){
-        redirect('logout');
-    }
 }

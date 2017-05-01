@@ -29,19 +29,15 @@
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
         <script type="text/javascript">
         $(document).ready(function(){
-          $('td.editable-col').on('focusout', function() {
+          $('.update_ban').click(function() {
                 data = {};
-                data['val'] = $(this).text();
-                data['id'] = $(this).parent('tr').attr('data-row-id');
-                data['index'] = $(this).attr('col-index');
-                if($(this).attr('oldVal') === data['val'])
-                return false;
+                data['val'] = $(this).attr('id');  
 
-                if(confirm('განვაახლოთ მონაცემები ?'))
+                if(confirm('დავბლოკოთ მომხმარებელი ?'))
                          {
                           $.ajax({
                           type: "POST",  
-                          url: "http://localhost/chat/institution/update_institution",  
+                          url: "<?=base_url()."blacklist/confutation_banlist";?>",  
                           cache:false,  
                           data: data,
                           dataType: "json",       
@@ -53,44 +49,12 @@
                                   setTimeout(function(){window.location.reload(1); }, 3000);		
                                 } else {
                                   $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                  setTimeout(function(){window.location.reload(1); }, 3000);		
+                                  setTimeout(function(){window.location.assign("<?=base_url();?>blacklist"); }, 3000);		
                                 }
                           }   
                         });
                         }
                 });
-             // delete the entry once we have confirmed that it should be deleted
-                $('.delete').click(function() {
-                data = {};			
-                data['id'] = $(this).parent('tr').attr('data-row-id');
-                        var parent = $(this).closest('tr');
-                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
-                         {
-                         $.ajax({
-                                type: "POST",  
-                                  url: "http://localhost/chat/institution/delete_institution",  
-                                  cache:false,  
-                                  data: data,
-                                  dataType: "json",   
-                                beforeSend: function() {
-                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
-                                },
-                                success: function(response) {
-
-                                //$("#loading").hide();
-                                        if(response.status) {
-                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                          setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        } else {
-                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                           setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        }
-                                }
-                        });	 
-                         }
-
-                });
-
         });
 
         </script>
@@ -146,52 +110,59 @@
                         <!-- Start Widget -->
  <div class="row">
 <div class="col-md-12">
-    <div class="panel panel-default">
-        <div class="panel-heading bg-warning">
-            <h3 class="panel-title">დასტურის მოლოდინში</h3>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>მომხმარებელი</th>
-                                    <th>ოპერატორი</th>
-                                    <th>შენიშვნა</th>
-                                    <th>ქმედება</th>
-                                   
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if(!empty($get_banlist))
-                                {
-                                    foreach ($get_banlist as $banlist):
-                                      
-                                
-                                ?>
-                                <tr>
-                                    <td></td>
-                                    <td><?=$banlist['first_name'];?>&nbsp;<?=$banlist['last_name'];?></td>
-                                    <td><?=$banlist['nickname'];?></td>
-                                    <td><?=$banlist['ban_comment'];?></td>
-                                    <td>
-                                    <a href="<?=base_url();?>dashboard/blacklist_chat/<?=$banlist['chat_id'];?>" class="btn btn-primary btn-rounded waves-effect waves-light m-b-5">საუბრის ისტორია</a>
-                                    <a href="" type="button" class="btn btn-success btn-rounded waves-effect waves-light m-b-5">ბანის დადასტურება</a>
-                                    </td>
-                                   
-                                </tr>
-                               <?php
-                                    endforeach; }
-                               ?>
-                            </tbody>
-                        </table>
-                    </div>
+<div class="panel panel-default">
+    <div class="panel-heading bg-warning">
+        <h3 class="panel-title">დასტურის მოლოდინში</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>მომხმარებელი</th>
+                                <th>IP მისამართი</th>
+                                <th>ოპერატორი</th>
+                                <th>შენიშვნა</th>
+                                <th>ისტორია</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if(!empty($get_banlist))
+                            {
+                                foreach ($get_banlist as $banlist):
+
+
+                            ?>
+                            <tr>
+                                <td></td>
+                                <td><?=$banlist['online_users_name'];?>&nbsp;<?=$banlist['online_users_lastname'];?></td>
+                                <td><?=$banlist['ip_address'];?></td>
+                                <td><?=$banlist['first_name'];?>&nbsp;<?=$banlist['last_name'];?></td>
+                                <td><?=$banlist['ban_comment'];?></td>
+                                <td>
+                                <a href="<?=base_url();?>blacklist/blacklist_chat/<?=$banlist['chat_id'];?>" class="btn btn-primary btn-rounded waves-effect waves-light m-b-5">საუბრის ისტორია</a>
+                               
+                                </td>
+
+                            </tr>
+                           <?php
+                                endforeach; }
+                           ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
+             <div class="row">
+<div class="col-lg-4">
+
+</div>
+</div>
         </div>
     </div>
 </div>
@@ -219,6 +190,7 @@
                             </thead>
                             <tbody>
                                 <?php
+                                
                                 if(!empty($get_blocklist))
                                 {
                                     foreach ($get_blocklist as $blocklist):
@@ -227,11 +199,11 @@
                                 ?>
                                 <tr>
                                     <td></td>
-                                    <td><?=$blocklist['first_name'];?>&nbsp;<?=$blocklist['last_name'];?></td>
-                                    <td><?=$blocklist['nickname'];?></td>
+                                    <td><?=$blocklist['online_users_name'];?>&nbsp;<?=$blocklist['online_users_lastname'];?></td>
+                                    <td><?=$blocklist['first_name'];?><?=$blocklist['last_name'];?></td>
                                     <td><?=$blocklist['ban_comment'];?></td>
                                     <td>                                    
-                                    <a href="" type="button" class="btn btn-danger btn-rounded waves-effect waves-light m-b-5">ბანის მოხსნა</a>
+                                    <button type="button" class="btn btn-danger btn-custom waves-effect waves-light m-b-5 update_ban" id="<?=$blocklist['chat_id'];?>">ბანის მოხსნა</button>
                                     </td>
                                    
                                 </tr>

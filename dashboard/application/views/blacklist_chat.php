@@ -29,19 +29,15 @@
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
         <script type="text/javascript">
         $(document).ready(function(){
-          $('td.editable-col').on('focusout', function() {
+          $('#update_ban').click(function() {
                 data = {};
-                data['val'] = $(this).text();
-                data['id'] = $(this).parent('tr').attr('data-row-id');
-                data['index'] = $(this).attr('col-index');
-                if($(this).attr('oldVal') === data['val'])
-                return false;
+                data['val'] = "<?=$get_uri_chat_id;?>";  
 
-                if(confirm('განვაახლოთ მონაცემები ?'))
+                if(confirm('დავბლოკოთ მომხმარებელი ?'))
                          {
                           $.ajax({
                           type: "POST",  
-                          url: "http://localhost/chat/institution/update_institution",  
+                          url: "<?=base_url()."blacklist/reconfirm_banlist";?>",  
                           cache:false,  
                           data: data,
                           dataType: "json",       
@@ -53,44 +49,12 @@
                                   setTimeout(function(){window.location.reload(1); }, 3000);		
                                 } else {
                                   $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                  setTimeout(function(){window.location.reload(1); }, 3000);		
+                                  setTimeout(function(){window.location.assign("<?=base_url();?>blacklist"); }, 3000);		
                                 }
                           }   
                         });
                         }
                 });
-             // delete the entry once we have confirmed that it should be deleted
-                $('.delete').click(function() {
-                data = {};			
-                data['id'] = $(this).parent('tr').attr('data-row-id');
-                        var parent = $(this).closest('tr');
-                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
-                         {
-                         $.ajax({
-                                type: "POST",  
-                                  url: "http://localhost/chat/institution/delete_institution",  
-                                  cache:false,  
-                                  data: data,
-                                  dataType: "json",   
-                                beforeSend: function() {
-                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
-                                },
-                                success: function(response) {
-
-                                //$("#loading").hide();
-                                        if(response.status) {
-                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                          setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        } else {
-                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                           setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        }
-                                }
-                        });	 
-                         }
-
-                });
-
         });
 
         </script>
@@ -146,52 +110,98 @@
                         <!-- Start Widget -->
  <div class="row">
 <div class="col-md-12">
-<div class="col-md-9"> 
+<div class="col-md-8"> 
    
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"> 
-                                        <h3 class="panel-title">Chat</h3> 
-                                    </div> 
-                                    <div class="panel-body"> 
-                                        <div class="chat-conversation">
-                                            <ul class="conversation-list nicescroll">
-                                                <?php
-                                                var_dump($get_chat);
-                                                foreach ($get_chat as $his):
-                                                echo $his['online_user_id'];
-                                                ?>
-                                                    <li class="clearfix <?php if($his['online_user_id']>=1) 
-                                                     {
-                                                          echo "odd";
-                                                     }
-                                                    else {
-                                                        echo "";
-                                                    } ?>">
-                                                    <div class="chat-avatar">
-                                                       
-                                                        <i>10:00</i>
-                                                    </div>
-                                                    <div class="conversation-text">
-                                                        <div class="ctext-wrap">
-                                                            <i>John Deo</i>
-                                                            <p>
-                                                                Hello!
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                               
-                                                 <?php
-                                                 endforeach ;
-                                                 ?>
-                                            </ul>
-                                           
-                                        </div>
-                                    </div> 
-                                  </div> 
-                            </div> <!-- end col-->
+<div class="panel panel-default">
+    <div class="panel-heading"> 
+        <h3 class="panel-title">Chat</h3> 
+    </div> 
+    <div class="panel-body"> 
+        <div class="chat-conversation">
+           
+            <ul class="conversation-list nicescroll">
+                <?php
+                foreach ($get_chat as $his):
+                 
+                if($his['online_user_id']>=1) 
+                { 
+                ?>
+                <li class="clearfix odd">
+                    <div class="chat-avatar">
+
+                        <i><?=$his['message_date'];?></i>
+                    </div>
+                    <div class="conversation-text">
+                        <div class="ctext-wrap">
+                            <i><?=$his['online_users_name'];?> &nbsp; <?=$his['online_users_lastname'];?></i>
+                            <p>
+                                <?=$his['chat_message'];?>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                <?php
+                }
+                else 
+                {
+                 
+                ?>
+                 <li class="clearfix">
+                    <div class="chat-avatar">
+
+                        <i><?=$his['message_date'];?></i>
+                    </div>
+                    <div class="conversation-text">
+                        <div class="ctext-wrap">
+                            <i><?=$his['first_name'];?> &nbsp; <?=$his['last_name'];?></i>
+                            <p>
+                                <?=$his['chat_message'];?>
+                            </p>
+                        </div>
+                    </div>
+                </li>
+                 <?php
+                }
+                 endforeach ;
+                 ?>
+            </ul>
+
+        </div>
+    </div> 
+  </div> 
+</div> <!-- end col-->
+     <div class="col-lg-4">
+    <div class="panel panel-default panel-fill">
+        <div class="panel-heading"> 
+            <h3 class="panel-title">
+                <button type="button" class="btn btn-danger btn-custom waves-effect waves-light m-b-5" id="update_ban">ბანის დადასტურება</button>
+            </h3> 
+        </div> 
+        <div class="panel-body"> 
+            <div class="inbox-widget">
+            <a href="#">
+                <div class="inbox-item">
+                    <div class="inbox-item-img"></div>
+                    <p class="inbox-item-author">IP მისამართი</p>
+                    <p class="inbox-item-text"><?=$ban_list['ip_address'];?> </p>                   
+                </div>
+            </a>
+            <a href="#">
+                <div class="inbox-item">
+                    <div class="inbox-item-img"></div>
+                   <p class="inbox-item-author">ოპერატორის კომენტარი</p>
+                    <p class="inbox-item-text"><?=$ban_list['ban_comment'];?></p>  
+                </div>
+            </a>
+ </div>
+        </div> 
+    </div>
 </div>
+</div>
+
 </div> <!-- End row -->
+
+
  <div class="row">
 <div class="col-md-12">
     <div class="panel panel-default">

@@ -3,7 +3,23 @@
 <head>
 <?php require_once ('components/styles.php');?>
 <link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">  
+<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css"> 
+<script src="<?=base_url();?>assets/js/jquery.min.js"></script>
+<script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+<?php
+if($notify==1){
+?>
+<script type="text/javascript">
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+   window.location.assign("<?=base_url();?>services");
+}, 2000);
+</script>
+<?php
+};
+?>
 </head>
 
 
@@ -57,6 +73,15 @@
     <!-- Start Widget -->
     <div class="row">
     <div class="col-sm-12">
+<?php
+if($notify==1){
+  echo '<div class="alert alert-info" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  სერვისი განახლებულია
+</div>';  
+}
+?>
+
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3 class="panel-title">სერვისის განახლება</h3></div>
 		<div class="panel-body">

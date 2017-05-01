@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <?php require_once ('components/styles.php');?>
-	<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">      
+<?php require_once ('components/styles.php');?>
+<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">      
+<?php
+if($notify==1){
+?>
 <script type="text/javascript">
-        $(document).ready(function(){        
-            
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+   window.location.assign("<?=base_url();?>services");
+}, 2000);
+</script>
+<?php
+};
+?>
+        <script type="text/javascript">
+        $(document).ready(function(){      
+             // delete the entry once we have confirmed that it should be deleted
                 $('.delete').click(function() {
                 data = {};			
                 data['id'] = $(this).parent('tr').attr('data-row-id');
@@ -15,7 +29,7 @@
                          {
                          $.ajax({
                                 type: "POST",  
-                                  url: "http://localhost/chat/services/delete_service",  
+                                  url: "<?=base_url()."services/delete_service";?>",  
                                   cache:false,  
                                   data: data,
                                   dataType: "json",   
@@ -40,7 +54,7 @@
 
         });
 
-        </script>
+</script>
 <style type="text/css">
  img {
     opacity: 0.5;
@@ -51,6 +65,7 @@ img:hover {
     opacity: 1.0;
     filter: alpha(opacity=100); /* For IE8 and earlier */
 }
+.val_notifications p {color:red;} 
 </style>        
     </head>
 
@@ -108,15 +123,22 @@ img:hover {
 	<div class="panel panel-default">
 		<div class="panel-heading"><h3 class="panel-title">სერვისის დამატება</h3></div>
 		<div class="panel-body">
-<?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-warning">', '</div></div>'); ?>
-<?php if(!empty($error_message)) {  echo '<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-warning">'.$error_message.'</div></div>'; }?> 
-                
+
+
+ <?php
+if($notify==1){
+  echo '<div class="alert alert-success" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  დაემატა ახალი სერვისი
+</div>';  
+}
+?>               
 <div class="form">
  <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="">
   <div class="form-group">
     <label for="cname" class="control-label col-lg-2">უწყების დასახელება</label>
     <div class="col-lg-9">
-       <select class="select2 form-control" data-placeholder="Choose a Country..." name="repo_categories">
+       <select class="select2 form-control" name="repo_categories">
         <option value="#">აირჩიეთ უწყება</option>
           <?php 
                 foreach ($sql_institutions as $institutions):														  
@@ -124,24 +146,28 @@ img:hover {
           <option value="<?php echo $institutions['repo_category_id'];?>"><?php echo $institutions['category_name'];?></option>
           <?php endforeach; ?>
    </select>
+    <?php if(!empty($error_message)) {  echo '<div class="val_notifications"><p>'.$error_message.'</p></div>'; }?>   
     </div>
   </div>
 <div class="form-group">
     <label for="cname" class="control-label col-lg-2">სერვისის დასახელება <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="service_name_geo" type="text">
+<input class="form-control" id="" name="service_name_geo" value="<?php echo set_value('service_name_geo');?>" type="text">
+<div class="val_notifications"><?php echo form_error('service_name_geo'); ?></div>  
 </div>
 </div>
 <div class="form-group">
 <label for="cname" class="control-label col-lg-2">სერვისის დასახელება <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="service_name_rus" type="text" >
+<input class="form-control" id="" name="service_name_rus" value="<?php echo set_value('service_name_rus');?>" type="text" >
+<div class="val_notifications"><?php echo form_error('service_name_rus'); ?></div>  
 </div>
 </div>
 <div class="form-group">
 <label for="cname" class="control-label col-lg-2">სერვისის დასახელება <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="service_name_eng" type="text" >
+<input class="form-control" id="" name="service_name_eng" value="<?php echo set_value('service_name_eng');?>" type="text" >
+<div class="val_notifications"><?php echo form_error('service_name_eng'); ?></div>  
 </div>
 </div>    
 <div class="form-group">
@@ -214,8 +240,7 @@ img:hover {
 	   <tr>
 	    <th>სერვისის სახელწოდება</th>
 	    <th>ჩართვის დრო</th>		
-	    <th>გამორთვის დრო</th>
-	    <th>სტატუსი</th>
+	    <th>გამორთვის დრო</th>	   
 	    <th>რედაქტირება</th>		
 	    <th>წაშლა</th>
 	  </tr>
@@ -225,10 +250,9 @@ img:hover {
             / <?php echo $res['service_name_rus'];?> / <?php echo $res['service_name_eng'];?>
             </td>
             <td class="editable-col" contenteditable="true"  col-index='1' title="<?php echo $res['start_time'];?>" oldVal ="<?php echo $res['start_time'];?>"><?php echo $res['start_time'];?></td>
-            <td class="editable-col" contenteditable="true"  col-index='2' title="<?php echo $res['end_time'];?>" oldVal ="<?php echo $res['end_time'];?>"><?php echo $res['end_time'];?></td>
-            <td class="edit"> <a href="<?=base_url();?>add_services/edit/<?php echo $res['category_service_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="სტატუსი"><img src='<?=base_url()."assets/images/online.png" ?>'></a></td>
+            <td class="editable-col" contenteditable="true"  col-index='2' title="<?php echo $res['end_time'];?>" oldVal ="<?php echo $res['end_time'];?>"><?php echo $res['end_time'];?></td>            
             <td class="edit"> <a href="<?=base_url();?>services/update_service/<?php echo $res['category_service_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="რედაქტირება"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
-            <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
+            <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" id="<?php echo $res['category_service_id'];?>" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
 		 
 	  </tr>
 	<?php endforeach;?>

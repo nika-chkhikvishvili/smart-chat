@@ -111,14 +111,14 @@ window.setTimeout(function() {
                     <div class="row">
                     <div class="col-md-12">
                     <div class="panel panel-default">
-		<div class="panel-heading"><h3 class="panel-title">ახალი შაბლონის დამატება</h3></div>
+		<div class="panel-heading"><h3 class="panel-title">შაბლონის რედაქტირება</h3></div>
 		<div class="panel-body">
 
 <?php
 if($notify==1){
   echo '<div class="alert alert-success" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  ახალი შაბლონის ტექსტი დამატებულია
+  შაბლონის ტექსტი განახლებულია
 </div>';  
 }
 ?> 
@@ -132,38 +132,38 @@ if($notify==1){
     <div class="col-lg-9">
        <select class="select2 form-control" data-placeholder="Choose a Country..." name="service_id">
         <option value="0">ყველა სერვისისთვის</option>
-          <?php 
-                foreach ($get_sql_services as $institutions):														  
-          ?>
-          <option value="<?php echo $institutions['category_service_id'];?>"><?php echo $institutions['service_name_geo'];?></option>
-          <?php endforeach; ?>
+         <?php 
+            foreach ($sql_services as $institutions):														  
+           ?>
+           <option value="<?php echo $institutions['category_service_id'];?>" <?php echo set_select('category', $institutions['category_service_id'], ($institutions['category_service_id'] == $sql_templates['service_id'])); ?> ><?php echo $institutions['service_name_geo'];?></option>
+           <?php endforeach; ?>
    </select>
     </div>
   </div>
 <div class="form-group">
 <label for="cname" class="control-label col-lg-2">შაბლონის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_ge" type="text">
+    <input class="form-control" id="cname" name="template_text_ge" value="<?php echo $sql_templates['template_text_ge'];?>" type="text">
 <div class="val_notifications"><?php echo form_error('template_text_ge'); ?></div> 
 </div>
 </div>
 <div class="form-group">
 <label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_ru" type="text" >
+<input class="form-control" id="cname" name="template_text_ru"  value="<?php echo $sql_templates['template_text_ru'];?>"  type="text" >
 </div>
 </div>
 <div class="form-group">
 <label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_en" type="text" >
+<input class="form-control" id="cname" name="template_text_en" value="<?php echo $sql_templates['template_text_en'];?>" type="text" >
 </div>
 </div>  
 
 		
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
-   <input type="submit" class="btn btn-primary" type="submit" name="add_tem" value="შენახვა" />
+   <input type="submit" class="btn btn-primary" type="submit" name="update" value="განახლება" />
    <input type="reset" class="btn btn-danger" type="submit"   value="გასუფთავება" />
 </div>
 </div>
@@ -179,61 +179,7 @@ if($notify==1){
 					  <!-- end of modal info -->
                         </div>
                         <!-- Start Widget -->
-                      
-                        <div class="row">
-                            <div class="col-md-12">
-                       <div class="panel-body">
-                                    <div class="portlet">
-                                    <div class="portlet-heading bg-info">
-                                        <h3 class="portlet-title">
-                                        შაბლონები
-                                        </h3>
-                                        <div class="clearfix"></div>
-                                </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>                                                               
-                                        <th>ქართული</th>
-                                        <th>რუსული</th>
-                                        <th>ინგლისური</th>
-                                        <th>კატეგორია</th>
-                                        <th>რედაქტირება</th>                                                                
-                                        <th>წაშლა</th>                                                                
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      <?php
-                                        if(!empty($get_sql_templates))
-                                        {                                           
-                                            foreach ($get_sql_templates as $templates):
-                                       
-                                    ?>
-                                    <tr data-row-id="<?php echo $templates['message_templates_id'];?>">                                                                
-                                        <td><?php echo $templates['template_text_ge']; ?></td>
-                                        <td><?php echo $templates['template_text_ru']; ?></td>
-                                        <td><?php echo $templates['template_text_en']; ?></td>                                        
-                                        <td><?php echo $templates['service_name_geo'];  ?></td>
-                                        <td class="edit"> <a href="<?=base_url();?>templates/update_templates/<?php echo $templates['message_templates_id'];?>" class="on-default" data-toggle="tooltip" data-placement="right" title="რედაქტირება"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
-                                        <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" id="<?php echo $templates['message_templates_id'];?>" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i></a></td>
-                                         
-                                    </tr>
-                                    <?php
-                                    endforeach; }
-                                    ?>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                                    </div></div>
-                            </div>
-                        </div> <!-- End row -->
+               
 						<!-- end row -->
 
                     </div> <!-- container -->

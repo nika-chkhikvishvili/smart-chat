@@ -13,6 +13,7 @@ class institution extends CI_Controller{
 
 
     public function index(){
+        $data['notify'] = 0;
         $session_data = $this->session->userdata('user');
         $this->load->library('form_validation');
         $this->load->model('dashboard_model');
@@ -42,12 +43,12 @@ class institution extends CI_Controller{
                     'information_object_date' => date("Y-m-d H:i:s"),
                 );
                 if ($this->dashboard_model->add_institution($add_institution_data, $information_object)) {
-                    echo '<meta http-equiv="refresh" content="0">';
+                    $data['notify'] = 1;
                 }
             }
 
         }
-
+       
        $this->load->view('add_institution', $data);
     }
     
@@ -55,10 +56,19 @@ class institution extends CI_Controller{
     
 
     public function update_institution(){
-        if ($this->input->post('id')) {
-            $this->load->library('institutions');
-            echo($this->institutions->update_institution($this->input->post('id'), $this->input->post('val')));
-        }
+        $data['notify'] = 0;
+        $session_data = $this->session->userdata('user');
+        $this->load->library('form_validation');
+        $this->load->model('dashboard_model');       
+        $data['sql_institutions'] = $this->dashboard_model->get_one_institutions($this->uri->segment(3));
+        if ($this->input->post('update')) 
+         {           
+         $this->dashboard_model->update_institution($this->uri->segment(3, 0), $this->input->post('institution_name')); 
+          
+         $data['notify'] = 1;                    
+          
+         }
+        $this->load->view('update_institution', $data);
     }
 
     public function delete_institution(){

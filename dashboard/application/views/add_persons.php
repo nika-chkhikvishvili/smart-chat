@@ -1,33 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="description" content="Smart Logic  Open Source Chat System">
-        <meta name="author" content="Coderthemes">
-        <link rel="shortcut icon" href="<?=base_url();?>assets/images/favicon_1.ico">
-        <title>ჩეთის ადმინისტრატორი</title>
-        <link href="<?=base_url();?>assets/plugins/nestable/jquery.nestable.css" rel="stylesheet">
-        <link href="<?=base_url();?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/core.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/icons.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/components.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/pages.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/menu.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/responsive.css" rel="stylesheet" type="text/css">
-        <script src="<?=base_url();?>assets/js/modernizr.min.js"></script>
-        <link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
-	<link href="<?=base_url();?>assets/plugins/modal-effect/css/component.css" rel="stylesheet">
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
+<?php require_once ('components/styles.php');?>
+<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">      
+<?php
+if($notify==1){
+?>
+<script type="text/javascript">
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+   window.location.assign("<?=base_url();?>institution");
+}, 2000);
+</script>
+<?php
+};
+?>
+ <script type="text/javascript">
+        $(document).ready(function(){      
+             // delete the entry once we have confirmed that it should be deleted
+                $('.delete').click(function() {
+                data = {};			
+                data['id'] = $(this).parent('tr').attr('data-row-id');
+                        var parent = $(this).closest('tr');
+                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
+                         {
+                         $.ajax({
+                                type: "POST",  
+                                  url: "<?=base_url()."institution/delete_institution";?>",  
+                                  cache:false,  
+                                  data: data,
+                                  dataType: "json",   
+                                beforeSend: function() {
+                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
+                                },
+                                success: function(response) {
 
-        <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
-        <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+                                //$("#loading").hide();
+                                        if(response.status) {
+                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                          setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        } else {
+                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                           setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        }
+                                }
+                        });	 
+                         }
 
+                });
+
+        });
+
+</script>
+<style type="text/css">
+.val_notifications p {color:red;} 
+</style> 
     </head>
 
 
@@ -85,7 +115,7 @@
                             <h3 class="panel-title">მომხმარებლის მართვა</h3>
                     </div>
                     <div class="panel-body">			
-                            <a href="<?=base_url();?>" class="btn btn-info waves-effect waves-light m-b-5"  id="sa-params">მომხმარებლის მართვა</a>
+                            <a href="<?=base_url();?>persons" class="btn btn-info waves-effect waves-light m-b-5"  id="sa-params">მომხმარებლის მართვა</a>
                     </div>
             </div>
     </div>
@@ -98,32 +128,34 @@
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3 class="panel-title">მომხმარებლის დამატება</h3></div>
                         <div class="panel-body">
-    <?php echo validation_errors('<div class="col-lg-offset-2 col-lg-9"><div class="alert alert-danger">', '</div></div>'); ?>
-
        <div class="form">
            <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="#" novalidate="novalidate">
                <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">სახელი (*)</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="cname" name="first_name" type="text" value="<?php echo set_value('first_name');?>"  required="" aria-required="true">
+                       <div class="val_notifications"><?php echo form_error('first_name'); ?></div>
                    </div>
                </div>
                    <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">გვარი (*)</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="cname" name="last_name" type="text" value="<?php  echo set_value('last_name');?>" required="" aria-required="true">
+                       <div class="val_notifications"><?php echo form_error('last_name'); ?></div>
                    </div>
                </div>
                                                                <div class="form-group">
                    <label for="cname" class="control-label col-lg-2">მეტსახელი (*)</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="cname" name="nickname"  value="<?php echo set_value('nickname');?>" type="text" required="" aria-required="true">
+                       <div class="val_notifications"><?php echo form_error('nickname'); ?></div>
                    </div>
                </div>
                <div class="form-group">
                    <label for="cemail" class="control-label col-lg-2">ელ-ფოსტა (*)</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="cemail" type="text" name="person_mail" value="<?php echo set_value('person_mail');?>" required="" aria-required="true">
+                       <div class="val_notifications"><?php echo form_error('person_mail'); ?></div>
                    </div>
                </div>
                <div class="form-group">
@@ -131,15 +163,16 @@
                    <div class="col-lg-10">
                       <input type="text" placeholder="" name="birthday" data-mask="99-99-9999" value="<?php echo set_value('birthday');?>" class="form-control">
                       <span class="help-inline">რიცხვი - თვე - წელი</span>
+                     
                    </div>
                </div>
                    <div class="form-group">
                    <label for="curl" class="control-label col-lg-2">ტელეფონის ნომერი</label>
                    <div class="col-lg-10">
                        <input class="form-control" id="curl" type="text" name="phone">
+                      
                    </div>
-               </div>
-
+                  </div>
                    <div class="form-group">
                    <label for="ccomment" class="control-label col-lg-2"></label>
                    <div class="col-lg-10">

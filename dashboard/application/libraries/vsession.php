@@ -16,5 +16,16 @@
 		}
 
      }
+     
+     public function is_login($session)
+     {
+         if($session)
+         {
+             redirect('dashboard');
+         }
+        else {
+              
+        }
+     }
 
  }

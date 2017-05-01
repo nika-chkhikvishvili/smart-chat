@@ -17,7 +17,7 @@ class institutions {
 		$error = true;		
 		 $this->CI->load->model('dashboard_model');
 		 $this->CI->dashboard_model->update_institution($id,$value);
-		 $msg = array('status' => !$error, 'msg' => 'ინსტიტუტის დასახელება განახლდა წარმატებით');
+		 $msg = array('status' => !$error, 'msg' => 'უწყების დასახელება განახლდა წარმატებით');
 	    return  json_encode($msg);
      }
 	 
@@ -26,8 +26,8 @@ class institutions {
 		$error = true;		
 		$this->CI->load->model('dashboard_model');
 		$this->CI->dashboard_model->delete_institution($id);
-		$msg = array('status' => !$error, 'msg' => 'დასახელების წაშლა წარმატებით შესრულდა');
-	    return json_encode($msg);
+		$msg = array('status' => !$error, 'msg' => 'უწყების დასახელების წაშლა წარმატებით დასრულდა');
+                return json_encode($msg);
 	 }
 }
 

@@ -155,21 +155,7 @@
                 </div>
                 </div>
                     </div>
-            <!-- modal info -->
-           <div class="md-modal md-effect-6" id="modal-6">					
-        <div class="md-content">
-        <h3>ინფორმაცია</h3>
-        <div>
-        <p>ნატალია აბაშმაძეს საკურატორო სერვისები:</p>
-        <ul>
-                <li><strong>საარქივო სერვისები</strong></li>
-                <li><strong>ID ბარათი</strong> </li>
-                <li><strong>ბიზნესი</strong> </li>
-        </ul>
-        <button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
-        </div>
-           </div>
-             </div>
+       
         <!-- modal info -->
                <div class="md-modal md-effect-6" id="modal-7">
                <div class="md-content">
@@ -246,15 +232,15 @@
                          ?>
 
                         <div class="info">
-                                <h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
-                                <p class="text-muted"><? if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
+                        <h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
+                        <p class="text-muted"><?php if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
                         </div>
                         </div>
                         <div class="clearfix"></div>
                         <hr>
                         <ul class="social-links list-inline">
                         <li>
-                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-6">
+                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-<?php echo $list['person_id'];?>">
                         <i class="fa  fa-info-circle"></i></a>
                         </li>
                          <li>
@@ -266,7 +252,55 @@
 					</div> <!-- panel-body -->
 				</div> <!-- panel -->
 				</div> <!-- end col -->
-						 <?php endforeach; }?>
+                                 <!-- modal info -->
+                                 <div class="md-modal md-effect-4" id="modal-<?php echo $list['person_id'];?>">					
+                        <div class="md-content panel panel-border panel-info">
+                      
+                    <div class="panel-heading"> 
+                     <h3 class="panel-title">პერსონალური ინფორმაცია</h3> 
+                     </div> 
+                        <div class="panel-body"> 
+                                <div class="">
+                                        <strong>სახელი გვარი</strong>
+                                        <br>
+                                        <p><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></p>
+                                </div>
+                                <div class="">
+                                        <strong>მეტსახელი</strong>
+                                        <br>
+                                        <p><?=$list['nickname'];?></p>
+                                </div>
+                                <div class="">
+                                        <strong>ელ-ფოსტა</strong>
+                                        <br>
+                                        <p><?=$list['email'];?></p>
+                                </div>
+                                <div class="">
+                                        <strong>დაბადების თარიღი</strong>
+                                        <br>
+                                        <p><?=$list['birth_date'];?></p>
+                                </div>
+                                <div class="">
+                                        <strong>ტელეფონი</strong>
+                                        <br>
+                                        <p><?=$list['phone'];?></p>
+                                </div>
+                                <div class="">
+                                        <strong> <p>საკურატორო სერვისები </p></strong>                                      
+                                        <ul>
+                                            <li><strong>საარქივო სერვისები</strong></li>
+                                            <li><strong>ID ბარათი</strong> </li>
+                                            <li><strong>ბიზნესი</strong> </li>
+                                        </ul>
+                                </div>
+                        
+                            <button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
+                        </div> 
+                        
+                        
+                        </div>
+                        </div>
+				<?php endforeach; }?>
                             </div> <!-- col -->
                         <div class="row">
                           <div class="col-sm-12">
