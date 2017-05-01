@@ -28,7 +28,7 @@
 <a href="<?= base_url(); ?>blacklist" class="waves-effect"><i class="md md-block"></i><span> შავი სია </span></a>
 </li>
  <li>
-<a href="#" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>
+<a href="<?=base_url();?>files" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>
 </li>
 <li><a href="<?=base_url();?>profile"><i class="md ion-android-contact"></i><span>პირადი პარამეტრები</span></a></li>
 <li><a href="<?=base_url();?>logout"><i class="glyphicon glyphicon-log-out"></i><span>გასვლა</span></a></li>  
