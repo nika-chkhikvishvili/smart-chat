@@ -8,8 +8,8 @@
 <body>
 <div id="asarchevi">
     <select id="select_theme"></select>
-    <input type="text" id="first_name" value="გიგა" placeholder="First Name">
-    <input type="text" id="last_name" value="კოკაია" placeholder="Last Name">
+    <input type="text" id="first_name" value="" placeholder="First Name">
+    <input type="text" id="last_name" value="" placeholder="Last Name">
     <button id="begin_btn">საუბრის დაწყება</button>
 </div>
 
@@ -29,7 +29,7 @@
         src="https://code.jquery.com/jquery-3.2.1.js"
         integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
         crossorigin="anonymous"></script>
-<script src="http://cdn.socket.io/socket.io-1.4.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 <script src="main_client.js?<?=rand(); ?>"></script>
