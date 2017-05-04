@@ -165,7 +165,7 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
         if (data.redirectType === 1) {
             app.connection.query('UPDATE `chat_rooms` SET person_mode = 5 WHERE chat_id =? AND person_id = ?',
                 [chatRoom.chat.chatId, socket.user.userId], function (err, res1) {
-                    if (err) return me.databaseError(null, err);
+                    if (err) return me.databaseError(socket, err);
 
                     chatRoom.users.splice(socket.user.userId, 1);
 
@@ -199,14 +199,14 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
     }
 
     app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(socket.user.userId, data.joinType), function (err, res1) {
-        if (err) return me.databaseError(null, err);
+        if (err) return me.databaseError(socket, err);
 
         chatRoom.addUser(socket.user.userId);
         var user = socket.user;
 
         if (user && user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
-                socket.broadcast.to(socketId).emit('newChatWindow', chatRoom );
+                socket.emit('newChatWindow', chatRoom );
             });
         }
 
@@ -215,17 +215,23 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, redirectType: data.redirectType});
 
         if (data.redirectType === 2) {
-            app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?',
-                [chatRoom.chat.chatId, socket.user.userId], function (err, res1) {
-                    if (err) return me.databaseError(null, err);
+            if (!!chatRoom.users && Array.isArray(chatRoom.users)){
+                chatRoom.users.forEach(function (userId) {
+                    if (socket.user.userId !== userId) {
+                        app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?',
+                            [chatRoom.chat.chatId, userId], function (err, res1) {
+                                if (err) return me.databaseError(socket, err);
 
-                    chatRoom.users.splice(socket.user.userId, 1);
+                                chatRoom.users.splice(userId, 1);
 
-                    var message = new Message();
-                    message.chatUniqId = data.chatUniqId;
-                    message.messageType = 'close';
-                    socket.emit('message', message);
-                });
+                                var message = new Message();
+                                message.chatUniqId = data.chatUniqId;
+                                message.messageType = 'close';
+                                socket.broadcast.to(socketId).emit('message', message );
+                            });
+                    }
+                })
+            }
         }
     });
 };
