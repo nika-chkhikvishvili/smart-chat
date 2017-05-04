@@ -2,6 +2,8 @@
  * Created by jedi on 2017-04-21
  */
 
+'use strict';
+
 function Message(initParams) {
     if (!(this instanceof Message)) return new Message(initParams);
     if (!initParams) initParams = {};

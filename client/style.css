@@ -63,3 +63,8 @@ a:hover { text-decoration:underline; }
     display : none;
     color :red;
 }
+
+.msg {
+    max-width: 415px;
+    word-wrap: break-word;
+}

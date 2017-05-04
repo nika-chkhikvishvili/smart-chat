@@ -2,6 +2,8 @@
  * Created by jedi on 2017-04-21
  */
 
+'use strict';
+
 function ChatRoom(initParams) {
     initParams = initParams || {};
     if (!(this instanceof ChatRoom)) return new ChatRoom(initParams);

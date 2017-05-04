@@ -239,9 +239,10 @@ var createChatWindowAndLoadDataSimple = function(data){
     $('.wrapper_chat .container_chat .left .people').append('<li class="person" data-chat="' + data.chatUniqId + '">'+
         '<img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />'+
         '<span class="name">'+ data.firstName + ' '+ data.lastName+'</span>'+
-    '<span class="time"></span>'+
-    '<span class="preview">...</span>'+
-    '</li>');
+        '<span class="new_message_icon"></span>'+
+        '<span class="time"></span>'+
+        '<span class="preview">...</span>'+
+        '</li>');
 
     $('.wrapper_chat .container_chat .right .chats_container').append('<div> <div class="chat" data-chat="' + data.chatUniqId + '"></div></div>');
 
@@ -357,6 +358,7 @@ $(document).ready(function () {
             $('.chat').removeClass('active-chat');
             $('.left .person').removeClass('active');
             $(this).addClass('active');
+            $(this).removeClass('new_message');
             $('.chat[data-chat = '+findChat+']').addClass('active-chat');
 
             // $(this).attr('data-chat')
@@ -431,6 +433,7 @@ $(document).ready(function () {
         var message = $("div.write input").val();
         var id = makeRandomString();
         var chatUniqId = elChatbox.attr('data-chat');
+
         socket.emit('sendMessage', {
             chatUniqId:  chatUniqId ,
             message: message,
@@ -550,11 +553,14 @@ socket.on('message', function (data) {
         alert('მომხმარებელმა ჩატი დახურა');
         $(".person[data-chat = " + data.chatUniqId + "]").remove();
         $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-
     } else {
 
     if (data.guestUserId) {
         elChatbox.append('<div class="bubble you">' + data.message + '</div>');
+
+        if (!($(".person[data-chat = " + data.chatUniqId + "]").hasClass('active'))) {
+            $(".person[data-chat = " + data.chatUniqId + "]").addClass('new_message');
+        }
     } else {
         elChatbox.append('<div class="bubble me">' + data.message + '</div>');
     }
@@ -634,12 +640,11 @@ socket.on('getActiveChatsResponse', function (data){
             operator = item.users[0].firstName + ' ' + item.users[0].firstName;
         }
 
-
         tableBody.append(
-            '<tr>'+
-            '<td>'+ item.chat_id +'</td>'+
-            ' <td>' + operator + '</td>'+
-            ' <td>'+ item.user_first_name + ' ' + item.user_last_name +'</td>'+
+        ' <tr>'+
+        ' <td>'+ item.chat_id +'</td>'+
+        ' <td>' + operator + '</td>'+
+        ' <td>'+ item.user_first_name + ' ' + item.user_last_name +'</td>'+
         ' <td>' + item.service_name_geo + '</td>'+
         ' <td>' + item.add_date + '</td>'+
         ' <td>'+
@@ -648,9 +653,8 @@ socket.on('getActiveChatsResponse', function (data){
         ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',1);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
         ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',2);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
         ' </td>'+
-        '</tr>'
+        ' </tr>'
         );
-
     });
 });
 

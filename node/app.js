@@ -5,6 +5,7 @@ var Message   = require('./models/Message');
 var GuestUser = require('./models/GuestUser');
 var Chat      = require('./models/Chat');
 var ChatRoom  = require('./models/ChatRoom');
+var AutoAnswering = require('./service/AutoAnsweringService');
 
 me.log = require('npmlog');
 var app = require('express')();
@@ -23,31 +24,33 @@ me.connection.connect();
 
 me.io = require('socket.io')(http_server);
 
-//var redis = require("redis");
-//var redisClient = redis.createClient();
+var redis = require("redis");
+var redisClient = redis.createClient();
 
 // if you'd like to select database 3, instead of 0 (default), call
 // client.select(3, function() { /* ... */ });
 
-//redisClient.on("error", function (err) {
-//    console.log("Error " + err);
-//});
+redisClient.on("error", function (err) {
+   console.log("Error " + err);
+});
 
-//redisClient.set("string key", "string val", redis.print);
-//redisClient.hset("hash key", "hashtest 1", "some value", redis.print);
-//redisClient.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-//redisClient.hkeys("hash key", function (err, replies) {
-//    console.log(replies.length + " replies:");
-//    replies.forEach(function (reply, i) {
-//        console.log("    " + i + ": " + reply);
-//    });
-//    //redisClient.quit();
-//});
+redisClient.set("string key", "string val", redis.print);
+redisClient.hset("hash key", "hashtest 1", "some value", redis.print);
+redisClient.hset(["hash key", "hashtest 2", "some other value"], redis.print);
+
+redisClient.hkeys("hash key", function (err, replies) {
+   console.log(replies.length + " replies:");
+   replies.forEach(function (reply, i) {
+       console.log("    " + i + ": " + reply);
+   });
+   //redisClient.quit();
+});
 
 
 me.chatRooms = {};
 me.waitingClients = [];
 me.onlineUsers = {};
+me.autoAnswering = {};
 
 
 var client = require('./client.js')(me);
@@ -83,6 +86,17 @@ me.databaseError = function (socket, err) {
  me.onlineUsers[row.person_id].tokens.push(row.token);
  });
  });*/
+
+me.connection.query('SELECT auto_answering_id, repository_id, start_chating, mail_offline, connect_failed, user_block,' +
+    ' auto_answering, repeat_auto_answering, time_off FROM  auto_answering',
+    function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+            process.exit(1);
+        }
+        me.autoAnswering = new AutoAnswering(rows);
+});
+
 
 //დაუსრულებელი ჩატების და  რიგში მდგომი სტუმრების ინიციალიზაცია
 me.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`service_id`,    `c`.`chat_uniq_id`,  c.`chat_status_id`, ' +
@@ -220,6 +234,15 @@ me.checkAvailableOperatorForService = function (socket, serviceId) {
                         socket.broadcast.to(socketId).emit('newChatWindow', chatRoom );
                     });
                 }
+
+                Object.keys(chatRoom.guests).forEach(function (socketId) {
+                    if (socket.id === socketId) {
+                        socket.emit('operatorJoined',  me.autoAnswering.getWelcomeMessage(1))
+                    } else {
+                        socket.broadcast.to(socketId).emit('operatorJoined', me.autoAnswering.getWelcomeMessage(1) );
+                    }
+                });
+
             });
         });
     });

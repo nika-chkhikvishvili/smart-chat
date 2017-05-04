@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Created by jedi on 2/23/16.
  */
@@ -21,7 +23,7 @@ function ChatServer(data) {
 ChatServer.prototype.getWaitingList = function (socket) {
     var ans = [];
     if (app.waitingClients && Array.isArray(app.waitingClients)) {
-        for (i = 0; i < app.waitingClients.length; ++i) {
+        for (var i = 0; i < app.waitingClients.length; ++i) {
             if (app.waitingClients[i]) ans[i] = app.waitingClients[i].toArray();
         }
     }
@@ -52,7 +54,6 @@ ChatServer.prototype.getAllChatMessages = function (socket, data) {
 
 
 // აბრუნებს მიმდინარეების სიას
-
 ChatServer.prototype.getActiveChats = function (socket) {
     var ans = [];
     app.connection.query('SELECT c.*, cs.service_name_geo, ou.online_users_name as user_first_name, ou.online_users_lastname as user_last_name ' +

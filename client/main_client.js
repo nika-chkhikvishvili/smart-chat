@@ -3,10 +3,12 @@ test comment
  * Created by jedi on 2016-07-01.
  */
 
+'use strict';
+
 var first_name = '';
 var last_name = '';
-var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
-var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
+var meTemplate = jQuery.validator.format("<div><div class='msg msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
+var othTemplate = jQuery.validator.format("<div class='msg msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
 //var socket = io('http://smartchat.cloud.gov.ge:3000');
 var socket = io(window.location.origin  + ':3000');
@@ -32,6 +34,11 @@ socket.on('clientGetServicesResponse', function (data) {
                     .text(value.category_name + ' - ' + value.service_name_geo));
         });
     }
+});
+
+socket.on('operatorJoined', function (data) {
+    console.log('execute: operatorJoined');
+    console.log(data);
 });
 
 socket.on('clientInitParamsResponse', function (data) {
@@ -112,7 +119,7 @@ socket.on('message', function (data) {
 
     } else if(data.messageType === 'close') {
         delete localStorage['chatUniqId'];
-        $('#chatbox').html('');
+        elChatbox.html('');
         $('#asarchevi').show();
         $('#wrapper').hide();
         $('#begin_btn').attr({disabled: false});
@@ -187,17 +194,17 @@ $(document).ready(function () {
         last_name = $('#last_name').val();
         var personal_no = $('#personal_no').val();
 
-        if (!select_theme || select_theme == '') {
+        if (!select_theme || select_theme === '') {
             alert('choose service');
             return;
         }
 
-        if (!first_name || first_name == '') {
+        if (!first_name || first_name === '') {
             alert('choose first_name');
             return;
         }
 
-        if (!last_name || last_name == '') {
+        if (!last_name || last_name === '') {
             alert('choose last_name');
             return;
         }
@@ -206,7 +213,7 @@ $(document).ready(function () {
     });
 
     $("#usermsg").keyup(function (event) {
-        if (event.keyCode == 13) {
+        if (event.keyCode === 13) {
             $("#submitmsg").click();
         }
     });

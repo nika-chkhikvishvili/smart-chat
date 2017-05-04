@@ -2,6 +2,8 @@
  * Created by jedi on 2/23/16.
  */
 
+'use strict';
+
 var Message   = require('./models/Message');
 var GuestUser = require('./models/GuestUser');
 var Chat      = require('./models/Chat');
@@ -50,7 +52,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             }
         }
 
-        var guestUser = new GuestUser({firstName: data.first_name, lastName: data.last_name});
+        var guestUser = new GuestUser({firstName: data.first_name, lastName: data.last_name, ip: socket.conn.remoteAddress});
 
         app.connection.query('INSERT INTO `online_users` SET ? ', guestUser.getInsertObject(), function (err, res) {
             if (err)  return app.databaseError(socket, err);
@@ -123,7 +125,7 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
         app.connection.query('SELECT * FROM  `online_users` WHERE online_user_id = ?', [ans.online_user_id], function (err, res) {
             if (err) return app.databaseError(socket, err);
 
-            if (!(res && Array.isArray(res) && res.length == 1)) {
+            if (!(res && Array.isArray(res) && res.length === 1)) {
                 socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
                 return ;
             }

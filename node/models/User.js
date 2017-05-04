@@ -2,6 +2,7 @@
  * Created by jedi on 2017-04-20
  */
 
+'use strict';
 
 function User(user) {
 

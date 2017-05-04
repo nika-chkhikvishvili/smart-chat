@@ -2,6 +2,8 @@
  * Created by jedi on 2017-04-21
  */
 
+'use strict';
+
 var randomStringGenerator = require("randomstring");
 
 

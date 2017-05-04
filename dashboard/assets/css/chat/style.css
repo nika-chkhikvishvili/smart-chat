@@ -492,3 +492,17 @@
   color: white;
   text-decoration: none;
 }
+
+.bubble {
+  max-width: 350px;
+  word-wrap: break-word;
+}
+
+.new_message .new_message_icon{
+  background: rgb(66, 183, 42);
+  border-radius: 50%;
+  display: inline-block;
+  height: 6px;
+  margin-left: 4px;
+  width: 6px;
+}
