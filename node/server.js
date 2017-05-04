@@ -11,8 +11,6 @@ var Message = require('./models/Message');
 var log;
 var app;
 
-module.exports = ChatServer;
-
 function ChatServer(data) {
     if (!(this instanceof ChatServer)) return new ChatServer(data);
     app = data;
@@ -386,7 +384,6 @@ ChatServer.prototype.messageReceived = function (socket, data) {
 
 
 ChatServer.prototype.operatorIsWorking = function (socket, data) {
-    var app = this.app;
 
     if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
         socket.emit("pingResponse", {isValid: false, error: 'chat_uniq_id', data: data});
@@ -397,3 +394,5 @@ ChatServer.prototype.operatorIsWorking = function (socket, data) {
     app.sendMessageToRoom(socket, data.chat_uniq_id, 'ping', 'ping', 'ping');
 
 };
+
+module.exports = ChatServer;

@@ -30,7 +30,4 @@ Message.prototype.getInsertObject = function () {
     }
 };
 
-
-
-
 module.exports = Message;

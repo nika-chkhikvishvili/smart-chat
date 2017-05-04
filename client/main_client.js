@@ -108,13 +108,11 @@ socket.on('message', function (data) {
 
 
     } else if(data.messageType === 'writing') {
-        $('#operator_is_writing').show();
+        var a = $('#operator_is_writing');
+        a.data('lastWriteTime', new Date().getTime());
+        a.show();
 
-        setTimeout(function(){
-            $('#operator_is_writing').hide();
-        },3000);
-
-    }  else if(data.messageType === 'ban') {
+    } else if(data.messageType === 'ban') {
         window.location = 'blocked.php';
 
     } else if(data.messageType === 'close') {
@@ -213,6 +211,7 @@ $(document).ready(function () {
     });
 
     $("#usermsg").keyup(function (event) {
+        socket.emit('userIsWriting', {chatUniqId: localStorage.getItem("chatUniqId")});
         if (event.keyCode === 13) {
             $("#submitmsg").click();
         }
@@ -227,3 +226,13 @@ $(document).ready(function () {
         addMessage(ran, message);
     });
 });
+
+setInterval(
+    function hideIsWriting(){
+        var el = $('#operator_is_writing');
+        if (isNaN(el.data('lastWriteTime') ) ) return  ;
+        if (new Date().getTime() - el.data('lastWriteTime') > 3000) {
+            el.hide();
+        }
+    }, 1000
+);

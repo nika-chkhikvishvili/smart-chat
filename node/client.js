@@ -9,14 +9,12 @@ var GuestUser = require('./models/GuestUser');
 var Chat      = require('./models/Chat');
 var ChatRoom  = require('./models/ChatRoom');
 var log;
-var app;
-
-module.exports = ChatClient;
+// var app;
 
 
 function ChatClient(data) {
     if (!(this instanceof ChatClient)) return new ChatClient(data);
-    app = data;
+    this.app = data;
     log = data.log;
 }
 
@@ -202,3 +200,21 @@ ChatClient.prototype.clientCloseChat = function (socket, data) {
         app.sendMessageToRoom(socket, message, true);
     });
 };
+
+ChatClient.prototype.userIsWriting = function (socket, data) {
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
+        return;
+    }
+
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chatUniqId)) {
+        return;
+    }
+
+    var message = new Message();
+    message.chatUniqId = data.chatUniqId;
+    message.messageType = 'writing';
+
+    app.sendMessageToRoom(socket, message);
+};
+
+module.exports = ChatClient;

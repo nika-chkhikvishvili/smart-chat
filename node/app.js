@@ -260,6 +260,7 @@ app.io.on('connection', function (socket) {
     socket.on('clientMessage',              function (data) {client.clientMessage(socket, data);});
     socket.on('clientMessageReceived',      function (data) {client.clientMessageReceived(socket, data);});
     socket.on('clientCloseChat',            function (data) {client.clientCloseChat(socket, data);});
+    socket.on('userIsWriting',              function (data) {client.userIsWriting(socket, data);});
 
     socket.on('test', function () {
         console.dir('test');

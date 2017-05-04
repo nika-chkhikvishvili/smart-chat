@@ -15,7 +15,9 @@
 
 <div id="wrapper">
     <div id="menu">
-        <p class="welcome">მოგესალმებით, <span id="saxeli_span"></span><span id="operator_is_working"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span><span id="operator_is_writing"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span></p>
+        <p class="welcome">მოგესალმებით, <span id="saxeli_span"></span>
+            <span id="operator_is_working"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span>
+            <span id="operator_is_writing"> <img src="/assets/images/typing.gif" style="height: 16px;margin-left: 10px;" > </span></p>
         <p class="logout"><a id="exit" href="#" >Exit Chat</a></p>
         <div style="clear:both"></div>
     </div>
