@@ -41,8 +41,9 @@ ChatServer.prototype.getAllChatMessages = function (socket, data) {
 
         if (res && Array.isArray(res) && res.length === 1) {
             var chat = res[0];
-            app.connection.query('SELECT m.`chat_message_id`, m.`chat_id`, m.`person_id`, m.`online_user_id`, m.`chat_message`, m.`message_date`' +
-                'FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [chat.chat_id], function (err, res) {
+            app.connection.query('SELECT m.`chat_message_id` as messageId, m.`chat_id` as chatId, ' +
+                ' m.`person_id` as userId, m.`online_user_id` as guestUserId, m.`chat_message` as message, m.`message_date` as messageDate' +
+                ' FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [chat.chat_id], function (err, res) {
                 if (err) return app.databaseError(socket, err);
                 socket.emit("getAllChatMessagesResponse", {chatUniqId: data.chatUniqId, messages: res});
             });
@@ -337,10 +338,10 @@ ChatServer.prototype.banPerson = function (socket, data) {
         return;
     }
 
-    var chatId = me.chatRooms[data.chat_uniq_id].chatId;
+    var chatId = app.chatRooms[data.chat_uniq_id].chatId;
 
-    me.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
-        if (err) me.databaseError(socket, err);
+    app.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
+        if (err) app.databaseError(socket, err);
         else {
             if (res && Array.isArray(res) && res.length === 1) {
 

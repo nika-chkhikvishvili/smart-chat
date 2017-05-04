@@ -268,8 +268,6 @@ var createChatWindowAndLoadData = function(data){
         lastName : data.chat.guestUser.firstName || ''
     };
     createChatWindowAndLoadDataSimple(d);
-
-
 };
 
 socket.on('getAllChatMessagesResponse', function (data) {
@@ -277,15 +275,15 @@ socket.on('getAllChatMessagesResponse', function (data) {
     console.log(data);
     var elChatbox = $(".chat[data-chat = "+data.chatUniqId+"]");
 
-    elChatbox.append('<div class="conversation-start">'+
-        '<span>Today, 6:48 AM</span>'+
-        '</div>');
+/*    elChatbox.append('<div class="conversation-start">'+
+        '<span>'+ new Date(item.messageDate).toISOString() +'</span>'+
+        '</div><br>');*/
 
     data.messages.forEach(function(item){
         if(item.guestUserId){
-            elChatbox.append('<div class="bubble you">'+ item.chat_message + '</div>' );
+            elChatbox.append('<div class="bubble you">'+ item.message + '</div>' );
         } else {
-            elChatbox.append('<div class="bubble me">'+ item.chat_message + '</div>' );
+            elChatbox.append('<div class="bubble me">'+ item.message + '</div>' );
         }
     });
 
@@ -634,10 +632,10 @@ socket.on('getActiveChatsResponse', function (data){
     var tableBody = $('#online_chats_list').find('tbody').html('');
 
     data.forEach(function(item){
-        console.log(item);
         var operator = 'ჯერ არ შესულა ოპერატორი';
-        if (item.users && Array.isArray(item.users)) {
-            operator = item.users[0].firstName + ' ' + item.users[0].firstName;
+        if (item.users && Array.isArray(item.users) && item.users.length > 0) {
+            console.log(item.users[0]);
+            operator = item.users[0].firstName + ' ' + item.users[0].lastName;
         }
 
         tableBody.append(
@@ -671,19 +669,6 @@ socket.on('getNextWaitingClientResponse', function (data){
     createChatWindowAndLoadData(data);
     socket.emit('getWaitingList');
 });
-
-//ჩატის ფანჯარაში ტექსტის დამატების ფუნქცია
-function addMessage(chat_uniq_id, id, message){
-    var msg = meTemplate(id, (new Date()).toISOString().substr(11,8)  ,message );
-
-    var elChatbox = $("#"+chat_uniq_id + ' .msgbox_chat_area');
-    elChatbox.append(msg);
-
-    // var height = elChatbox[0].scrollHeight;
-    // elChatbox.scrollTop(height);
-
-    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
-}
 
 function makeRandomString() {
     var text = "";
