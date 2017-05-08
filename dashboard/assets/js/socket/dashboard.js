@@ -413,6 +413,8 @@ $(document).ready(function () {
 
     // ჩატის ტექსტის აკრეფინს ფანჯარაზე ენტერ ღილაკზე დაჭერა
     $(".write input").on('keyup', function (event) {
+        var elChatbox = $('.active-chat');
+        socket.emit('userIsWriting', {chatUniqId: elChatbox.data("chat")});
         if (event.keyCode === 13 ) {
             $(".wrapper_chat .send").click();
         }
@@ -541,6 +543,7 @@ socket.on('message', function (data) {
     var elChatbox = $(".chat[data-chat = " + data.chatUniqId + "]");
 
     if(data.messageType === 'writing') {
+        console.log('ბეჭდავს');
         // $('#operator_is_writing').show();
         //
         // setTimeout(function(){
