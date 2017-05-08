@@ -1,3 +1,6 @@
+<?php
+$session_data = $this->session->userdata('user');
+?>
 <ul>
     <li>
         <a href="<?= base_url(); ?>dashboard" class="waves-effect active"><i class="md md-home"></i><span> მთავარი გვერდი </span></a>
@@ -7,7 +10,11 @@
     <li>
     <a href="#" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
     </li>
-
+    <?php
+    
+    if($session_data->is_admin ==1){        
+    
+    ?>
     <li class="has_sub">
         <a href="#" class="waves-effect"><i class="md md-palette"></i> <span> ადმინისტრირება </span> <span
         class="pull-right"><i class="md md-add"></i></span></a>
@@ -21,6 +28,7 @@
             
         </ul>
     </li>
+   
     <li>
 <a href="<?= base_url(); ?>dashboard/answering" class="waves-effect"><i class="md md-cast-connected"></i><span> ავტომოპასუხე </span></a>
 </li>
@@ -30,6 +38,9 @@
  <li>
 <a href="<?=base_url();?>files" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>
 </li>
+ <?php
+    };
+?>
 <li><a href="<?=base_url();?>profile"><i class="md ion-android-contact"></i><span>პირადი პარამეტრები</span></a></li>
 <li><a href="<?=base_url();?>logout"><i class="glyphicon glyphicon-log-out"></i><span>გასვლა</span></a></li>  
 </ul>
