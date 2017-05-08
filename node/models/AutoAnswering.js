@@ -26,17 +26,17 @@ function AutoAnswering(params) {
     if (!!params && Array.isArray(params)) {
         params.forEach(function (val) {
             a[val.repository_id] = new AutoAnsweringNode({welcomeMessage: val.start_chating});
-        })
+        });
     }
 }
 
 AutoAnswering.prototype.getValue = function (repositoryId, field, defaultValue) {
     var autoAnswering = this.autoAnswerings.hasOwnProperty(repositoryId) ? this.autoAnswerings[repositoryId] : false;
     if (!autoAnswering) {
-        autoAnswering= this.autoAnswerings.hasOwnProperty(0) ? this.autoAnswerings[0] : false;
+        autoAnswering = this.autoAnswerings.hasOwnProperty(0) ? this.autoAnswerings[0] : false;
     }
     if (autoAnswering) {
-        return autoAnswering.hasOwnProperty(field)? autoAnswering[field]: defaultValue;
+        return autoAnswering.hasOwnProperty(field) ? autoAnswering[field]: defaultValue;
     }
     return defaultValue;
 };

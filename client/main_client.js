@@ -5,13 +5,12 @@ test comment
 
 'use strict';
 
-var first_name = '';
-var last_name = '';
+var firstName = '';
+var lastName = '';
 var meTemplate = jQuery.validator.format("<div><div class='msg msgln' id='message_{0}'>({1}) <b>{2}</b>: {3}<br></div></div>");
 var othTemplate = jQuery.validator.format("<div class='msg msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
 
-//var socket = io('http://smartchat.cloud.gov.ge:3000');
-var socket = io(window.location.origin  + ':3000');
+var socket = io(window.location.origin + ':3000');
 
 socket.on('testResponse', function (data){
     console.log('execute: testResponse');
@@ -28,10 +27,7 @@ socket.on('clientGetServicesResponse', function (data) {
     if ($.isArray(data)){
         $('#select_theme').html('');
         $.each(data, function(key, value) {
-            $('#select_theme')
-                .append($("<option></option>")
-                    .attr("value",value.category_service_id)
-                    .text(value.category_name + ' - ' + value.service_name_geo));
+            $('#select_theme').append($("<option></option>").attr("value", value.category_service_id).text(value.category_name + ' - ' + value.service_name_geo));
         });
     }
 });
@@ -46,24 +42,24 @@ socket.on('clientInitParamsResponse', function (data) {
 
     if (!data) {
         alert('Error');
-        return ;
+        return;
     }
 
     if (data.hasOwnProperty('isValid')) {
         alert('Wrong Params');
-        return ;
+        return;
     }
 
     if (data.hasOwnProperty('serviceIsOffline')) {
         alert('Service Is Offline');
         $('#begin_btn').attr({disabled: false});
         window.location = 'offline.php';
-        return ;
+        return;
     }
 
     $('#chatbox').html('');
     localStorage.chatUniqId = data.chatUniqId;
-    $('#saxeli_span').text(first_name + ' ' + last_name);
+    $('#saxeli_span').text(firstName + ' ' + lastName);
     $('#asarchevi').hide();
     $('#wrapper').show();
 });
@@ -72,21 +68,21 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
     console.log('execute: clientCheckChatIfAvailableResponse');
     console.log(data);
     if(data && data.hasOwnProperty('isValid') && data.isValid){
-        first_name =data.first_name || '';
-        last_name =data.last_name || '';
-        $('#saxeli_span').text(first_name + ' ' + last_name);
+        firstName =data.firstName || '';
+        lastName =data.lastName || '';
+        $('#saxeli_span').text(firstName + ' ' + lastName);
         $('#asarchevi').hide();
         $('#wrapper').show();
         var elChatbox = $("#chatbox");
-        if (data.messages && Array.isArray(data.messages)){
+        if (data.messages && Array.isArray(data.messages)) {
             elChatbox.html('');
-            data.messages.forEach(function(item){
-                if(item.online_user_id){
-                    elChatbox.append(meTemplate(item.chat_message_id, item.message_date.substr(11,8) , first_name +' '+ last_name , item.chat_message ));
+            data.messages.forEach(function(item) {
+                if(item.online_user_id) {
+                    elChatbox.append(meTemplate(item.chat_message_id, item.message_date.substr(11, 8), firstName + ' ' + lastName, item.chat_message));
                 } else {
-                    elChatbox.append(othTemplate(item.message_date.substr(11,8) ,'system', item.chat_message ));
+                    elChatbox.append(othTemplate(item.message_date.substr(11, 8), item.sender, item.chat_message));
                 }
-            })
+            });
         }
         elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     } else {
@@ -97,7 +93,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
 socket.on('message', function (data) {
     console.log('execute: message');
     console.log(data);
-    socket.emit('clientMessageReceived', { chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
+    socket.emit('clientMessageReceived', {chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     var elChatbox = $("#chatbox");
     if(data.messageType === 'ping') {
         $('#operator_is_working').show();
@@ -107,16 +103,16 @@ socket.on('message', function (data) {
         },3000);
 
 
-    } else if(data.messageType === 'writing') {
+    } else if (data.messageType === 'writing') {
         var a = $('#operator_is_writing');
-        a.data('lastWriteTime', new Date().getTime());
+        a.data('lastWriteTime', Date.now());
         a.show();
 
-    } else if(data.messageType === 'ban') {
+    } else if (data.messageType === 'ban') {
         window.location = 'blocked.php';
 
     } else if(data.messageType === 'close') {
-        delete localStorage['chatUniqId'];
+        delete localStorage.chatUniqId;
         elChatbox.html('');
         $('#asarchevi').show();
         $('#wrapper').hide();
@@ -125,11 +121,10 @@ socket.on('message', function (data) {
 
     } else {
         if (data.guestUserId) {
-            elChatbox.append( meTemplate(data.messageUniqId, (new Date()).toISOString().substr(11,8) , first_name +' '+ last_name , data.message ));
+            elChatbox.append(meTemplate(data.messageUniqId, Date.now().toISOString().substr(11, 8), firstName + ' ' + lastName, data.message ));
         } else {
-            elChatbox.append(othTemplate((new Date()).toISOString().substr(11,8) , data.sender, data.message ));
+            elChatbox.append(othTemplate((new Date()).toISOString().substr(11, 8), data.sender, data.message));
         }
-
     }
     elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 });
@@ -145,19 +140,21 @@ socket.on('messageReceived', function (data) {
 
 socket.on('clientMessageResponse', function (data) {
     console.log('execute: clientMessageResponse');
-    // console.log(data);
+    console.log(data);
 });
 
 
 function redAlert(id) {
     var el = $('#message_' + id);
-    if (el.val() !== 'submited') el.css({'background-color': 'red'});
+    if (el.val() !== 'submited') {
+        el.css({'background-color': 'red'});
+    }
 }
 
-function addMessage(id , message){
-    var msg = meTemplate(id, (new Date()).toISOString().substr(11,8) , first_name +' '+ last_name ,message );
+function addMessage(id, message) {
+    var msg = meTemplate(id, (new Date()).toISOString().substr(11, 8), firstName + ' ' + lastName, message);
 
-      var elChatbox = $("#chatbox");
+    var elChatbox = $("#chatbox");
     elChatbox.append(msg);
 
     //setTimeout(function () {
@@ -166,21 +163,19 @@ function addMessage(id , message){
     elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
-
 socket.io.on('reconnect', function () {
     var chatUniqId = localStorage.getItem("chatUniqId") || '';
-    socket.emit('clientCheckChatIfAvailable',{chatUniqId : chatUniqId});
+    socket.emit('clientCheckChatIfAvailable', {chatUniqId: chatUniqId});
 });
 
 $(document).ready(function () {
     var chatUniqId = localStorage.getItem("chatUniqId") || '';
-    socket.emit('clientCheckChatIfAvailable',{chatUniqId : chatUniqId});
+    socket.emit('clientCheckChatIfAvailable', {chatUniqId: chatUniqId});
 
     $("#exit").click(function () {
         var exit = confirm("Are you sure you want to end the session?");
         if (exit === true) {
-            var chatUniqId = localStorage.getItem("chatUniqId") || '';
-            socket.emit('clientCloseChat', {chatUniqId : chatUniqId});
+            socket.emit('clientCloseChat', {chatUniqId: localStorage.getItem("chatUniqId")});
         }
         return false;
     });
@@ -188,8 +183,8 @@ $(document).ready(function () {
     $("#begin_btn").click(function ()  {
         $('#begin_btn').attr({disabled: true});
         var select_theme = $('#select_theme').val();
-        first_name = $('#first_name').val();
-        last_name = $('#last_name').val();
+        firstName = $('#first_name').val();
+        lastName = $('#last_name').val();
         var personal_no = $('#personal_no').val();
 
         if (!select_theme || select_theme === '') {
@@ -197,17 +192,16 @@ $(document).ready(function () {
             return;
         }
 
-        if (!first_name || first_name === '') {
+        if (!firstName || firstName === '') {
             alert('choose first_name');
             return;
         }
 
-        if (!last_name || last_name === '') {
+        if (!lastName || lastName === '') {
             alert('choose last_name');
             return;
         }
-
-        socket.emit('clientInitParams', {service_id: select_theme, first_name: first_name, last_name: last_name, personal_no:personal_no});
+        socket.emit('clientInitParams', {service_id: select_theme, first_name: firstName, last_name: lastName, personal_no:personal_no});
     });
 
     $("#usermsg").keyup(function (event) {
@@ -230,8 +224,10 @@ $(document).ready(function () {
 setInterval(
     function hideIsWriting(){
         var el = $('#operator_is_writing');
-        if (isNaN(el.data('lastWriteTime') ) ) return  ;
-        if (new Date().getTime() - el.data('lastWriteTime') > 3000) {
+        if (isNaN(el.data('lastWriteTime'))) {
+            return  ;
+        }
+        if (Date.now() - el.data('lastWriteTime') > 3000) {
             el.hide();
         }
     }, 1000

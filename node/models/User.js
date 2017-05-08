@@ -7,13 +7,16 @@
 function User(user) {
 
     user = user || {};
-    if (!(this instanceof User)) return new User(user);
+    if (!(this instanceof User)) {
+        return new User(user);
+    }
     this.userId    = user.hasOwnProperty('userId')    ? user.userId    : null;
     this.firstName = user.hasOwnProperty('firstName') ? user.firstName : null;
     this.lastName  = user.hasOwnProperty('lastName')  ? user.lastName  : null;
     this.photo     = user.hasOwnProperty('photo')     ? user.photo     : null;
     this.isAdmin   = user.hasOwnProperty('isAdmin')   ? user.isAdmin   : null;
     this.statusId  = user.hasOwnProperty('statusId')  ? user.statusId  : null;
+    this.isOnline  = user.hasOwnProperty('isOnline')  ? user.isOnline  : null;
     this.sockets = {};
     this.tokens = {};
 }
