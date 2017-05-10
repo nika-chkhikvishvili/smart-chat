@@ -38,7 +38,43 @@
     width: 100%;
 }
 </style>
+<script type="text/javascript">
+        $(document).ready(function(){      
+             // delete the entry once we have confirmed that it should be deleted
+                $('.delete').click(function() {
+                data = {};			
+                data['id'] = $(this).parent('tr').attr('data-row-id');
+                        var parent = $(this).closest('tr');
+                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
+                         {
+                         $.ajax({
+                                type: "POST",  
+                                  url: "<?=base_url()."files/del_file";?>",  
+                                  cache:false,  
+                                  data: data,
+                                  dataType: "json",   
+                                beforeSend: function() {
+                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
+                                },
+                                success: function(response) {
 
+                                //$("#loading").hide();
+                                        if(response.status) {
+                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                          setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        } else {
+                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                           setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        }
+                                }
+                        });	 
+                         }
+
+                });
+
+        });
+
+</script>
 </head>
 
 
@@ -118,10 +154,10 @@
          <?php       
          foreach ($sql_files as $files):
          ?> 
-        <tr class="">
+        <tr data-row-id="<?php echo $files['files_id'];?>" id="<?php echo $files['files_id'];?>">
          
             <td><a href="<?=base_url();?>uploads/<?=$files['file_name'];?>"><?=$files['file_name'];?></a></td>
-          <td><a href="<?=$files['files_id'];?>">წაშლა</a></td>
+           <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" id="<?php echo $files['files_id'];?>" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i>&nbsp; წაშლა</a></td>
         </tr>
         <?php
         endforeach;

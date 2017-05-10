@@ -356,6 +356,21 @@ class dashboard_model extends CI_Model{
       $query = $this->db->get();
       return $query->result_array();
    }
+   
+   function get_one_file($file_id)
+   {
+      $this->db->select('*');
+      $this->db->from('files');
+      $this->db->where('files_id', $file_id); 
+      $query = $this->db->get();
+      return $query->row_array(); 
+   }
+   
+   function del_files($files_id)
+   {
+      $this->db->where('files_id', $files_id);
+      $this->db->delete('files');  
+   }
 
    public function get_all_full_services(){
     	    $this->db->select('repositories.`repository_id`, repositories.name as repository_name, repo_categories.`repo_category_id`, repo_categories.`category_name` , category_services.`category_service_id` , category_services.`service_name_geo`');

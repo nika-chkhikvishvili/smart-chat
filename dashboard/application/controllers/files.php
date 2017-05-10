@@ -41,11 +41,37 @@ class Files extends CI_Controller{
               'file_name' => $this->upload->data()['orig_name']
           );
           $this->dashboard_model->add_files($insert_data);
-          echo '<meta http-equiv="refresh" content="3;'.$url.'">';
+          echo '<meta http-equiv="refresh" content="3">';
         }
         
         $data['sql_files'] = $this->dashboard_model->get_files($session_data->repo_id);
         $this->load->view('files',$data);
+    }
+    
+    function del_file()
+    {
+        $del_file_id =  $_POST['id'];
+        $this->load->model('dashboard_model');
+        
+        $get_file_path = $this->dashboard_model->get_one_file($del_file_id);
+       
+        $file = 'uploads/'.$get_file_path['file_name'];
+        
+        if (@!unlink($file))
+        {
+            $error = true;           
+            $msg = array('status' => !$error, 'msg' => 'ფაილის წაშლა ვერ ხერხდება!');
+            echo json_encode($msg);
+        }
+        else
+        {
+            $get_file_path = $this->dashboard_model->del_files($del_file_id);
+            $error = true;           
+            $msg = array('status' => !$error, 'msg' => 'ფაილი წაშლილია!');
+            echo  json_encode($msg);
+        }
+       
+        
     }
     
    

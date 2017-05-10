@@ -18,7 +18,7 @@ window.setTimeout(function() {
 <?php
 };
 ?>
-        <script type="text/javascript">
+ <script type="text/javascript">
         $(document).ready(function(){      
              // delete the entry once we have confirmed that it should be deleted
                 $('.delete').click(function() {
