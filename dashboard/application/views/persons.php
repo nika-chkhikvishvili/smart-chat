@@ -209,7 +209,7 @@
                                 foreach ($persons as $list):
                                # var_dump($list);
                         ?>
-                        <div class="col-sm-4 col-lg-3">
+                        <div class="col-sm-4 col-lg-4">
                         <div class="panel">
                         <div class="panel-body">
                         <div class="media-main">
