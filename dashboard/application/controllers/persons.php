@@ -66,12 +66,12 @@ class Persons extends CI_Controller{
                 'repo_id' => $session_data->repo_id
                 );
                 $this->load->library('email');
-                $this->email->from('info@psh.gov.ge', 'Your Name');
+                $this->email->from('info@psh.gov.ge', 'smart_chat');
                 $this->email->to($this->input->post('person_mail'));
 
                 $this->email->subject('SmartChat Account Activation');
                 $this->email->message('თქვენი ანგარიში გააქტიურებულია სისტემაში, მისამართი https://dashboard-smartchat.cloud.gov.ge \n'
-                        . ' მომხმარებელი : $this->input->post("person_mail") \n პაროლი : '.$pass.' ');
+                        . ' მომხმარებელი : '.$this->input->post("person_mail").' \n პაროლი : '.$pass.' ');
                 $this->email->send();
                 
                 
@@ -164,6 +164,27 @@ class Persons extends CI_Controller{
         
      }    
      $this->load->view('edit_persons', $data);
+    }
+    
+    function change_password()
+    {
+       $person_id = $_POST['id'];
+       $this->load->model('dashboard_model');
+       $password = self::randomPassword(6,1,"lower_case,upper_case,numbers");
+       $data['person_password'] = sha1($password[0]);
+       $sql_person = $this->dashboard_model->get_one_preson($person_id);
+       $this->dashboard_model->update_person($person_id,$data);
+      
+        $this->load->library('email');
+        $this->email->from('info@psh.gov.ge', 'smart_chat');
+        $this->email->to($sql_person['email']);
+
+        $this->email->subject('SmartChat New Password');
+        $this->email->message('თქვენი ანგარიშზე განხორციელდა პაროლის ცვლილება. მისამართი :  https://dashboard-smartchat.cloud.gov.ge \n'
+                . ' მომხმარებელი : '.$this->input->post("person_mail").' \n პაროლი : '.$password[0].' ');
+        $this->email->send();
+      
+      
     }
     
 public function randomPassword($length,$count, $characters) {
