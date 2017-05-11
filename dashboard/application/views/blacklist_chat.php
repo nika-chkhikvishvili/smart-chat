@@ -39,7 +39,6 @@
                 if(confirm('დავბლოკოთ მომხმარებელი ?'))
                          {
                           socket.emit('approveBan', data);
-                          console.log(data);
                           $.ajax({
                           type: "POST",  
                           url: "<?=base_url()."blacklist/reconfirm_banlist";?>",  
