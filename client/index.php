@@ -1,9 +1,3 @@
-<?php
-// check if blocked
-$sql = "SELECT count(*) as cou FROM `online_users` u, banlist WHERE u.ip_string = '{$_SERVER['REMOTE_ADDR']}'
-AND u.online_user_id = banlist.online_user_id AND banlist.status = 1 AND banlist.add_date > now() - INTERVAL 1 month";
-
-?>
 <!doctype html>
 <html lang="en">
 <head>
