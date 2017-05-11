@@ -17,7 +17,7 @@ function Message(initParams) {
     this.messageDate   = initParams.hasOwnProperty('messageDate')   ?  initParams.messageDate  : null;
     this.messageUniqId = initParams.hasOwnProperty('messageUniqId') ?  initParams.messageUniqId  : null;
     this.sender        = null;
-    this.messageType   = null;
+    this.messageType   = initParams.messageType || null;
 
 }
 

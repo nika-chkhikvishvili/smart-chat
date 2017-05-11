@@ -110,8 +110,10 @@ socket.on('message', function (data) {
         a.show();
 
     } else if (data.messageType === 'ban') {
-        window.location = 'blocked.php';
-
+        $('#wrapper').hide();
+        $('#asarchevi').hide();
+        $('.user_ban').html(data.message);
+        socket.disconnect();
     } else if(data.messageType === 'close') {
         delete localStorage.chatUniqId;
         elChatbox.html('');

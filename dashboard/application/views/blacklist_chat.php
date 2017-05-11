@@ -27,14 +27,19 @@
 
         <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
         <script type="text/javascript">
         $(document).ready(function(){
+            var socket = io('<?=substr(base_url(),0,-1);?>:3000');
+
           $('#update_ban').click(function() {
                 data = {};
                 data['val'] = "<?=$get_uri_chat_id;?>";  
 
                 if(confirm('დავბლოკოთ მომხმარებელი ?'))
                          {
+                          socket.emit('approveBan', data);
+                          console.log(data);
                           $.ajax({
                           type: "POST",  
                           url: "<?=base_url()."blacklist/reconfirm_banlist";?>",  
@@ -42,7 +47,7 @@
                           data: data,
                           dataType: "json",       
                           success: function(response)  
-                          {   
+                          {
                                 //$("#loading").hide();
                                 if(response.status) {
                                   $.Notification.notify('success','top center', 'ყურადღება', response.msg);

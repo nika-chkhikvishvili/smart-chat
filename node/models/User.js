@@ -10,19 +10,22 @@ function User(user) {
     if (!(this instanceof User)) {
         return new User(user);
     }
-    this.userId    = user.hasOwnProperty('userId')    ? user.userId    : null;
-    this.firstName = user.hasOwnProperty('firstName') ? user.firstName : null;
-    this.lastName  = user.hasOwnProperty('lastName')  ? user.lastName  : null;
-    this.photo     = user.hasOwnProperty('photo')     ? user.photo     : null;
-    this.isAdmin   = user.hasOwnProperty('isAdmin')   ? user.isAdmin   : null;
-    this.statusId  = user.hasOwnProperty('statusId')  ? user.statusId  : null;
-    this.isOnline  = user.hasOwnProperty('isOnline')  ? user.isOnline  : null;
+    this.userId    = user.userId    || null;
+    this.userName  = user.userName  || null;
+    this.firstName = user.firstName || null;
+    this.lastName  = user.lastName  || null;
+    this.photo     = user.photo     || null;
+    this.isAdmin   = user.isAdmin   || null;
+    this.statusId  = user.statusId  || null;
+    this.isOnline  = user.isOnline  || null;
     this.sockets = {};
     this.tokens = {};
 }
 
 User.prototype.addSocket = function (socketId) {
-    if (!socketId) return ;
+    if (!socketId) {
+        return;
+    }
     if (!this.sockets.hasOwnProperty(socketId)) this.sockets[socketId] = null;
 };
 

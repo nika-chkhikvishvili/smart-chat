@@ -373,7 +373,7 @@ ChatServer.prototype.banPerson = function (socket, data) {
             var banlist = {
                 ban_id: null,
                 ip: 1,
-                ip_address: '',
+                ip_address: socket.handshake.address,
                 chat_id: chatId,
                 online_user_id: ans.online_user_id,
                 person_id: socket.user.userId,
@@ -391,6 +391,32 @@ ChatServer.prototype.banPerson = function (socket, data) {
     });
 };
 
+ChatServer.prototype.approveBan = function (socket, data) {
+    if (!data || !data.hasOwnProperty('val')) {
+        return;
+    }
+    var chatId = data.val;
+
+    app.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+
+        if (!res || res.length === 0) {
+            return;
+        }
+
+        var messageClose = new Message({messageType: 'close'});
+        messageClose.message = app.autoAnswering.getBanMessage(1);
+        messageClose.chatUniqId = res[0].chat_uniq_id;
+        app.sendMessageToRoom(socket, messageClose);
+
+        var message = new Message({messageType: 'ban'});
+        message.message = app.autoAnswering.getBanMessage(1);
+        message.chatUniqId = res[0].chat_uniq_id;
+        app.sendMessageToRoom(socket, message);
+    });
+}
 
 ChatServer.prototype.messageReceived = function (socket, data) {
     if (!data || !data.hasOwnProperty('msgId') || !data.msgId || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId) {

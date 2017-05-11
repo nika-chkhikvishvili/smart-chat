@@ -33,6 +33,11 @@ ChatClient.prototype.clientGetServices = function (socket) {
 };
 
 ChatClient.prototype.clientInitParams = function (socket, data) {
+
+    if (socket.isBlocked) {
+        return;
+    }
+
     //შეამოწმებს სერვისის სამუშაო პერიოდს თუ არ გასცდა
     app.connection.query('SELECT start_time, end_time  FROM category_services WHERE category_service_id = ? ', [data.service_id], function (err, res) {
         if (err) {
@@ -102,11 +107,15 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
 };
 
 ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
-    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
+    if (socket.isBlocked) {
         socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
         return;
     }
 
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
+        socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
+        return;
+    }
     app.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chatUniqId], function (err, res) {
         if (err) {
             return app.databaseError(socket, err);

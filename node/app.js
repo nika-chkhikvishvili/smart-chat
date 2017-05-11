@@ -7,6 +7,7 @@ var GuestUser = require('./models/GuestUser');
 var Chat = require('./models/Chat');
 var ChatRoom = require('./models/ChatRoom');
 var AutoAnswering = require('./models/AutoAnswering');
+var Message = require('./models/Message');
 
 app.log = require('npmlog');
 var app1 = require('express')();
@@ -263,7 +264,10 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
                     if (socket.id === chatRoom.guests[socketId]) {
                         socket.emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
                     } else {
-                        socket.broadcast.to(chatRoom.guests[socketId]).emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
+                        socket.broadcast.to(chatRoom.guests[socketId]).emit('operatorJoined', {
+                            userName: user.firstName,
+                            message: app.autoAnswering.getWelcomeMessage(1)
+                        });
                     }
                 });
 
@@ -273,6 +277,22 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
 };
 
 app.io.on('connection', function (socket) {
+    // check if blocked
+    app.connection.query('SELECT count(*) as cou FROM banlist WHERE ip_address = ? ' +
+            'AND banlist.status = 1 AND banlist.add_date > now() - INTERVAL 1 month', [socket.handshake.address], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+        var isBlocked = (res[0].cou === '1' || res[0].cou === 1);
+        socket.blockCheckCount = socket.hasOwnProperty('blockCheckCount') ? socket.blockCheckCount + 1 : 0;
+
+        if (isBlocked) {
+            socket.isBlocked = true;
+            var message = new Message({messageType: 'ban'});
+            message.message = app.autoAnswering.getDefaultBanMessage();
+            socket.emit("message", message);
+        }
+    });
 
     socket.on('clientGetServices', function () {
         client.clientGetServices(socket);
@@ -298,7 +318,7 @@ app.io.on('connection', function (socket) {
 
     socket.on('test', function () {
         console.dir('test');
-        socket.emit('testResponse');
+        socket.emit('testResponse', socket.blockCheckCount);
     });
 
     socket.on('checkToken', function (data) {
@@ -334,7 +354,9 @@ app.io.on('connection', function (socket) {
     socket.on('banPerson', function (data) {
         server.banPerson(socket, data);
     });
-
+    socket.on('approveBan', function (data) {
+        server.approveBan(socket, data);
+    });
 
     socket.on('disconnect', function () {
         if (socket.hasOwnProperty('user')) {
