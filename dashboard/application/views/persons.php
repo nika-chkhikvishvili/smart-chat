@@ -27,73 +27,7 @@
 
         <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-		$(document).ready(function(){
-		  $('td.editable-col').on('focusout', function() {
-			data = {};
-			data['val'] = $(this).text();
-			data['id'] = $(this).parent('tr').attr('data-row-id');
-			data['index'] = $(this).attr('col-index');
-			if($(this).attr('oldVal') === data['val'])
-			return false;
-			
-			if(confirm('განვაახლოთ მონაცემები ?'))
-				 {
-				  $.ajax({
-				  type: "POST",  
-				  url: "http://localhost/chat/dashboard/update_institution",  
-				  cache:false,  
-				  data: data,
-				  dataType: "json",       
-				  success: function(response)  
-				  {   
-					//$("#loading").hide();
-					if(response.status) {
-					  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-					  setTimeout(function(){window.location.reload(1); }, 3000);		
-					} else {
-					  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-					  setTimeout(function(){window.location.reload(1); }, 3000);		
-					}
-				  }   
-				});
-				}
-			});
-		     // delete the entry once we have confirmed that it should be deleted
-			$('.delete').click(function() {
-			data = {};			
-			data['id'] = $(this).parent('tr').attr('data-row-id');
-				var parent = $(this).closest('tr');
-				 if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
-				 {
-				 $.ajax({
-					type: "POST",  
-					  url: "http://localhost/chat/dashboard/delete_institution",  
-					  cache:false,  
-					  data: data,
-					  dataType: "json",   
-					beforeSend: function() {
-						parent.animate({'backgroundColor':'#fb6c6c'},300);
-					},
-					success: function(response) {
-						
-					//$("#loading").hide();
-						if(response.status) {
-						  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-						  setTimeout(function(){window.location.reload(1); }, 3000);		
-						} else {
-						   $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-						   setTimeout(function(){window.location.reload(1); }, 3000);		
-						}
-					}
-				});	 
-				 }
-				       
-			});
-			
-		});
 
-		</script>
     </head>
 
 
@@ -233,18 +167,18 @@
 
                         <div class="info">
                         <h4><?=$list['first_name'];?> &nbsp; <?=$list['last_name'];?></h4>
-                        <p class="text-muted"><?php if ($list['is_admin']==1) { echo "ადმინისტრატორი";} else {echo "ოპერატორი";}?></p>
+                        <p class="text-muted"><?=$list['email'];?></p>
                         </div>
                         </div>
                         <div class="clearfix"></div>
                         <hr>
                         <ul class="social-links list-inline">
                         <li>
-                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-<?php echo $list['person_id'];?>">
+                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-original-title="დეტალური ინფორმაცია" data-modal="modal-<?php echo $list['person_id'];?>">
                         <i class="fa  fa-info-circle"></i></a>
                         </li>
                          <li>
-                        <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-modal="modal-7">
+                        <a title="" data-placement="top" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-original-title="პაროლის განახლება" data-modal="modal-7">
                         <i class="fa fa-history"></i></a>
                         </li>
 							
