@@ -160,7 +160,7 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
 
     if (chatRoom.users.indexOf(data.personId) > -1) {
         socket.emit("redirectToPersonResponse", {isValid: true, chatUniqId: data.chatUniqId, redirectType: data.redirectType});
-        return ;
+        return;
     }
 
     app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(data.personId, 7), function (err) {
@@ -238,18 +238,17 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
             if (!!chatRoom.users && Array.isArray(chatRoom.users)){
                 chatRoom.users.forEach(function (userId) {
                     if (socket.user.userId !== userId) {
-                        app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?',
-                            [chatRoom.chat.chatId, userId], function (err, res1) {
-                                if (err) {
-                                    return app.databaseError(socket, err);
-                                }
+                        app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?', [chatRoom.chat.chatId, userId], function (err, res1) {
+                            if (err) {
+                                return app.databaseError(socket, err);
+                            }
 
-                                chatRoom.users.splice(userId, 1);
-                                var message = new Message();
-                                message.chatUniqId = data.chatUniqId;
-                                message.messageType = 'close';
-                                socket.broadcast.to(socketId).emit('message', message );
-                            });
+                            chatRoom.users.splice(userId, 1);
+                            var message = new Message();
+                            message.chatUniqId = data.chatUniqId;
+                            message.messageType = 'close';
+                            socket.broadcast.to(socketId).emit('message', message);
+                        });
                     }
                 });
             }
@@ -270,8 +269,8 @@ ChatServer.prototype.checkToken = function (socket, data) {
 
 
     app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id ' +
-        ' FROM `persons` WHERE person_id in ' +
-        '(SELECT history_person_id as person_id FROM xlog_login_history WHERE php_session_id = ? )', [data.token], function (err, res) {
+            ' FROM `persons` WHERE person_id in ' +
+            '(SELECT history_person_id as person_id FROM xlog_login_history WHERE php_session_id = ? )', [data.token], function (err, res) {
         if (err) {
             return app.databaseError(socket, err);
         }
@@ -293,8 +292,8 @@ ChatServer.prototype.checkToken = function (socket, data) {
         user.isOnline = true;
 
         app.connection.query('SELECT c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
-            ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +
-            ' and r.person_mode in (1,2,7) and r.person_id = ?', [ans.person_id], function (err, resChat) {
+                ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +
+                ' and r.person_mode in (1,2,7) and r.person_id = ?', [ans.person_id], function (err, resChat) {
             if (err) {
                 return app.databaseError(socket, err);
             }

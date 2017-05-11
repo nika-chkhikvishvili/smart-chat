@@ -35,6 +35,7 @@ socket.on('clientGetServicesResponse', function (data) {
 socket.on('operatorJoined', function (data) {
     console.log('execute: operatorJoined');
     console.log(data);
+    $("#chatbox").append("<div class='msg msglnr'>" + data + "<br></div>");
 });
 
 socket.on('clientInitParamsResponse', function (data) {
@@ -225,7 +226,7 @@ setInterval(
     function hideIsWriting(){
         var el = $('#operator_is_writing');
         if (isNaN(el.data('lastWriteTime'))) {
-            return  ;
+            return;
         }
         if (Date.now() - el.data('lastWriteTime') > 3000) {
             el.hide();

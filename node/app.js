@@ -260,10 +260,10 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
                 }
 
                 Object.keys(chatRoom.guests).forEach(function (socketId) {
-                    if (socket.id === socketId) {
+                    if (socket.id === chatRoom.guests[socketId]) {
                         socket.emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
                     } else {
-                        socket.broadcast.to(socketId).emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
+                        socket.broadcast.to(chatRoom.guests[socketId]).emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
                     }
                 });
 

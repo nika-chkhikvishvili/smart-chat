@@ -346,7 +346,7 @@
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 
         <script type="application/javascript">
             var token = "<?=$this->session->userdata['token'] ; ?>";
