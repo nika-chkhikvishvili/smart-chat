@@ -180,7 +180,7 @@ class Persons extends CI_Controller{
         $this->email->to($sql_person['email']);
 
         $this->email->subject('SmartChat New Password');
-        $this->email->message('თქვენი ანგარიშზე განხორციელდა პაროლის ცვლილება. მისამართი :  https://dashboard-smartchat.cloud.gov.ge'
+        $this->email->message('თქვენს ანგარიშზე განხორციელდა პაროლის ცვლილება. მისამართი :  https://dashboard-smartchat.cloud.gov.ge'
                 . ' მომხმარებელი : '.$this->input->post("person_mail").'  პაროლი : '.$password[0].' ');
         $this->email->send();
         
