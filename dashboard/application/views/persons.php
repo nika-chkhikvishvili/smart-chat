@@ -38,7 +38,7 @@
                 
                
                         var parent = $(this).closest('.url_changer a');
-                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
+                        if(confirm('გავუგზავნოთ მომხმარებელს ახალი პაროლი?'))
                          {
                          $.ajax({
                                 type: "POST",  
