@@ -27,7 +27,47 @@
 
         <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+ <script type="text/javascript">
+        $(document).ready(function(){      
+             // delete the entry once we have confirmed that it should be deleted
+                $('.change').click(function() {
+                data = {};
+                //data['id'] = $(this).parent('a').attr('data-row-id');
+               
+                data['id'] = $(this).attr('id');
+                
+               
+                        var parent = $(this).closest('.url_changer a');
+                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
+                         {
+                         $.ajax({
+                                type: "POST",  
+                                  url: "<?=base_url()."persons/change_password";?>",  
+                                  cache:false,  
+                                  data: data,
+                                  dataType: "json",   
+                                beforeSend: function() {
+                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
+                                },
+                                success: function(response) {
 
+                                //$("#loading").hide();
+                                        if(response.status) {
+                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                          setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        } else {
+                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                           setTimeout(function(){window.location.reload(1); }, 3000);		
+                                        }
+                                }
+                        });	 
+                         }
+
+                });
+
+        });
+
+</script>
     </head>
 
 
@@ -95,40 +135,7 @@
                <div class="md-content">
                        <h3>ინფორმაცია</h3>
                        <div>
-        <div class="tab-pane" id="profile-2">
-         <!-- Personal-Information -->
-         <div class="panel panel-default panel-fill">
-
-               <div class="panel-body"> 
-                       <div class="timeline-2">
-                       <div class="time-item">
-                    <div class="item-info">
-                            <div class="text-muted">09:00:53</div>
-                            <p><strong>სისტემაში ავტორიზაცია </strong></p>
-                    </div>
-                       </div>
-
-                       <div class="time-item">
-                    <div class="item-info">
-                            <div class="text-muted">30 minutes ago</div>
-                            <p><a href="#" class="text-info">Lorem</a> commented your post.</p>
-
-                    </div>
-                       </div>
-
-                       <div class="time-item">
-                        <div class="item-info">
-                                <div class="text-muted">59 minutes ago</div>
-                                <p><a href="#" class="text-info">Jessi</a> attended a meeting with<a href="#" class="text-success">John Doe</a>.</p>
-
-                        </div>
-                       </div>
-               </div>
-
-               </div> 
-                </div>
-                <!-- Personal-Information -->
-                </div> 
+    
 
                  <button class="md-close btn btn-primary waves-effect waves-light">დახურვა</button>
                  </div>
@@ -177,8 +184,8 @@
                         <a title="" data-placement="right" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-original-title="დეტალური ინფორმაცია" data-modal="modal-<?php echo $list['person_id'];?>">
                         <i class="fa  fa-info-circle"></i></a>
                         </li>
-                         <li>
-                        <a title="" data-placement="top" data-toggle="tooltip" href="javascript:;" class="tooltips md-trigger waves-effect waves-light" data-original-title="პაროლის განახლება" data-modal="modal-7">
+                         <li class="url_changer">
+                        <a title="" class="change" id="<?php echo $list['person_id'];?>" data-placement="top" data-toggle="tooltip" class="tooltips md-trigger waves-effect waves-light" data-original-title="პაროლის განახლება">
                         <i class="fa fa-history"></i></a>
                         </li>
 							
@@ -187,7 +194,7 @@
 				</div> <!-- panel -->
 				</div> <!-- end col -->
                                  <!-- modal info -->
-                                 <div class="md-modal md-effect-4" id="modal-<?php echo $list['person_id'];?>">					
+                        <div class="md-modal md-effect-4" id="modal-<?php echo $list['person_id'];?>">					
                         <div class="md-content panel panel-border panel-info">
                       
                     <div class="panel-heading"> 
