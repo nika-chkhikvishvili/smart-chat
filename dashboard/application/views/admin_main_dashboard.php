@@ -13,11 +13,17 @@
             <!-- Top Bar End -->
             <!-- ========== Left Sidebar Start ========== -->
 
-            <div class="left side-menu">
-                <div class="sidebar-inner slimscrollleft">
-                    <div class="user-details">
-                        <?php require_once 'components/user_info.php'; ?>
-                    </div>
+         <div class="left side-menu">
+<div class="sidebar-inner slimscrollleft">
+<div class="user-details">
+	<div class="pull-left">
+	<img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+	</div>
+	<div class="user-info">
+	 <?php require_once 'components/user_info.php'; ?>
+	</div>
+</div>
+                    
                     <!--- Divider -->
                     <div id="sidebar-menu">
                     <?php require_once('components/admin_menu.php');?>
