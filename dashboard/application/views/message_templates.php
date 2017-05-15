@@ -131,25 +131,42 @@ if($notify==1){
     </div>
   </div>
 <div class="form-group">
-<label for="cname" class="control-label col-lg-2">შაბლონის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<label for="cname" class="control-label col-lg-2">სახელწოდება <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_ge" type="text">
+<input class="form-control" id="cname" name="template_title_ge" type="text">
 <div class="val_notifications"><?php echo form_error('template_text_ge'); ?></div> 
 </div>
 </div>
 <div class="form-group">
-<label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
+<label class="col-md-2 control-label">შაბლონის ტექსტი</label>
+<div class="col-md-10">
+    <textarea class="form-control" rows="5" name="template_text_ge"></textarea>
+</div>
+</div>     
+<div class="form-group">
+<label for="cname" class="control-label col-lg-2">სახელწოდება <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_ru" type="text" >
+<input class="form-control" id="cname" name="template_title_ru" type="text" >
 </div>
 </div>
 <div class="form-group">
-<label for="cname" class="control-label col-lg-2"> <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
+<label class="col-md-2 control-label">შაბლონის ტექსტი</label>
+<div class="col-md-10">
+    <textarea class="form-control" rows="5" name="template_text_ru"></textarea>
+</div>
+</div>       
+<div class="form-group">
+<label for="cname" class="control-label col-lg-2">სახელწოდება <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="ინგლისური"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="template_text_en" type="text" >
+<input class="form-control" id="cname" name="template_title_en" type="text" >
 </div>
 </div>  
-
+<div class="form-group">
+<label class="col-md-2 control-label">შაბლონის ტექსტი</label>
+<div class="col-md-10">
+    <textarea class="form-control" rows="5" name="template_text_en"></textarea>
+</div>
+</div>  
 		
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
