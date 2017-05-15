@@ -30,7 +30,7 @@ class Files extends CI_Controller{
         {
                 
                 $error = array('error' => $this->upload->display_errors());
-                var_dump($error);
+              
         }
         else
         {
@@ -41,8 +41,8 @@ class Files extends CI_Controller{
               'file_name' => $this->upload->data()['orig_name']
           );
           $this->dashboard_model->add_files($insert_data);
-         // echo '<meta http-equiv="refresh" content="3">';
-            var_dump($data);
+          echo '<meta http-equiv="refresh" content="3">';
+         
         }
         
         $data['sql_files'] = $this->dashboard_model->get_files($session_data->repo_id);
