@@ -80,16 +80,7 @@ window.setTimeout(function() {
                             <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
                         <div class="user-info">
-                          <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="javascript:void(0)"><i class="md md-face-unlock"></i> პროფილი<div class="ripple-wrapper"></div></a></li>
-                                    
-                                    <li><a href="javascript:void(0)"><i class="md md-settings-power"></i> გასვლა</a></li>
-                                </ul>
-                            </div>
-                            
-                            <p class="text-muted m-0">ადმინისტრატორი</p>
+                          <?php require_once 'components/user_info.php'; ?>
                         </div>
                     </div>
                     <!--- Divider -->

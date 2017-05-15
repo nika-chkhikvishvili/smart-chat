@@ -96,9 +96,8 @@
                         <div class="pull-left">
                             <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
                         </div>
-                        <div class="user-info">
-                          
-                            <p class="text-muted m-0">ადმინისტრატორი</p>
+                        <div class="user-info">                          
+                           <?php require_once 'components/user_info.php'; ?>
                         </div>
                     </div>
                     <!--- Divider -->

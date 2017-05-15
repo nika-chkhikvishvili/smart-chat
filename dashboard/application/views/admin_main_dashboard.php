@@ -16,15 +16,7 @@
             <div class="left side-menu">
                 <div class="sidebar-inner slimscrollleft">
                     <div class="user-details">
-                        <div class="pull-left">
-                           <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
-                        </div>
-                        <div class="user-info">
-                            <div class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">ნატალია</a>                                
-                            </div>                            
-                            <p class="text-muted m-0">ადმინისტრატორი</p>
-                        </div>
+                        <?php require_once 'components/user_info.php'; ?>
                     </div>
                     <!--- Divider -->
                     <div id="sidebar-menu">
