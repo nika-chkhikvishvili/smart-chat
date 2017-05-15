@@ -45,7 +45,7 @@
                 data = {};			
                 data['id'] = $(this).parent('tr').attr('data-row-id');
                         var parent = $(this).closest('tr');
-                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
+                         if(confirm('დარწმუნებული ხართ რომ გინდათ ფაილის წაშლა?'))
                          {
                          $.ajax({
                                 type: "POST",  
