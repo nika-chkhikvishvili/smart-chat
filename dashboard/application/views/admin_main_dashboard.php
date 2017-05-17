@@ -319,10 +319,6 @@
     </table>
 </div>
 
-
-
-
-
         <!-- jQuery  -->
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -349,6 +345,7 @@
         <script type="application/javascript">
             var token = "<?=$this->session->userdata['token'] ; ?>";
             var socketAddr = '<?=substr(base_url(),0,-1);?>';
+            var imWorkingDelay = 60000* <?php  echo $params['repeat_auto_answering'];  ?>;
         </script>
         <script src="<?=base_url();?>assets/js/socket/common.js"></script>
 

@@ -375,7 +375,7 @@ $(document).ready(function () {
     $(".wrapper_chat").on('click', '.chat_close_button', function (e) {
         $(".container_chat").hide();
         $(".chat_open_button").show();
-        $(".wrapper_chat").css(  {bottom: "9px",  right: "0px", width : "20px", height: "20px" });
+        $(".wrapper_chat").css({bottom: "9px",  right: "0px", width : "20px", height: "20px" });
     });
 
     $(".wrapper_chat").on('click', '.chat_open_button', function (e) {
@@ -432,7 +432,7 @@ $(document).ready(function () {
 
         var message = $("div.write input").val();
         var id = makeRandomString();
-        var chatUniqId = elChatbox.attr('data-chat');
+        var chatUniqId = elChatbox.data('chat');
 
         socket.emit('sendMessage', {
             chatUniqId:  chatUniqId ,
@@ -508,31 +508,24 @@ $(document).ready(function () {
     setInterval(function(){
         $('.chat').each(function(key,val){
             var element = $(val);
-            if(!element.data('lastSendTime')) element.data('lastSendTime', new Date(0));
+            if(!element.data('lastSendTime')) element.data('lastSendTime', Date.now());
 
             if (element.data('ImWorking')) {
-                // console.log(element.data('chat'));
-
-
-                console.log(element.data('lastSendTime') );
+                if (Date.now() - element.data('lastSendTime') > imWorkingDelay ) {
+                    socket.emit('operatorIsWorking',{chatUniqId: element.data('chat') });
+                    element.data('lastSendTime', Date.now());
+                }
             }
-
-            // if(val.checked){
-            //     ++val.lastWorkingCount;
-            //     if(val.lastWorkingCount>5) {
-            //         val.lastWorkingCount = 0;
-            //         socket.emit('operatorIsWorking',{chat_uniq_id: $(val).parents('.msgbox_chat_window').attr('id') });
-            //     }
-            //
-            // } else {
-            //     val.lastWorkingChecked = new Date();
-            //     val.lastWorkingCount = 0;
-            // }
-
         });
     }, 1000);
+});
+
+socket.on('operatorIsWorking', function (data) {
+    console.log('execute: operatorIsWorking');
+    console.log(data);
 
 });
+
 
 socket.on('message', function (data) {
     console.log('execute: message');
@@ -567,7 +560,7 @@ socket.on('message', function (data) {
     }
 
     $(".person[data-chat = " + data.chatUniqId + "] .preview").html(shorter(data.message));
-    $(".person[data-chat = " + data.chatUniqId + "] .time").html(Date().substr(16, 5));
+    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().substr(16, 5));
     if (elChatbox && elChatbox[0]) elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 });

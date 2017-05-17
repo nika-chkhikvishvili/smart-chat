@@ -96,19 +96,18 @@ socket.on('message', function (data) {
     console.log(data);
     socket.emit('clientMessageReceived', {chatUniqId: localStorage.getItem("chatUniqId"), msgId: data.ran});
     var elChatbox = $("#chatbox");
-    if(data.messageType === 'ping') {
+
+    if (data.messageType === 'operatorIsWorking') {
         $('#operator_is_working').show();
 
-        setTimeout(function(){
+        setTimeout(function () {
             $('#operator_is_working').hide();
-        },3000);
-
+        }, 10000);
 
     } else if (data.messageType === 'writing') {
         var a = $('#operator_is_writing');
         a.data('lastWriteTime', Date.now());
         a.show();
-
     } else if (data.messageType === 'ban') {
         $('#wrapper').hide();
         $('#asarchevi').hide();

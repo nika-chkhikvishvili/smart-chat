@@ -416,7 +416,7 @@ ChatServer.prototype.approveBan = function (socket, data) {
         message.chatUniqId = res[0].chat_uniq_id;
         app.sendMessageToRoom(socket, message);
     });
-}
+};
 
 ChatServer.prototype.messageReceived = function (socket, data) {
     if (!data || !data.hasOwnProperty('msgId') || !data.msgId || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId) {
@@ -432,13 +432,13 @@ ChatServer.prototype.messageReceived = function (socket, data) {
 
 
 ChatServer.prototype.operatorIsWorking = function (socket, data) {
-    if (!data || !data.hasOwnProperty('chat_uniq_id') || !data.chat_uniq_id || data.chat_uniq_id.length < 10) {
-        socket.emit("pingResponse", {isValid: false, error: 'chat_uniq_id', data: data});
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
         return;
     }
-    // var chat = app.chatRooms[data.chat_uniq_id];
 
-    app.sendMessageToRoom(socket, data.chat_uniq_id, 'ping', 'ping', 'ping');
+    var message = new Message({messageType: 'operatorIsWorking'});
+    message.chatUniqId = data.chatUniqId;
+    app.sendMessageToRoom(socket, message);
 
 };
 

@@ -19,6 +19,7 @@ class Dashboard extends CI_Controller{
         $this->load->model('dashboard_model');
         $data['get_sql_templates'] = $this->dashboard_model->get_message_templates();
         $data['all_services'] = $this->dashboard_model->get_all_full_services();
+        $data['params'] = $this->dashboard_model->get_answering();
         $this->load->view('admin_main_dashboard',$data);
     }
     
