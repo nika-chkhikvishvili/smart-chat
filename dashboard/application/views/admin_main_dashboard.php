@@ -191,11 +191,11 @@
         </div>
         <div class="right">
             <div class="top"><span>To: <span class="name"> </span></span>
-                <span style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="https://bounty.github.com/images/badges/A10-1.png"></a></span>
+                <span style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/redirect.png"></a></span>
                 <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                <span style="float:right;"><a href="javascript:close_chat();"><img width="30" src="http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/32/Actions-window-close-icon.png"></a></span>
+                <span style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/close.png"></a></span>
                 <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                <span style="float:right;"><a href="javascript:ban_person();"><img width="30" src="http://www.fastkashmir.com/wp-content/uploads/2017/03/ban-2.png"></a></span>
+                <span style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/ban_user.png"></a></span>
                 <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
                 <span style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>            </div>
             <div class="chats_container">
@@ -222,8 +222,8 @@
             </div>
             <div class="write">
                 <a href="javascript:;" class="write-link attach"></a>
+                <a href="javascript:;" class="write-link draft"></a>
                 <input type="text" />
-                <a href="javascript:;" class="write-link smiley"></a>
                 <a href="javascript:;" class="write-link send"></a>
             </div>
         </div>

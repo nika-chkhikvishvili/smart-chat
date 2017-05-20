@@ -343,6 +343,17 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.container_chat .right .write .write-link.draft:before {
+  display: inline-block;
+  float: left;
+  width: 21px;
+  height: 42px;
+  content: '';
+  background-size: 25px 25px;
+  background-image: url("/assets/chat/draft.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
 .container_chat .right .write .write-link.send:before {
   display: inline-block;
   float: left;
