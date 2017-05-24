@@ -10,16 +10,17 @@ function User(user) {
     if (!(this instanceof User)) {
         return new User(user);
     }
-    this.userId    = user.userId    || null;
-    this.userName  = user.userName  || null;
-    this.firstName = user.firstName || null;
-    this.lastName  = user.lastName  || null;
-    this.photo     = user.photo     || null;
-    this.isAdmin   = user.isAdmin   || null;
-    this.statusId  = user.statusId  || null;
-    this.isOnline  = user.isOnline  || null;
-    this.sockets = {};
-    this.tokens = {};
+    this.userId      = user.userId      || null;
+    this.nickname    = user.nickname    || null;
+    this.userName    = user.userName    || null;
+    this.firstName   = user.firstName   || null;
+    this.lastName    = user.lastName    || null;
+    this.photo       = user.photo       || null;
+    this.isAdmin     = user.isAdmin     || null;
+    this.statusId    = user.statusId    || null;
+    this.isOnline    = user.isOnline    || null;
+    this.sockets     = {};
+    this.tokens      = {};
 }
 
 User.prototype.addSocket = function (socketId) {

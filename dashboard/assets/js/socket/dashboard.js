@@ -414,7 +414,7 @@ $(document).ready(function () {
     // ჩატის ტექსტის აკრეფინს ფანჯარაზე ენტერ ღილაკზე დაჭერა
     $(".write input").on('keyup', function (event) {
         var elChatbox = $('.active-chat');
-        socket.emit('userIsWriting', {chatUniqId: elChatbox.data("chat")});
+        socket.emit('operatorIsWriting', {chatUniqId: elChatbox.data("chat")});
         if (event.keyCode === 13 ) {
             $(".wrapper_chat .send").click();
         }
@@ -460,7 +460,7 @@ $(document).ready(function () {
         }
     });
 
-    $(".wrapper_chat").on('click', '.smiley', function (e) {
+    $(".wrapper_chat").on('click', '.draft', function (e) {
         dialog.dialog( "open" );
 
     });
@@ -492,7 +492,7 @@ $(document).ready(function () {
         ul.html('');
 
         messageTemplates.forEach(function(tmpl){
-            if (service == 0 || service === tmpl.service_id) {
+            if (service === 0 || service === tmpl.service_id) {
                 if (needle.length===0 || (tmpl.template_text_ge.indexOf(needle) !==-1 ||
                     tmpl.template_text_en.indexOf(needle) !==-1 ||
                     tmpl.template_text_ru.indexOf(needle) !==-1 )

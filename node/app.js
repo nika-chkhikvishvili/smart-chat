@@ -351,6 +351,9 @@ app.io.on('connection', function (socket) {
     socket.on('operatorIsWorking', function (data) {
         server.operatorIsWorking(socket, data);
     });
+    socket.on('operatorIsWriting', function (data) {
+        server.operatorIsWriting(socket, data);
+    });
     socket.on('banPerson', function (data) {
         server.banPerson(socket, data);
     });

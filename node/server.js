@@ -267,8 +267,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         return;
     }
 
-
-    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id ' +
+    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id,  nickname ' +
             ' FROM `persons` WHERE person_id in ' +
             '(SELECT history_person_id as person_id FROM xlog_login_history WHERE php_session_id = ? )', [data.token], function (err, res) {
         if (err) {
@@ -283,7 +282,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         var ans = res[0];
 
         if (!app.onlineUsers.hasOwnProperty(ans.person_id)) {
-            app.onlineUsers[ans.person_id] = new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true});
+            app.onlineUsers[ans.person_id] = new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, nickname: ans.nickname});
         }
 
         var user = app.onlineUsers[ans.person_id];
@@ -342,7 +341,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
 
         message.messageId = res.insertId;
         message.messageUniqId = data.id;
-        message.sender = app.onlineUsers[socket.user.userId].firstName;
+        message.sender = app.onlineUsers[socket.user.userId].nickname;
 
         app.sendMessageToRoom(socket, message);
         socket.emit("sendMessageResponse", {isValid: true});
@@ -440,6 +439,22 @@ ChatServer.prototype.operatorIsWorking = function (socket, data) {
     message.chatUniqId = data.chatUniqId;
     app.sendMessageToRoom(socket, message);
 
+};
+
+ChatServer.prototype.operatorIsWriting = function (socket, data) {
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
+        return;
+    }
+
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chatUniqId)) {
+        return;
+    }
+
+    var message = new Message();
+    message.chatUniqId = data.chatUniqId;
+    message.messageType = 'writing';
+
+    app.sendMessageToRoom(socket, message);
 };
 
 module.exports = ChatServer;

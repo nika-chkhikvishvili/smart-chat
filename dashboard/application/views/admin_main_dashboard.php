@@ -199,26 +199,6 @@
                 <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
                 <span style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>            </div>
             <div class="chats_container">
-                <div class="chat" data-chat="person1" style="display: none;">
-                    <div class="conversation-start">
-                        <span>Monday, 1:27 PM</span>
-                    </div>
-                    <div class="bubble you">
-                        So, how's your new phone?
-                    </div>
-                    <div class="bubble you">
-                        You finally have a smartphone :D
-                    </div>
-                    <div class="bubble me">
-                        Drake?
-                    </div>
-                    <div class="bubble me">
-                        Why aren't you answering?
-                    </div>
-                    <div class="bubble you">
-                        howdoyoudoaspace
-                    </div>
-                </div>
             </div>
             <div class="write">
                 <a href="javascript:;" class="write-link attach"></a>
