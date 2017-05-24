@@ -15,7 +15,7 @@ function Chat($, socket) {
     var scroolDiv = $("#scrooldiv");
     var meTemplate = $.validator.format('<li class="mar-btm">' +
             '<div class="media-right">' +
-            '<img src="http://bootdey.com/img/Content/avatar/avatar2.png" class="img-circle img-sm" alt="Profile Picture"> ' +
+            '<img src="/assets/images/me.png" class="img-circle img-sm" alt="Profile Picture"> ' +
             '</div> ' +
             '<div class="media-body pad-hor speech-right"> ' +
             '<div class="speech"> ' +
@@ -29,7 +29,7 @@ function Chat($, socket) {
             '</li>');
     var othTemplate = $.validator.format('<li class="mar-btm">' +
             '<div class="media-left">' +
-            '<img src="http://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">' +
+            '<img src="/assets/images/you.png" class="img-circle img-sm" alt="Profile Picture">' +
             '</div>' +
             '<div class="media-body pad-hor">' +
             '<div class="speech"> ' +
@@ -51,7 +51,7 @@ function Chat($, socket) {
         //    redAlert(id);
         //}, 3000);
         if (dontScrool !== true) {
-            me.scroolDownFn();
+            this.scrollDown();
         }
     }
 
@@ -60,7 +60,7 @@ function Chat($, socket) {
         var time = data.messageDate || (new Date()).toISOString();
         elChatbox.append(othTemplate(time.substr(11, 8), data.sender, data.message));
         if (dontScrool !== true) {
-            me.scroolDownFn();
+            this.scrollDown();
         }
     }
 

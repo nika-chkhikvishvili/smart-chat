@@ -96,7 +96,8 @@
     }
     .speech {
         position: relative;
-        background: #b7dcfe;
+        /*background: #b7dcfe;*/
+        background: #7ab800;
         color: #317787;
         display: inline-block;
         border-radius: 0;
@@ -150,7 +151,8 @@
         padding-right: 15px;
     }
     .speech-right>.speech {
-        background: #ffda87;
+        /*background: #ffda87;*/
+        background: #fed100;
         color: #a07617;
         text-align: right;
     }
@@ -202,6 +204,10 @@
     .panel {
         display: none;
     }
+    #asarchevi{
+        width: 300px;
+        margin: auto;
+    }
 </style>
 </head>
 <body>
@@ -209,12 +215,22 @@
 <div class="container">
     <div class="user_ban"></div>
 
-    <div id="asarchevi">
-        <select id="select_theme"></select>
-        <input type="text" id="first_name" value="" placeholder="First Name">
-        <input type="text" id="last_name" value="" placeholder="Last Name">
-        <button id="begin_btn">საუბრის დაწყება</button>
-    </div>
+    <form id="asarchevi" >
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" class="form-control" id="first_name" placeholder="First Name">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" class="form-control" id="last_name" placeholder="Last Name">
+        </div>
+        <div class="form-group">
+            <label for="select_theme">აირჩიეთ სერვისი:</label>
+            <select id="select_theme" name="select_theme"></select>
+        </div>
+
+        <button type="submit" class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
+    </form>
 
     <div class="col-md-12 col-lg-6">
         <div class="panel">
@@ -235,7 +251,7 @@
     				</div>-->
                     <span id="operator_is_working"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span>
                     <span id="operator_is_writing"> <img src="/assets/images/typing.gif" style="height: 16px;margin-left: 10px;" > </span>
-                    <a id="disconnect-chat" href="#" data-target="#chat-body">Disconect</a>
+                    <a id="disconnect-chat" href="#" data-target="#chat-body">საუბრის დასრულება</a>
     			</div>
     			<h3 class="panel-title">Chat</h3>
     		</div>

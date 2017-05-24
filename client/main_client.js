@@ -13,7 +13,7 @@ $(document).ready(function () {
     socket.emit('clientCheckChatIfAvailable', chat.getChatUniqObject());
 
     $("#disconnect-chat").click(function () {
-        var exit = confirm("Are you sure you want to end the session?");
+        var exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
         if (exit === true) {
             socket.emit('clientCloseChat');
         }
