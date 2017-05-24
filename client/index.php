@@ -13,7 +13,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
+
+    html, body {
+        height:97%
+    }
 
     body{
         margin-top:20px;
@@ -64,7 +69,7 @@
     }
     .nano>.nano-content {
         position: absolute;
-        overflow: scroll;
+        overflow-y: scroll;
         overflow-x: hidden;
         top: 0;
         right: 0;
@@ -215,8 +220,7 @@
 </style>
 </head>
 <body>
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
+<div class="container" style="height:100%">
     <div class="user_ban"></div>
 
     <form id="asarchevi" >
@@ -236,8 +240,8 @@
         <button type="submit" class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
     </form>
 
-    <div class="col-md-12 col-lg-8 center-block" >
-        <div class="panel">
+    <div class="col-md-12 col-lg-8 center-block" style="height:90%">
+        <div class="panel"style="height:100%">
         	<!--Heading-->
     		<div class="panel-heading">
     			<div class="panel-control">
@@ -261,8 +265,8 @@
     		</div>
 
     		<!--Widget body-->
-    		<div id="chat-body" class="collapse in">
-    			<div class="nano has-scrollbar" style="height:380px">
+    		<div id="chat-body" class="collapse in" style="height:100%">
+    			<div class="nano has-scrollbar" style="height:90%">
     				<div class="nano-content pad-all" tabindex="0" style="right: -17px;" id="scrooldiv">
     					<ul class="list-unstyled media-block" id="chat-body-ul">
     						<li class="mar-btm">
