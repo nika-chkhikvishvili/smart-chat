@@ -27,47 +27,38 @@
 
         <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
         <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
- <script type="text/javascript">
-        $(document).ready(function(){      
-             // delete the entry once we have confirmed that it should be deleted
-                $('.change').click(function() {
+<script type="text/javascript">
+        $(document).ready(function(){
+          $('.remove_person').click(function() {
                 data = {};
-                //data['id'] = $(this).parent('a').attr('data-row-id');
-               
-                data['id'] = $(this).attr('id');
-                
-               
-                        var parent = $(this).closest('.url_changer a');
-                        if(confirm('გავუგზავნოთ მომხმარებელს ახალი პაროლი?'))
+                data['val'] = $(this).attr('id');  
+
+                if(confirm('წავშალოთ მომხმარებელის ანგარიში ?'))
                          {
-                         $.ajax({
-                                type: "POST",  
-                                  url: "<?=base_url()."persons/change_password";?>",  
-                                  cache:false,  
-                                  data: data,
-                                  dataType: "json",   
-                                beforeSend: function() {
-                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
-                                },
-                                success: function(response) {
-
+                           
+                          $.ajax({
+                          type: "POST",  
+                          url: "<?=base_url()."persons/delete_person";?>",  
+                          cache:false,  
+                          data: data,
+                          dataType: "json",       
+                          success: function(response)  
+                          {   
                                 //$("#loading").hide();
-                                        if(response.status) {
-                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                          setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        } else {
-                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                           setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        }
+                                if(response.status) {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.reload(1); }, 3000);		
+                                } else {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.assign("<?=base_url();?>blacklist"); }, 3000);		
                                 }
-                        });	 
-                         }
-
+                          }   
+                        });
+                        }
                 });
-
         });
 
-</script>
+        </script>
     </head>
 
 
@@ -116,6 +107,7 @@
                 </div>
                 <div class="panel-body">			
                 <a href="<?=base_url();?>persons/add_person" class="btn btn-info waves-effect waves-light m-b-5"  id="sa-params">მომხმარებლის დამატება</a>
+              
                 </div>
                 </div>
                     </div>
@@ -155,8 +147,8 @@
                                 <a href="'.$edit_url.'" class="btn btn-success waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="რედაქტირება">
                                         <i class="fa fa-pencil"></i>
                                 </a>
-                                <a href="'.$del_url.'" class="btn btn-danger waves-effect waves-light tooltips" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
-                                        <i class="fa fa-close"></i>
+                                <button type="button"  id="'.$list['person_id'].'" class="btn btn-danger waves-effect waves-light tooltips remove_person" data-placement="top" data-toggle="tooltip" data-original-title="ანგარიშის გაუქმება">
+                                        <i class="fa fa-close"></i></button>
                                 </a>
                         </div>';
                          }
