@@ -60,6 +60,7 @@ $route['^(delete_institution)(/:any)?$'] = 'istitution/$0';
 // persons routes
 $route['^()(/:any)?$'] = 'persons/$0';
 $route['^(change_password)(/:any)?$'] = 'persons/$0';
+$route['^(delete_person)(/:any)?$'] = 'persons/$0';
 // templates routes
 $route['^()(/:any)?$'] = 'templates/$0';
 
