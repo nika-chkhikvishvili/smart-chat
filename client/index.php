@@ -208,6 +208,10 @@
         width: 300px;
         margin: auto;
     }
+    .center-block{
+        float: none;
+        margin: 0 auto;
+    }
 </style>
 </head>
 <body>
@@ -232,7 +236,7 @@
         <button type="submit" class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
     </form>
 
-    <div class="col-md-12 col-lg-6">
+    <div class="col-md-12 col-lg-8 center-block" >
         <div class="panel">
         	<!--Heading-->
     		<div class="panel-heading">
