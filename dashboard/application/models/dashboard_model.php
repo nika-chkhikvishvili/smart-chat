@@ -194,6 +194,12 @@ class dashboard_model extends CI_Model{
         $this->db->where('person_id', $id);
         $this->db->delete('person_services'); 
     }
+   
+   function delete_person($id)
+   {
+      $this->db->where('person_id', $id);
+      $this->db->delete('persons');  
+   }	
    // end of persons
     
     
