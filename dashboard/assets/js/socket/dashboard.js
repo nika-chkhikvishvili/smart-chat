@@ -265,7 +265,7 @@ var createChatWindowAndLoadData = function(data){
     var d = {
         chatUniqId : data.chatUniqId,
         firstName : data.chat.guestUser.firstName || '',
-        lastName : data.chat.guestUser.firstName || ''
+        lastName : data.chat.guestUser.lastName || ''
     };
     createChatWindowAndLoadDataSimple(d);
 };

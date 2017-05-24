@@ -211,7 +211,7 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
 
     var chatRoom = app.chatRooms[data.chatUniqId];
 
-    if (chatRoom.users.indexOf(data.personId) > -1) {
+    if (chatRoom.users.indexOf(socket.user.userId) > -1) {
         socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: data.joinType});
         return ;
     }
