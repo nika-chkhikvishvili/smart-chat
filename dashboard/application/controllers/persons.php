@@ -223,4 +223,20 @@ public function randomPassword($length,$count, $characters) {
     return $passwords; // return the generated password
 }
 
+public function delete_person()
+{
+   $person_id = $_POST['val']; 
+   $this->load->model('dashboard_model');
+   $this->dashboard_model->delete_person_role($person_id);
+   $this->dashboard_model->delete_person_service($person_id);
+   $this->dashboard_model->delete_person($person_id);
+   
+    $error = true;    
+    $msg = array('status' => !$error, 'msg' => 'მომხმარებელის ანგარიში გაუქმებულია...');
+    echo json_encode($msg);
+    echo '<meta http-equiv="refresh" content="2">';
+    
+   
+}
+
 }
