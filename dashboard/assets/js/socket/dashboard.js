@@ -18,7 +18,7 @@ function close_chat(){
 
     var exit = confirm("Are you sure you want to end the session?");
     if (exit === true) {
-        socket.emit('clientCloseChat', {chatUniqId : chat_uniq_id});
+        socket.emit('operatorCloseChat', {chatUniqId : chat_uniq_id});
         $(".person[data-chat = " + chat_uniq_id + "]").remove();
         $(".chat[data-chat = " + chat_uniq_id + "]").remove();
     }

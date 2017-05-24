@@ -457,4 +457,25 @@ ChatServer.prototype.operatorIsWriting = function (socket, data) {
     app.sendMessageToRoom(socket, message);
 };
 
+ChatServer.prototype.operatorCloseChat = function (socket,data) {
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId) {
+        return;
+    }
+
+    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chatUniqId)) {
+        return;
+    }
+
+    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [data.chatUniqId], function (err) {
+        if (err) {
+            return app.databaseError(data, err);
+        }
+        var message = new Message();
+        message.chatUniqId = data.chatUniqId;
+        message.messageType = 'close';
+
+        app.sendMessageToRoom(socket, message, true);
+    });
+};
+
 module.exports = ChatServer;

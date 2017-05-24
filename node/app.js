@@ -354,6 +354,9 @@ app.io.on('connection', function (socket) {
     socket.on('operatorIsWriting', function (data) {
         server.operatorIsWriting(socket, data);
     });
+    socket.on('operatorCloseChat', function (data) {
+        server.operatorCloseChat(socket, data);
+    });
     socket.on('banPerson', function (data) {
         server.banPerson(socket, data);
     });
