@@ -289,7 +289,7 @@ app.io.on('connection', function (socket) {
         if (isBlocked) {
             socket.isBlocked = true;
             var message = new Message({messageType: 'ban'});
-            message.message = app.autoAnswering.getDefaultBanMessage();
+            message.message = app.autoAnswering.getBanMessage(1);
             socket.emit("message", message);
         }
     });

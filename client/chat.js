@@ -70,7 +70,7 @@ function Chat($, socket) {
 
     function operatorIsWorkingShowFn() {
         $('#operator_is_working').show();
-        setTimeout(me.operatorIsWorkingHide, 10000);
+        setTimeout(chat.operatorIsWorkingHide, 10000);
     }
 
     function operatorIsWorkingHide() {
@@ -80,11 +80,11 @@ function Chat($, socket) {
     function operatorIsWritingShowFn() {
         $('#operator_is_writing').show();
         lastWriteTime = Date.now();
-        setTimeout(me.operatorIsWritingHide, 3000);
+        setTimeout(chat.operatorIsWritingHide, 3000);
     }
 
-    function operatorIsWritingHide() {
-        if (Date.now() - lastWriteTime > 3000) {
+    function operatorIsWritingHideFn() {
+        if (Date.now() - lastWriteTime > 2000) {
             $('#operator_is_writing').hide();
         }
     }
@@ -143,6 +143,7 @@ function Chat($, socket) {
         setUserInformation: setUserInformationFn,
         banUser: banUserFn,
         operatorIsWorkingShow: operatorIsWorkingShowFn,
+        operatorIsWritingHide:operatorIsWritingHideFn,
         operatorIsWritingShow: operatorIsWritingShowFn
     };
 }

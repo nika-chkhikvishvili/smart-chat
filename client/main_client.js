@@ -177,7 +177,7 @@ socket.on('message', function (data) {
     } else if (data.messageType === 'writing') {
         chat.operatorIsWritingShow();
     } else if (data.messageType === 'ban') {
-        chat.banUser();
+        chat.banUser(data.message);
         socket.disconnect();
     } else if (data.messageType === 'close') {
         chat.closeChat();
