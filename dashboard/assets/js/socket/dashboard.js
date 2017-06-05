@@ -16,7 +16,7 @@ function close_chat(){
     if (!chat_uniq_id  || chat_uniq_id === '') return;
 
 
-    var exit = confirm("Are you sure you want to end the session?");
+    var exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
     if (exit === true) {
         socket.emit('operatorCloseChat', {chatUniqId : chat_uniq_id});
         $(".person[data-chat = " + chat_uniq_id + "]").remove();
@@ -352,7 +352,7 @@ $(document).ready(function () {
         } else {
             var findChat = $(this).attr('data-chat');
             var personName = $(this).find('.name').text();
-            $('.right .top .name').html(personName);
+            $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
             $('.chat').removeClass('active-chat');
             $('.left .person').removeClass('active');
             $(this).addClass('active');
@@ -533,7 +533,7 @@ socket.on('message', function (data) {
 
     socket.emit('messageReceivedFromClient', {chatUniqId: data.chatUniqId, msgId: data.ran});
 
-    var elChatbox = $(".chat[data-chat = " + data.chatUniqId + "]");
+    let elChatbox = $(".chat[data-chat=" + data.chatUniqId + "]");
 
     if(data.messageType === 'writing') {
         console.log('ბეჭდავს');
@@ -543,6 +543,10 @@ socket.on('message', function (data) {
         //     $('#operator_is_writing').hide();
         // },3000);
 
+    } else if(data.messageType === 'leave') {
+        alert('თქვენ გახვედით ჩატიდან');
+        $(".person[data-chat = " + data.chatUniqId + "]").remove();
+        $(".chat[data-chat = " + data.chatUniqId + "]").remove();
     } else if(data.messageType === 'close') {
         alert('მომხმარებელმა ჩატი დახურა');
         $(".person[data-chat = " + data.chatUniqId + "]").remove();
@@ -560,7 +564,7 @@ socket.on('message', function (data) {
     }
 
     $(".person[data-chat = " + data.chatUniqId + "] .preview").html(shorter(data.message));
-    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().substr(16, 5));
+    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().toISOString().substr(11, 5));
     if (elChatbox && elChatbox[0]) elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 });
@@ -587,6 +591,12 @@ socket.on('checkClientCount', function (){
 
 });
 
+socket.on('checkActiveChats', function (){
+    console.log('execute: checkActiveChats');
+    socket.emit('getActiveChats');
+
+});
+
 // სერვისების სია, ბიბლიოთეკა
 socket.emit('clientGetServices');
 socket.on('clientGetServicesResponse', function (data) {
@@ -602,14 +612,14 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
-    // console.log(data);
+    console.log(data);
     var ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
             if (value) {
                 ans = ans + '<tr><td>'+services[key]+"</td><td>";
                 $.each(value, function(i, val){
-                    ans = ans + val.first_name+" " + val.last_name + ", ";
+                    ans = ans + val.chat.guestUser.firstName + " " + val.chat.guestUser.lastName + ", ";
                 });
                 ans = ans + "</td></tr>"
             }
@@ -622,7 +632,7 @@ socket.on('getWaitingListResponse', function (data){
 
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
-    // console.log(data);
+    console.log(data);
 
     var i = 1;
     var tableBody = $('#online_chats_list').find('tbody').html('');

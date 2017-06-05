@@ -11,6 +11,7 @@ function User(user) {
         return new User(user);
     }
     this.userId      = user.userId      || null;
+    this.isValid     = user.isValid     || null;
     this.nickname    = user.nickname    || null;
     this.userName    = user.userName    || null;
     this.firstName   = user.firstName   || null;
@@ -21,6 +22,7 @@ function User(user) {
     this.isOnline    = user.isOnline    || null;
     this.sockets     = {};
     this.tokens      = {};
+    this.chatRooms = new Map();
 }
 
 User.prototype.addSocket = function (socketId) {
@@ -37,10 +39,20 @@ User.prototype.addToken = function (token) {
 
 User.prototype.getLimited = function () {
     return {
-        personId  : this.personId ,
-        firstName  : this.firstName ,
-        lastName  : this.lastName
+        personId: this.personId,
+        firstName: this.firstName,
+        lastName: this.lastName
     }
+};
+
+User.prototype.addChat = function (chatId) {
+    if (!this.chatRooms.has(chatId)) {
+        this.chatRooms.set(chatId, null);
+    }
+};
+
+User.prototype.canTakeMore = function () {
+    return this.chatRooms.size < 5;
 };
 
 module.exports = User;

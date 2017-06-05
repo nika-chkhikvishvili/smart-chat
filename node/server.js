@@ -22,11 +22,11 @@ function ChatServer(data) {
 
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 ChatServer.prototype.getWaitingList = function (socket) {
-    var ans = [];
-    if (app.waitingClients && Array.isArray(app.waitingClients)) {
-        app.waitingClients.forEach(function(i){
-            if (app.waitingClients[i]) {
-                ans[i] = app.waitingClients[i].toArray();
+    let ans = [];
+    if (!!app.waitingClients && Array.isArray(app.waitingClients)) {
+        app.waitingClients.forEach(function(val, idx){
+            if (!!val) {
+                ans[idx] = val.toArray();
             }
         });
     }
@@ -61,7 +61,7 @@ ChatServer.prototype.getAllChatMessages = function (socket, data) {
 };
 
 
-// აბრუნებს მიმდინარეების სიას
+//TODO აბრუნებს მიმდინარეების სიას
 ChatServer.prototype.getActiveChats = function (socket) {
     app.connection.query('SELECT c.*, cs.service_name_geo, ou.online_users_name as user_first_name, ou.online_users_lastname as user_last_name ' +
             'FROM chats c left join online_users ou on ou.online_user_id = c.online_user_id' +
@@ -77,13 +77,11 @@ ChatServer.prototype.getActiveChats = function (socket) {
             if (app.chatRooms[item.chat_uniq_id]) {
                 item.users = [];
                 var chatRoom = app.chatRooms[item.chat_uniq_id];
-                if (chatRoom.users && Array.isArray(chatRoom.users)) {
-                    chatRoom.users.forEach(function (userId) {
-                        if (app.onlineUsers[userId]) {
-                            item.users.push(app.onlineUsers[userId].getLimited());
-                        }
-                    });
-                }
+                chatRoom.users.forEach(function (userId) {
+                    if (app.onlineUsers[userId]) {
+                        item.users.push(app.onlineUsers[userId].getLimited());
+                    }
+                });
             }
             ans.push(item);
         });
@@ -158,7 +156,7 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
 
     var chatRoom = app.chatRooms[data.chatUniqId];
 
-    if (chatRoom.users.indexOf(data.personId) > -1) {
+    if (chatRoom.users.has(data.personId)) {
         socket.emit("redirectToPersonResponse", {isValid: true, chatUniqId: data.chatUniqId, redirectType: data.redirectType});
         return;
     }
@@ -185,7 +183,7 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
                     return app.databaseError(socket, err);
                 }
 
-                chatRoom.users.splice(socket.user.userId, 1);
+                chatRoom.users.delete(socket.user.userId);
 
                 var message = new Message();
                 message.chatUniqId = data.chatUniqId;
@@ -204,54 +202,70 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         return;
     }
 
-    if (!data || !data.hasOwnProperty('joinType') || !data.joinType) {
+    let joinType = parseInt(data.joinType || NaN);
+
+    if (!joinType || !isFinite(joinType)) {
         socket.emit("joinToRoomResponse", {isValid: false});
         return;
     }
 
-    var chatRoom = app.chatRooms[data.chatUniqId];
+    let chatRoom = app.chatRooms[data.chatUniqId];
 
-    if (chatRoom.users.indexOf(socket.user.userId) > -1) {
-        socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: data.joinType});
+    if (!chatRoom) {
+        socket.emit("joinToRoomResponse", {isValid: false});
+        return;
+    }
+
+
+    if (chatRoom.users.has(socket.user.userId)) {
+        socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: joinType});
         return ;
     }
 
-    app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(socket.user.userId, data.joinType), function (err, res1) {
+    let userJoinMode = 1;
+
+    if (joinType === 1) {
+        userJoinMode = 4;
+    }
+
+    if (joinType === 2) {
+        userJoinMode = 5;
+    }
+
+    app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(socket.user.userId, joinType, userJoinMode), function (err, res1) {
         if (err) {
             return app.databaseError(socket, err);
         }
 
-        chatRoom.addUser(socket.user.userId);
-        var user = socket.user;
+        chatRoom.addUser(socket.user.userId, joinType);
+        let user = socket.user;
 
-        if (user && user.sockets) {
+        if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
-                socket.emit('newChatWindow', chatRoom);
+                socket.broadcast.to(socketId).emit('newChatWindow', chatRoom);
             });
         }
 
         socket.emit('newChatWindow', chatRoom);
 
-        socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, redirectType: data.redirectType});
+        socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: joinType});
 
-        if (data.redirectType === 2) {
-            if (!!chatRoom.users && Array.isArray(chatRoom.users)){
-                chatRoom.users.forEach(function (userId) {
-                    if (socket.user.userId !== userId) {
-                        app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?', [chatRoom.chat.chatId, userId], function (err, res1) {
-                            if (err) {
-                                return app.databaseError(socket, err);
-                            }
+        if (joinType === 2) {
+            chatRoom.users.forEach(function (userId) {
+                if (socket.user.userId !== userId) {
+                    app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?', [chatRoom.chat.chatId, userId], function (err, res1) {
+                        if (err) {
+                            return app.databaseError(socket, err);
+                        }
 
-                            chatRoom.users.splice(userId, 1);
-                            var message = new Message();
-                            message.chatUniqId = data.chatUniqId;
-                            message.messageType = 'close';
-                            socket.broadcast.to(socketId).emit('message', message);
-                        });
-                    }
-                });
-            }
+                        chatRoom.users.delete(userId);
+                        let message = new Message();
+                        message.chatUniqId = data.chatUniqId;
+                        message.messageType = 'leave';
+                        socket.broadcast.to(socketId).emit('message', message);
+                    });
+                }
+            });
         }
     });
 };
@@ -285,22 +299,25 @@ ChatServer.prototype.checkToken = function (socket, data) {
             app.onlineUsers[ans.person_id] = new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, nickname: ans.nickname});
         }
 
-        var user = app.onlineUsers[ans.person_id];
+        let user = app.onlineUsers[ans.person_id];
         user.addSocket(socket.id);
         user.addToken(data.token);
         user.isOnline = true;
+        socket.user = user;
 
         app.connection.query('SELECT c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
                 ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +
-                ' and r.person_mode in (1,2,7) and r.person_id = ?', [ans.person_id], function (err, resChat) {
+                ' and r.person_mode in (1,2) and r.person_id = ?', [ans.person_id], function (err, resChat) {
             if (err) {
                 return app.databaseError(socket, err);
             }
 
-            var chatAns = [];
+            let chatAns = [];
             if (resChat && Array.isArray(resChat)) {
-
                 resChat.forEach(function (row) {
+                    let chatRoom = app.chatRooms[row.chat_uniq_id];
+                    chatRoom.addUser(user.userId, row.person_mode, user);
+
                     chatAns.push({
                         chatUniqId: row.chat_uniq_id,
                         first_name: row.first_name,
@@ -308,10 +325,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
                     });
                 })
             }
-            socket.user = {
-                userId: ans.person_id,
-                isValid: true
-            };
+
             socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
         });
     });
@@ -475,6 +489,9 @@ ChatServer.prototype.operatorCloseChat = function (socket,data) {
         message.messageType = 'close';
 
         app.sendMessageToRoom(socket, message, true);
+        app.checkAvailableServiceForOperator(socket);
+        app.io.emit('checkClientCount');
+        app.io.emit('checkActiveChats');
     });
 };
 
