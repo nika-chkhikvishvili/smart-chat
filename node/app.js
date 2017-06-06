@@ -112,6 +112,7 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
         });
         var chat = new Chat({
             chatId: row.chat_id,
+            chatUniqId: row.chat_uniq_id,
             serviceId: row.service_id,
             guestUser: guestUser,
             guestUserId: guestUser.guestUserId
@@ -149,13 +150,18 @@ app.sendMessageToRoomUsers = function (socket, message) {
         return;
     }
 
-    for (let key of chat.users.keys()) {
-        let user = app.onlineUsers[chat.users.get(key)];
+    let chatRoom = app.chatRooms[message.chatUniqId];
+    chatRoom.users.forEach(function (status, userId) {
+        let user = app.onlineUsers[userId];
         if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
                 socket.broadcast.to(socketId).emit('message', message);
             });
         }
+    });
+
+    for (let key of chat.users.keys()) {
+
     }
 };
 

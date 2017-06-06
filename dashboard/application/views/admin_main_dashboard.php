@@ -233,7 +233,7 @@
         <option value="ka">Georgian</option>
         <option value="en">English</option>
         <option value="ru">Russian</option>
-    </select><br>
+    </select>
 
     <select name="template_service" id="template_service" onchange="">
         <option value="0">All</option>
@@ -252,11 +252,11 @@
     </select>
     <input type="text" id="template_dialog_form_search_field"><br>
 
-    <ul id="template_dialog_form_ul">
+    <ul id="template_dialog_form_ul" class="list-group">
         <?php
 
         foreach ($get_sql_templates as $key => $val) {
-            echo "<li data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
+            echo "<li  class=\"list-group-item\" data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
         }
         ?>
     </ul>

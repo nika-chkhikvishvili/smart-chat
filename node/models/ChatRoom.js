@@ -45,10 +45,20 @@ ChatRoom.prototype.getInsertUserObject = function (userId, person_mode, person_j
 ChatRoom.prototype.addUser = function (userId, userMode, user) {
     if (!userId) return false;
     if (!!user){
-        user.addChat(userId);
+        user.addChat(this.chatUniqId);
     }
     if (this.users.has(userId)) return false;
     this.users.set(userId, userMode || 1);
+};
+
+ChatRoom.prototype.removeUser = function (user) {
+    if (!user) return false;
+
+        let st = this.users.get(user.userId);
+        if (st && isFinite(st) && parseInt(st) === 1) {
+            this.users.delete(user.userId);
+            user.removeChat(this.chatUniqId );
+        }
 };
 
 ChatRoom.prototype.isAlreadyInTheRoom = function (userId) {

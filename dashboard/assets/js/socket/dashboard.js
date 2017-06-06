@@ -483,7 +483,7 @@ $(document).ready(function () {
     var dialog = $( "#template-dialog-form" ).dialog({
         autoOpen: false,
         height: 400,
-        width: 350,
+        width: 550,
         modal: true,
         buttons: {
             Cancel: function() {
@@ -511,15 +511,15 @@ $(document).ready(function () {
 
 
     function searchTemplates() {
-        var needle =$("#template_dialog_form_search_field").val();
+        let needle =$("#template_dialog_form_search_field").val();
 
-        var template_service = $("#template_service");
-        var template_lang    = $("#template_lang");
-        var ul = $("#template_dialog_form_ul");
+        let template_service = $("#template_service");
+        let template_lang    = $("#template_lang");
+        let ul = $("#template_dialog_form_ul");
 
-        var service = template_service.val();
-        var lang    = template_lang.val() || 'ka';
-        var field_name = 'template_text_ge';
+        let service = parseInt(template_service.val());
+        let lang    = template_lang.val() || 'ka';
+        let field_name = 'template_text_ge';
         if (lang === 'en' ) {
             field_name = 'template_text_en';
         }
@@ -531,10 +531,14 @@ $(document).ready(function () {
 
         messageTemplates.forEach(function(tmpl){
             if (service === 0 || service === tmpl.service_id) {
-                if (needle.length===0 || (tmpl.template_text_ge.indexOf(needle) !==-1 ||
+                if (needle.length===0 ||
+                    tmpl.template_text_ge.indexOf(needle) !==-1 ||
                     tmpl.template_text_en.indexOf(needle) !==-1 ||
-                    tmpl.template_text_ru.indexOf(needle) !==-1 )
-                ) ul.append('<li data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
+                    tmpl.template_text_ru.indexOf(needle) !==-1 ||
+                    tmpl.template_title_en.indexOf(needle) !==-1 ||
+                    tmpl.template_title_ge.indexOf(needle) !==-1 ||
+                    tmpl.template_title_ru.indexOf(needle) !==-1
+                ) ul.append('<li  class="list-group-item" data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
             }
         });
     }
@@ -692,8 +696,8 @@ socket.on('getActiveChatsResponse', function (data){
         ' <td>'+
         ' <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
         ' <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
-        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',1);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
-        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',2);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
+        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',2);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
+        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',1);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
         ' </td>'+
         ' </tr>'
         );

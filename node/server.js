@@ -71,13 +71,13 @@ ChatServer.prototype.getActiveChats = function (socket) {
             return app.databaseError(socket, err);
         }
 
-        var ans = [];
+        let ans = [];
 
         res.forEach(function (item) {
             if (app.chatRooms[item.chat_uniq_id]) {
                 item.users = [];
-                var chatRoom = app.chatRooms[item.chat_uniq_id];
-                chatRoom.users.forEach(function (userId) {
+                let chatRoom = app.chatRooms[item.chat_uniq_id];
+                chatRoom.users.forEach(function (status, userId) {
                     if (app.onlineUsers[userId]) {
                         item.users.push(app.onlineUsers[userId].getLimited());
                     }
@@ -225,11 +225,11 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
     let userJoinMode = 1;
 
     if (joinType === 1) {
-        userJoinMode = 4;
+        userJoinMode = 5;
     }
 
     if (joinType === 2) {
-        userJoinMode = 5;
+        userJoinMode = 4;
     }
 
     app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertUserObject(socket.user.userId, joinType, userJoinMode), function (err, res1) {
@@ -237,8 +237,8 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
             return app.databaseError(socket, err);
         }
 
-        chatRoom.addUser(socket.user.userId, joinType);
         let user = socket.user;
+        chatRoom.addUser(user.userId, joinType, user);
 
         if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
@@ -250,20 +250,31 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
 
         socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: joinType});
 
-        if (joinType === 2) {
-            chatRoom.users.forEach(function (userId) {
-                if (socket.user.userId !== userId) {
-                    app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE chat_id =? AND person_id = ?', [chatRoom.chat.chatId, userId], function (err, res1) {
-                        if (err) {
-                            return app.databaseError(socket, err);
-                        }
 
-                        chatRoom.users.delete(userId);
-                        let message = new Message();
-                        message.chatUniqId = data.chatUniqId;
-                        message.messageType = 'leave';
-                        socket.broadcast.to(socketId).emit('message', message);
-                    });
+        function disableUsers(chatId, userId){
+                app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE person_mode = 1 AND chat_id =? AND person_id = ?', [chatId, userId], function (err, res1) {
+                    if (err) {
+                        return app.databaseError(socket, err);
+                    }
+
+                    let message = new Message();
+                    message.chatUniqId = data.chatUniqId;
+                    message.messageType = 'leave';
+                    let user = app.onlineUsers[userId];
+                    if (!!user) {
+                        chatRoom.removeUser(user);
+                        Object.keys(user.sockets).forEach(function (socketId) {
+                            socket.broadcast.to(socketId).emit('message', message);
+                        });
+                    }
+                });
+
+        }
+
+        if (joinType === 1) {
+            chatRoom.users.forEach(function (status, userId) {
+                if (socket.user.userId !== userId && status === 1) {
+                    disableUsers(chatRoom.chat.chatId, userId);
                 }
             });
         }
@@ -365,18 +376,23 @@ ChatServer.prototype.sendFile = function (socket, data) {
 //ოპერატორის მიერ აკრეფილი ტექსტი, გაეგზავნება ყველას ოთახში ვინც არის
 ChatServer.prototype.sendMessage = function (socket, data) {
     if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
-        socket.emit("sendMessageResponse", {isValid: false, error: 'chatUniqId', data: data});
-        return;
+        return socket.emit("sendMessageResponse", {isValid: false, error: 'chatUniqId', data: data});
     }
 
     if (!app.chatRooms || !app.chatRooms.hasOwnProperty(data.chatUniqId)) {
-        socket.emit("sendMessageResponse", {isValid: false, error: 'chatRooms'});
-        return;
+        return socket.emit("sendMessageResponse", {isValid: false, error: 'chatRooms'});
     }
 
-    var chatRoom = app.chatRooms[data.chatUniqId];
+    let chatRoom = app.chatRooms[data.chatUniqId];
+    let user = socket.user;
 
-    var message = new Message( {chatId: chatRoom.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId});
+    if (chatRoom.users.get(user.userId)!==1) {
+        return socket.emit("sendMessageResponse", {isValid: false, error: 'Not Allowed'});
+    }
+
+
+
+    let message = new Message( {chatId: chatRoom.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
         if (err) {

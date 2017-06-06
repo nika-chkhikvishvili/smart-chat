@@ -51,6 +51,12 @@ User.prototype.addChat = function (chatId) {
     }
 };
 
+User.prototype.removeChat = function (chatId) {
+    if (this.chatRooms.has(chatId)) {
+        this.chatRooms.delete(chatId);
+    }
+};
+
 User.prototype.canTakeMore = function () {
     return this.chatRooms.size < 5;
 };
