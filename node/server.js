@@ -331,6 +331,36 @@ ChatServer.prototype.checkToken = function (socket, data) {
     });
 };
 
+ChatServer.prototype.sendWelcomeMessage = function (socket, data) {
+    let message = {
+        chatUniqId: data,
+        message: app.autoAnswering.getWelcomeMessage(1),
+        id: -158
+    };
+    this.sendMessage(socket, message)
+};
+
+ChatServer.prototype.sendFile = function (socket, data) {
+    let me = this;
+
+    app.connection.query('SELECT files_id, file_name FROM files WHERE files_id = ?', [data.id], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+
+        if (!res || res.length === 0) {
+            return;
+        }
+        let file = res[0];
+
+        let message = {
+            chatUniqId: data.chatUniqId,
+            message: '<a href="#' + file.file_name +'">' + file.file_name +'</a>',
+            id: -157
+        };
+        me.sendMessage(socket, message)
+    });
+};
 
 //ოპერატორის მიერ აკრეფილი ტექსტი, გაეგზავნება ყველას ოთახში ვინც არის
 ChatServer.prototype.sendMessage = function (socket, data) {

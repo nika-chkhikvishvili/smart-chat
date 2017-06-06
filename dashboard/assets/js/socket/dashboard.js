@@ -3,25 +3,45 @@
  */
 
 
-var services = [];
-var me;
-var choose_redirect_person_locker = false;
+let services = [];
+let me;
+let choose_redirect_person_locker = false;
 
-var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) : {2}<br></div></div>");
-var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
+
+let filesDialog;
 
 
 function close_chat(){
-    var chat_uniq_id = $('.active-chat').attr('data-chat');
+    let chat_uniq_id = $('.active-chat').attr('data-chat');
     if (!chat_uniq_id  || chat_uniq_id === '') return;
 
 
-    var exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
+    let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
     if (exit === true) {
         socket.emit('operatorCloseChat', {chatUniqId : chat_uniq_id});
         $(".person[data-chat = " + chat_uniq_id + "]").remove();
         $(".chat[data-chat = " + chat_uniq_id + "]").remove();
     }
+}
+
+function send_file(fileId, fileName){
+
+    let elChatbox = $('.active-chat');
+
+    if (elChatbox.size() === 0) {
+        alert('არ არის არჩეული პიროვნება');
+        return ;
+    }
+
+    socket.emit('sendFile', {
+        chatUniqId:  elChatbox.data('chat'),
+        message: fileName,
+        id: fileId
+    });
+
+    filesDialog.dialog( "close" );
+    elChatbox.append('<div class="bubble me">'+ fileName + '</div>' );
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
 function redirect_to_service(serviceId){
@@ -445,6 +465,21 @@ $(document).ready(function () {
         elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });
 
+    filesDialog = $( "#dialog-form-files" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 550,
+        modal: true,
+        buttons: {
+            Cancel: function() {
+                filesDialog.dialog( "close" );
+            }
+        },
+        close: function() {
+
+        }
+    });
+
     var dialog = $( "#template-dialog-form" ).dialog({
         autoOpen: false,
         height: 400,
@@ -460,9 +495,12 @@ $(document).ready(function () {
         }
     });
 
+    $(".wrapper_chat").on('click', '.attach', function (e) {
+        filesDialog.dialog( "open" );
+    });
+
     $(".wrapper_chat").on('click', '.draft', function (e) {
         dialog.dialog( "open" );
-
     });
 
 
@@ -719,5 +757,7 @@ function redAlert(id) {
 socket.on('newChatWindow', function (data) {
     console.log('execute: newChatWindow');
     // console.log(data);
+
+    socket.emit('sendWelcomeMessage', data.chatUniqId );
     createChatWindowAndLoadData(data);
 });

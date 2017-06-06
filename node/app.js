@@ -370,6 +370,12 @@ app.io.on('connection', function (socket) {
     socket.on('sendMessage', function (data) {
         server.sendMessage(socket, data);
     });
+    socket.on('sendFile', function (data) {
+        server.sendFile(socket, data);
+    });
+    socket.on('sendWelcomeMessage', function (data) {
+        server.sendWelcomeMessage(socket, data);
+    });
     socket.on('operatorIsWorking', function (data) {
         server.operatorIsWorking(socket, data);
     });
