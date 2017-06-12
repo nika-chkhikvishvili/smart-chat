@@ -22,7 +22,7 @@ function ChatServer(data) {
 
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 ChatServer.prototype.getWaitingList = function (socket) {
-    let ans = [];
+    var ans = [];
     if (!!app.waitingClients && Array.isArray(app.waitingClients)) {
         app.waitingClients.forEach(function(val, idx){
             if (!!val) {
@@ -71,12 +71,12 @@ ChatServer.prototype.getActiveChats = function (socket) {
             return app.databaseError(socket, err);
         }
 
-        let ans = [];
+        var ans = [];
 
         res.forEach(function (item) {
             if (app.chatRooms[item.chat_uniq_id]) {
                 item.users = [];
-                let chatRoom = app.chatRooms[item.chat_uniq_id];
+                var chatRoom = app.chatRooms[item.chat_uniq_id];
                 chatRoom.users.forEach(function (status, userId) {
                     if (app.onlineUsers[userId]) {
                         item.users.push(app.onlineUsers[userId].getLimited());
@@ -202,14 +202,14 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         return;
     }
 
-    let joinType = parseInt(data.joinType || NaN);
+    var joinType = parseInt(data.joinType || NaN);
 
     if (!joinType || !isFinite(joinType)) {
         socket.emit("joinToRoomResponse", {isValid: false});
         return;
     }
 
-    let chatRoom = app.chatRooms[data.chatUniqId];
+    var chatRoom = app.chatRooms[data.chatUniqId];
 
     if (!chatRoom) {
         socket.emit("joinToRoomResponse", {isValid: false});
@@ -222,7 +222,7 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         return ;
     }
 
-    let userJoinMode = 1;
+    var userJoinMode = 1;
 
     if (joinType === 1) {
         userJoinMode = 5;
@@ -237,7 +237,7 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
             return app.databaseError(socket, err);
         }
 
-        let user = socket.user;
+        var user = socket.user;
         chatRoom.addUser(user.userId, joinType, user);
 
         if (!!user && !!user.sockets) {
@@ -257,10 +257,10 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
                         return app.databaseError(socket, err);
                     }
 
-                    let message = new Message();
+                    var message = new Message();
                     message.chatUniqId = data.chatUniqId;
                     message.messageType = 'leave';
-                    let user = app.onlineUsers[userId];
+                    var user = app.onlineUsers[userId];
                     if (!!user) {
                         chatRoom.removeUser(user);
                         Object.keys(user.sockets).forEach(function (socketId) {
@@ -310,7 +310,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
             app.onlineUsers[ans.person_id] = new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, nickname: ans.nickname});
         }
 
-        let user = app.onlineUsers[ans.person_id];
+        var user = app.onlineUsers[ans.person_id];
         user.addSocket(socket.id);
         user.addToken(data.token);
         user.isOnline = true;
@@ -323,10 +323,10 @@ ChatServer.prototype.checkToken = function (socket, data) {
                 return app.databaseError(socket, err);
             }
 
-            let chatAns = [];
+            var chatAns = [];
             if (resChat && Array.isArray(resChat)) {
                 resChat.forEach(function (row) {
-                    let chatRoom = app.chatRooms[row.chat_uniq_id];
+                    var chatRoom = app.chatRooms[row.chat_uniq_id];
                     chatRoom.addUser(user.userId, row.person_mode, user);
 
                     chatAns.push({
@@ -343,7 +343,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
 };
 
 ChatServer.prototype.sendWelcomeMessage = function (socket, data) {
-    let message = {
+    var message = {
         chatUniqId: data,
         message: app.autoAnswering.getWelcomeMessage(1),
         id: -158
@@ -352,7 +352,7 @@ ChatServer.prototype.sendWelcomeMessage = function (socket, data) {
 };
 
 ChatServer.prototype.sendFile = function (socket, data) {
-    let me = this;
+    var me = this;
 
     app.connection.query('SELECT files_id, file_name FROM files WHERE files_id = ?', [data.id], function (err, res) {
         if (err) {
@@ -362,9 +362,9 @@ ChatServer.prototype.sendFile = function (socket, data) {
         if (!res || res.length === 0) {
             return;
         }
-        let file = res[0];
+        var file = res[0];
 
-        let message = {
+        var message = {
             chatUniqId: data.chatUniqId,
             message: '<a href="#' + file.file_name +'">' + file.file_name +'</a>',
             id: -157
@@ -383,8 +383,8 @@ ChatServer.prototype.sendMessage = function (socket, data) {
         return socket.emit("sendMessageResponse", {isValid: false, error: 'chatRooms'});
     }
 
-    let chatRoom = app.chatRooms[data.chatUniqId];
-    let user = socket.user;
+    var chatRoom = app.chatRooms[data.chatUniqId];
+    var user = socket.user;
 
     if (chatRoom.users.get(user.userId)!==1) {
         return socket.emit("sendMessageResponse", {isValid: false, error: 'Not Allowed'});
@@ -392,7 +392,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
 
 
 
-    let message = new Message( {chatId: chatRoom.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId});
+    var message = new Message( {chatId: chatRoom.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
         if (err) {

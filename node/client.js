@@ -228,7 +228,7 @@ ChatClient.prototype.clientCloseChat = function (socket) {
         if (err) {
             return app.databaseError(socket, err);
         }
-        let message = new Message();
+        var message = new Message();
         message.chatUniqId = socket.chatUniqId;
         message.messageType = 'close';
 

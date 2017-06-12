@@ -145,14 +145,14 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
 });
 
 app.sendMessageToRoomUsers = function (socket, message) {
-    let chat = app.chatRooms[message.chatUniqId];
+    var chat = app.chatRooms[message.chatUniqId];
     if (!chat) {
         return;
     }
 
-    let chatRoom = app.chatRooms[message.chatUniqId];
+    var chatRoom = app.chatRooms[message.chatUniqId];
     chatRoom.users.forEach(function (status, userId) {
-        let user = app.onlineUsers[userId];
+        var user = app.onlineUsers[userId];
         if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
                 socket.broadcast.to(socketId).emit('message', message);
@@ -160,7 +160,7 @@ app.sendMessageToRoomUsers = function (socket, message) {
         }
     });
 
-    for (let key of chat.users.keys()) {
+    for (var key of chat.users.keys()) {
 
     }
 };
@@ -203,7 +203,7 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
 
 
 app.checkAvailableServiceForOperator = function (socket) {
-    let user = socket.user;
+    var user = socket.user;
     if (!user.canTakeMore()) {
         return ;
     }
@@ -213,7 +213,7 @@ app.checkAvailableServiceForOperator = function (socket) {
         }
 
         res.forEach(function(item){
-           let serviceQuee = app.waitingClients[item.service_id];
+            var serviceQuee = app.waitingClients[item.service_id];
            if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
                app.addOperatorToService(socket, user.userId, item.service_id, 1)
            }
@@ -223,8 +223,8 @@ app.checkAvailableServiceForOperator = function (socket) {
 
 
 app.addOperatorToService = function(socket, userId, serviceId, joinedModeId){
-    let waiting = app.waitingClients[serviceId].shift();
-    let chatRoom;
+    var waiting = app.waitingClients[serviceId].shift();
+    var chatRoom;
     if (app.chatRooms.hasOwnProperty(waiting.chatUniqId)) {
         chatRoom = app.chatRooms[waiting.chatUniqId];
     } else {
@@ -244,7 +244,7 @@ app.addOperatorToService = function(socket, userId, serviceId, joinedModeId){
             }
             chatRoom.addUser(userId, 1);
 
-            let user = app.onlineUsers[userId];
+            var user = app.onlineUsers[userId];
             if (user && user.sockets) {
                 Object.keys(user.sockets).forEach(function (socketId) {
                     socket.broadcast.to(socketId).emit('newChatWindow', chatRoom);
@@ -269,7 +269,7 @@ app.addOperatorToService = function(socket, userId, serviceId, joinedModeId){
 
 //სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
 app.checkAvailableOperatorForService = function (socket, serviceId) {
-    let serviceIdParsed = parseInt(serviceId);
+    var serviceIdParsed = parseInt(serviceId);
     if (isNaN(serviceIdParsed)
             || !app.waitingClients
             || !Array.isArray(app.waitingClients)
@@ -278,7 +278,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
         return;
     }
 
-    let wh = '-1';
+    var wh = '-1';
 
     Object.keys(app.onlineUsers).forEach(function (id) {
         if (app.onlineUsers[id].isOnline) {

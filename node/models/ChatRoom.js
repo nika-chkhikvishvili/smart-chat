@@ -11,7 +11,7 @@ function ChatRoom(initParams) {
     this.chatRoomId    = initParams.hasOwnProperty('chatRoomId')  ? initParams.chatRoomId   : null;
     this.chat          = initParams.hasOwnProperty('chat')        ? initParams.chat         : null;
     if (initParams.hasOwnProperty('chat')) {
-        let chat = initParams.chat;
+        var chat = initParams.chat;
         this.chatUniqId    = chat.hasOwnProperty('chatUniqId')  ? chat.chatUniqId   : null;
         this.chatId        = chat.hasOwnProperty('chatId')      ? chat.chatId       : null;
         this.guestUserId   = chat.hasOwnProperty('guestUserId') ? chat.guestUserId  : null;
@@ -54,7 +54,7 @@ ChatRoom.prototype.addUser = function (userId, userMode, user) {
 ChatRoom.prototype.removeUser = function (user) {
     if (!user) return false;
 
-        let st = this.users.get(user.userId);
+    var st = this.users.get(user.userId);
         if (st && isFinite(st) && parseInt(st) === 1) {
             this.users.delete(user.userId);
             user.removeChat(this.chatUniqId );
