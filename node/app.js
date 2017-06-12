@@ -160,9 +160,9 @@ app.sendMessageToRoomUsers = function (socket, message) {
         }
     });
 
-    for (var key of chat.users.keys()) {
-
-    }
+    // for (var key of chat.users.keys()) {
+    //
+    // }
 };
 
 app.sendMessageToRoomGuests = function (socket, message) {
