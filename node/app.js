@@ -311,12 +311,12 @@ app.io.on('connection', function (socket) {
         if (err) {
             return app.databaseError(socket, err);
         }
-        var isBlocked = (res[0].cou === '1' || res[0].cou === 1);
+        let isBlocked = (res[0].cou === '1' || res[0].cou === 1);
         socket.blockCheckCount = socket.hasOwnProperty('blockCheckCount') ? socket.blockCheckCount + 1 : 0;
 
         if (isBlocked) {
             socket.isBlocked = true;
-            var message = new Message({messageType: 'ban'});
+            let message = new Message({messageType: 'ban'});
             message.message = app.autoAnswering.getBanMessage(1);
             socket.emit("message", message);
         }
