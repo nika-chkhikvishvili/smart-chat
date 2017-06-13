@@ -22,7 +22,7 @@ function ChatRoom(initParams) {
         this.guestUserId   = initParams.hasOwnProperty('guestUserId') ? initParams.guestUserId  : null;
         this.serviceId     = initParams.hasOwnProperty('serviceId')   ? initParams.serviceId    : null;
     }
-    this.users         = [];
+    this.users         =  new Map();
     this.guests        = []
 }
 
@@ -33,28 +33,36 @@ ChatRoom.prototype.getInsertGuestObject = function () {
     };
 };
 
-ChatRoom.prototype.getInsertUserObject = function (userId, person_mode) {
+ChatRoom.prototype.getInsertUserObject = function (userId, person_mode, person_join_mode_id) {
     return {
         chat_id    : this.chatId,
         person_id  : userId,
-        person_mode: person_mode || null
+        person_mode: person_mode,
+        person_join_mode_id: person_join_mode_id
     };
 };
 
-ChatRoom.prototype.addUser = function (userId) {
-    if (!userId) return ;
-    if (!this.users || !Array.isArray(this.users)) this.users = [];
-
-    var isAdded = false;
-
-    this.users.forEach(function (chatUserId) {
-        isAdded = isAdded || ( userId === chatUserId);
-    });
-
-    if (!isAdded) {
-        this.users.push(userId);
+ChatRoom.prototype.addUser = function (userId, userMode, user) {
+    if (!userId) return false;
+    if (!!user){
+        user.addChat(this.chatUniqId);
     }
+    if (this.users.has(userId)) return false;
+    this.users.set(userId, userMode || 1);
 };
 
+ChatRoom.prototype.removeUser = function (user) {
+    if (!user) return false;
+
+    var st = this.users.get(user.userId);
+        if (st && isFinite(st) && parseInt(st) === 1) {
+            this.users.delete(user.userId);
+            user.removeChat(this.chatUniqId );
+        }
+};
+
+ChatRoom.prototype.isAlreadyInTheRoom = function (userId) {
+    return this.users.has(userId);
+};
 
 module.exports = ChatRoom;

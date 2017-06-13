@@ -3,25 +3,45 @@
  */
 
 
-var services = [];
-var me;
-var choose_redirect_person_locker = false;
+let services = [];
+let me;
+let choose_redirect_person_locker = false;
 
-var meTemplate = jQuery.validator.format("<div><div class='msgln' id='message_{0}'>({1}) : {2}<br></div></div>");
-var othTemplate = jQuery.validator.format("<div class='msglnr'>({0}) <b>{1}</b>: {2}<br></div>");
+
+let filesDialog;
 
 
 function close_chat(){
-    var chat_uniq_id = $('.active-chat').attr('data-chat');
+    let chat_uniq_id = $('.active-chat').attr('data-chat');
     if (!chat_uniq_id  || chat_uniq_id === '') return;
 
 
-    var exit = confirm("Are you sure you want to end the session?");
+    let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
     if (exit === true) {
         socket.emit('operatorCloseChat', {chatUniqId : chat_uniq_id});
         $(".person[data-chat = " + chat_uniq_id + "]").remove();
         $(".chat[data-chat = " + chat_uniq_id + "]").remove();
     }
+}
+
+function send_file(fileId, fileName){
+
+    let elChatbox = $('.active-chat');
+
+    if (elChatbox.size() === 0) {
+        alert('არ არის არჩეული პიროვნება');
+        return ;
+    }
+
+    socket.emit('sendFile', {
+        chatUniqId:  elChatbox.data('chat'),
+        message: fileName,
+        id: fileId
+    });
+
+    filesDialog.dialog( "close" );
+    elChatbox.append('<div class="bubble me">'+ fileName + '</div>' );
+    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
 function redirect_to_service(serviceId){
@@ -352,7 +372,7 @@ $(document).ready(function () {
         } else {
             var findChat = $(this).attr('data-chat');
             var personName = $(this).find('.name').text();
-            $('.right .top .name').html(personName);
+            $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
             $('.chat').removeClass('active-chat');
             $('.left .person').removeClass('active');
             $(this).addClass('active');
@@ -445,10 +465,25 @@ $(document).ready(function () {
         elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });
 
+    filesDialog = $( "#dialog-form-files" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 550,
+        modal: true,
+        buttons: {
+            Cancel: function() {
+                filesDialog.dialog( "close" );
+            }
+        },
+        close: function() {
+
+        }
+    });
+
     var dialog = $( "#template-dialog-form" ).dialog({
         autoOpen: false,
         height: 400,
-        width: 350,
+        width: 550,
         modal: true,
         buttons: {
             Cancel: function() {
@@ -460,9 +495,12 @@ $(document).ready(function () {
         }
     });
 
+    $(".wrapper_chat").on('click', '.attach', function (e) {
+        filesDialog.dialog( "open" );
+    });
+
     $(".wrapper_chat").on('click', '.draft', function (e) {
         dialog.dialog( "open" );
-
     });
 
 
@@ -473,15 +511,15 @@ $(document).ready(function () {
 
 
     function searchTemplates() {
-        var needle =$("#template_dialog_form_search_field").val();
+        let needle =$("#template_dialog_form_search_field").val();
 
-        var template_service = $("#template_service");
-        var template_lang    = $("#template_lang");
-        var ul = $("#template_dialog_form_ul");
+        let template_service = $("#template_service");
+        let template_lang    = $("#template_lang");
+        let ul = $("#template_dialog_form_ul");
 
-        var service = template_service.val();
-        var lang    = template_lang.val() || 'ka';
-        var field_name = 'template_text_ge';
+        let service = parseInt(template_service.val());
+        let lang    = template_lang.val() || 'ka';
+        let field_name = 'template_text_ge';
         if (lang === 'en' ) {
             field_name = 'template_text_en';
         }
@@ -493,10 +531,14 @@ $(document).ready(function () {
 
         messageTemplates.forEach(function(tmpl){
             if (service === 0 || service === tmpl.service_id) {
-                if (needle.length===0 || (tmpl.template_text_ge.indexOf(needle) !==-1 ||
+                if (needle.length===0 ||
+                    tmpl.template_text_ge.indexOf(needle) !==-1 ||
                     tmpl.template_text_en.indexOf(needle) !==-1 ||
-                    tmpl.template_text_ru.indexOf(needle) !==-1 )
-                ) ul.append('<li data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
+                    tmpl.template_text_ru.indexOf(needle) !==-1 ||
+                    tmpl.template_title_en.indexOf(needle) !==-1 ||
+                    tmpl.template_title_ge.indexOf(needle) !==-1 ||
+                    tmpl.template_title_ru.indexOf(needle) !==-1
+                ) ul.append('<li  class="list-group-item" data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
             }
         });
     }
@@ -533,7 +575,7 @@ socket.on('message', function (data) {
 
     socket.emit('messageReceivedFromClient', {chatUniqId: data.chatUniqId, msgId: data.ran});
 
-    var elChatbox = $(".chat[data-chat = " + data.chatUniqId + "]");
+    let elChatbox = $(".chat[data-chat=" + data.chatUniqId + "]");
 
     if(data.messageType === 'writing') {
         console.log('ბეჭდავს');
@@ -543,6 +585,10 @@ socket.on('message', function (data) {
         //     $('#operator_is_writing').hide();
         // },3000);
 
+    } else if(data.messageType === 'leave') {
+        alert('თქვენ გახვედით ჩატიდან');
+        $(".person[data-chat = " + data.chatUniqId + "]").remove();
+        $(".chat[data-chat = " + data.chatUniqId + "]").remove();
     } else if(data.messageType === 'close') {
         alert('მომხმარებელმა ჩატი დახურა');
         $(".person[data-chat = " + data.chatUniqId + "]").remove();
@@ -560,7 +606,7 @@ socket.on('message', function (data) {
     }
 
     $(".person[data-chat = " + data.chatUniqId + "] .preview").html(shorter(data.message));
-    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().substr(16, 5));
+    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().toISOString().substr(11, 5));
     if (elChatbox && elChatbox[0]) elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 });
@@ -587,6 +633,12 @@ socket.on('checkClientCount', function (){
 
 });
 
+socket.on('checkActiveChats', function (){
+    console.log('execute: checkActiveChats');
+    socket.emit('getActiveChats');
+
+});
+
 // სერვისების სია, ბიბლიოთეკა
 socket.emit('clientGetServices');
 socket.on('clientGetServicesResponse', function (data) {
@@ -602,14 +654,14 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
-    // console.log(data);
+    console.log(data);
     var ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
             if (value) {
                 ans = ans + '<tr><td>'+services[key]+"</td><td>";
                 $.each(value, function(i, val){
-                    ans = ans + val.first_name+" " + val.last_name + ", ";
+                    ans = ans + val.chat.guestUser.firstName + " " + val.chat.guestUser.lastName + ", ";
                 });
                 ans = ans + "</td></tr>"
             }
@@ -622,7 +674,7 @@ socket.on('getWaitingListResponse', function (data){
 
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
-    // console.log(data);
+    console.log(data);
 
     var i = 1;
     var tableBody = $('#online_chats_list').find('tbody').html('');
@@ -644,8 +696,8 @@ socket.on('getActiveChatsResponse', function (data){
         ' <td>'+
         ' <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
         ' <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
-        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',1);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
-        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',2);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
+        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',2);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
+        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',1);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
         ' </td>'+
         ' </tr>'
         );
@@ -709,5 +761,7 @@ function redAlert(id) {
 socket.on('newChatWindow', function (data) {
     console.log('execute: newChatWindow');
     // console.log(data);
+
+    socket.emit('sendWelcomeMessage', data.chatUniqId );
     createChatWindowAndLoadData(data);
 });

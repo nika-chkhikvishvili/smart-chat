@@ -105,6 +105,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
                     app.checkAvailableOperatorForService(socket, data.serviceId);
                     //უგზავნის სუყველას შეტყობინებას რომ ახალი მომხმარებელი შემოვიდა
                     app.io.emit('checkClientCount');
+                    app.io.emit('checkActiveChats');
                     socket.emit("clientInitParamsResponse", {chatUniqId: chat.chatUniqId});
                 });
             });
@@ -122,7 +123,7 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
         socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
         return;
     }
-    app.connection.query('SELECT * FROM  `chats` WHERE  chat_uniq_id = ?', [data.chatUniqId], function (err, res) {
+    app.connection.query('SELECT * FROM  `chats` WHERE chat_status_id in (0,1,2) AND chat_uniq_id = ? ', [data.chatUniqId], function (err, res) {
         if (err) {
             return app.databaseError(socket, err);
         }
@@ -232,6 +233,10 @@ ChatClient.prototype.clientCloseChat = function (socket) {
         message.messageType = 'close';
 
         app.sendMessageToRoom(socket, message, true);
+
+        app.checkAvailableOperatorForService(socket, app.chatRooms[socket.chatUniqId].serviceId);
+        app.io.emit('checkClientCount');
+        app.io.emit('checkActiveChats');
     });
 };
 

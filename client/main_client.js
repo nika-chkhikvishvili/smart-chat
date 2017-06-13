@@ -161,12 +161,6 @@ socket.on('clientInitParamsResponse', function (data) {
     $('.panel').show();
 });
 
-socket.on('operatorJoined', function (data) {
-    console.log('execute: operatorJoined');
-    console.log(data);
-    $("#chat-body-ul").append("<div class='msg msglnr'>" + data + "<br></div>");
-});
-
 socket.on('message', function (data) {
     console.log('execute: message');
     console.log(data);

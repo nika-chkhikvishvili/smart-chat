@@ -210,12 +210,30 @@
     </div>
 </div>
 
+<div id="dialog-form-files" class="chat-dialog" title="ფაილი">
+<!--    <input type="text" id="dialog_form_files_search_field"><br>-->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ფაილის სახელი</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($files as $key => $val) {
+            echo "<tr><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$val['file_name']}</a></td></tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+</div>
+
 <div id="template-dialog-form" class="chat-dialog" title="აირჩიეთ შაბლონი">
     <select name="template_lang" id="template_lang">
         <option value="ka">Georgian</option>
         <option value="en">English</option>
         <option value="ru">Russian</option>
-    </select><br>
+    </select>
 
     <select name="template_service" id="template_service" onchange="">
         <option value="0">All</option>
@@ -234,11 +252,11 @@
     </select>
     <input type="text" id="template_dialog_form_search_field"><br>
 
-    <ul id="template_dialog_form_ul">
+    <ul id="template_dialog_form_ul" class="list-group">
         <?php
 
         foreach ($get_sql_templates as $key => $val) {
-            echo "<li data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
+            echo "<li  class=\"list-group-item\" data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
         }
         ?>
     </ul>
@@ -326,6 +344,7 @@
             var token = "<?=$this->session->userdata['token'] ; ?>";
             var socketAddr = '<?=substr(base_url(),0,-1);?>';
             var imWorkingDelay = 60000* <?php  echo $params['repeat_auto_answering'];  ?>;
+
         </script>
         <script src="<?=base_url();?>assets/js/socket/common.js"></script>
 
