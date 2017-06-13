@@ -201,7 +201,7 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
 
 //სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
 app.checkAvailableOperatorForService = function (socket, serviceId) {
-    var serviceIdParsed = parseInt(serviceId);
+    let serviceIdParsed = parseInt(serviceId);
     if (isNaN(serviceIdParsed)
             || !app.waitingClients
             || !Array.isArray(app.waitingClients)
@@ -210,7 +210,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
         return;
     }
 
-    var wh = '-1';
+    let wh = '-1';
 
     Object.keys(app.onlineUsers).forEach(function (id) {
         if (app.onlineUsers[id].isOnline) {
@@ -229,10 +229,10 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
         if (!res || !Array.isArray(res) || res.length === 0) {
             return;
         }
-        var userId = res[0].person_id;
+        let userId = res[0].person_id;
 
-        var waiting = app.waitingClients[serviceId].shift();
-        var chatRoom;  // =  waiting ;//new ChatRoom({chat: waiting.chat, userId: userId});
+        let waiting = app.waitingClients[serviceId].shift();
+        let chatRoom;  // =  waiting ;//new ChatRoom({chat: waiting.chat, userId: userId});
         if (app.chatRooms.hasOwnProperty(waiting.chatUniqId)) {
             chatRoom = app.chatRooms[waiting.chatUniqId];
         } else {
@@ -253,7 +253,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
                 }
                 chatRoom.addUser(userId);
 
-                var user = app.onlineUsers[userId];
+                let user = app.onlineUsers[userId];
                 if (user && user.sockets) {
                     Object.keys(user.sockets).forEach(function (socketId) {
                         socket.broadcast.to(socketId).emit('newChatWindow', chatRoom);
@@ -283,12 +283,12 @@ app.io.on('connection', function (socket) {
         if (err) {
             return app.databaseError(socket, err);
         }
-        var isBlocked = (res[0].cou === '1' || res[0].cou === 1);
+        let isBlocked = (res[0].cou === '1' || res[0].cou === 1);
         socket.blockCheckCount = socket.hasOwnProperty('blockCheckCount') ? socket.blockCheckCount + 1 : 0;
 
         if (isBlocked) {
             socket.isBlocked = true;
-            var message = new Message({messageType: 'ban'});
+            let message = new Message({messageType: 'ban'});
             message.message = app.autoAnswering.getBanMessage(1);
             socket.emit("message", message);
         }
