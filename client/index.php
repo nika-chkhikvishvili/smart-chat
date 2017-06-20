@@ -223,7 +223,7 @@
 <div class="container" style="height:100%">
     <div class="user_ban"></div>
 
-    <form id="asarchevi" >
+    <div id="asarchevi" >
         <div class="form-group">
             <label for="first_name">First Name:</label>
             <input type="text" class="form-control" id="first_name" placeholder="First Name">
@@ -237,8 +237,8 @@
             <select id="select_theme" name="select_theme"></select>
         </div>
 
-        <button type="submit" class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
-    </form>
+        <button class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
+    </div>
 
     <div class="col-md-12 col-lg-8 center-block" style="height:90%">
         <div class="panel"style="height:100%">
