@@ -56,6 +56,33 @@
                         });
                         }
                 });
+$('.change').click(function() {
+                data = {};
+                data['val'] = $(this).attr('id');  
+
+                if(confirm('გავუგზავნოთ მომხმარებელს ახალი პაროლი ?'))
+                         {
+                           
+                          $.ajax({
+                          type: "POST",  
+                          url: "<?=base_url()."persons/change_password";?>",  
+                          cache:false,  
+                          data: data,
+                          dataType: "json",       
+                          success: function(response)  
+                          {   
+                                //$("#loading").hide();
+                                if(response.status) {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.reload(1); }, 3000);		
+                                } else {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.assign("<?=base_url();?>blacklist"); }, 3000);		
+                                }
+                          }   
+                        });
+                        }
+                }); 		
         });
 
         </script>
