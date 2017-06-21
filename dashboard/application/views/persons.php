@@ -58,7 +58,7 @@
                 });
 $('.change').click(function() {
                 data = {};
-                data['val'] = $(this).attr('id');  
+                data['id'] = $(this).attr('id');  
 
                 if(confirm('გავუგზავნოთ მომხმარებელს ახალი პაროლი ?'))
                          {
