@@ -125,6 +125,59 @@
                                 </div>
                             </div>
                         </div> <!-- end row -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">მიმდინარე საუბრები</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <div class="table-responsive">
+                                                    <div class="wrapper_chat">
+                                                        <div class="container_chat">
+                                                            <div class="left">
+                                                                <div class="top">
+                                                                    <input type="text" />
+                                                                    <a href="javascript:;" class="search"></a>
+                                                                </div>
+                                                                <ul class="people">
+                                                                    <li class="person" data-chat="person1" style="display: none;">
+                                                                        <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                                                                        <span class="name">Thomas Bangalter</span>
+                                                                        <span class="time">2:09 PM</span>
+                                                                        <span class="preview">I was wondering...</span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="right">
+                                                                <div class="top"><span>To: <span class="name"> </span></span>
+                                                                    <span style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/redirect.png"></a></span>
+                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/close.png"></a></span>
+                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/ban_user.png"></a></span>
+                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>            </div>
+                                                                <div class="chats_container"  style="height: 567px;">
+                                                                </div>
+                                                                <div class="write">
+                                                                    <a href="javascript:;" class="write-link attach"></a>
+                                                                    <a href="javascript:;" class="write-link draft"></a>
+                                                                    <input type="text" />
+                                                                    <a href="javascript:;" class="write-link send"></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> <!--end table-responsive-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end row -->
 
                     </div> <!-- container -->
                                
@@ -170,7 +223,7 @@
 <!--        </div>-->
 <!--    </div>-->
 <!--</div>-->
-
+<!--
 <div class="wrapper_chat">
     <div class="chat_open_button" style="display: none; cursor: pointer; ">X</div>
     <div class="container_chat">
@@ -208,7 +261,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <div id="dialog-form-files" class="chat-dialog" title="ფაილი">
 <!--    <input type="text" id="dialog_form_files_search_field"><br>-->

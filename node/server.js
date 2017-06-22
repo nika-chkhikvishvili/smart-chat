@@ -316,7 +316,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         user.isOnline = true;
         socket.user = user;
 
-        app.connection.query('SELECT c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
+        app.connection.query('SELECT r.person_mode, c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
                 ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +
                 ' and r.person_mode in (1,2) and r.person_id = ?', [ans.person_id], function (err, resChat) {
             if (err) {
@@ -332,7 +332,8 @@ ChatServer.prototype.checkToken = function (socket, data) {
                     chatAns.push({
                         chatUniqId: row.chat_uniq_id,
                         first_name: row.first_name,
-                        last_name: row.last_name
+                        last_name: row.last_name,
+                        joinType: row.person_mode
                     });
                 })
             }

@@ -250,16 +250,23 @@ function isChatWindowHidden(id) {
 var createChatWindowAndLoadDataSimple = function(data){
     console.log('execute: createChatWindowAndLoadData');
     // console.log(data);
+    console.log(data.joinType);
 
     if (!data || !data.chatUniqId) {
         return;
     }
 
+    let ro = '';
 
-    $('.wrapper_chat .container_chat .left .people').append('<li class="person" data-chat="' + data.chatUniqId + '">'+
+    if (data.joinType == 2){
+        ro = 'readonly';
+    }
+
+    $('.wrapper_chat .container_chat .left .people').append('<li class="person ' + ro + '"  data-type="' + ro + '"  data-chat="' + data.chatUniqId + '">'+
         '<img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />'+
         '<span class="name">'+ data.firstName + ' '+ data.lastName+'</span>'+
         '<span class="new_message_icon"></span>'+
+        '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+
         '<span class="time"></span>'+
         '<span class="preview">...</span>'+
         '</li>');
@@ -272,7 +279,7 @@ var createChatWindowAndLoadDataSimple = function(data){
 
 var createChatWindowAndLoadData = function(data){
     console.log('execute: createChatWindowAndLoadData');
-    // console.log(data);
+    console.log(data);
 
     if (!data || !data.chatUniqId) {
         return;
@@ -329,7 +336,8 @@ socket.on('checkTokenResponse', function (data){
                 var d = {
                     chatUniqId : i.chatUniqId,
                     firstName : i.first_name || '',
-                    lastName : i.last_name || ''
+                    lastName : i.last_name || '',
+                    joinType: i.joinType || ''
                 };
                 createChatWindowAndLoadDataSimple(d)
             })
@@ -371,6 +379,13 @@ $(document).ready(function () {
             return false;
         } else {
             var findChat = $(this).attr('data-chat');
+            console.log();
+            if ($(this).attr('data-type') === 'readonly') {
+                $('.write').hide();
+            } else {
+                $('.write').show();
+            }
+
             var personName = $(this).find('.name').text();
             $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
             $('.chat').removeClass('active-chat');
@@ -389,19 +404,6 @@ $(document).ready(function () {
 
     $('#im_working_checkbox').click(function() {
         $('.active-chat').data('ImWorking', this.checked);
-    });
-
-    //სასაუბრო ფანჯრის დამალვა
-    $(".wrapper_chat").on('click', '.chat_close_button', function (e) {
-        $(".container_chat").hide();
-        $(".chat_open_button").show();
-        $(".wrapper_chat").css({bottom: "9px",  right: "0px", width : "20px", height: "20px" });
-    });
-
-    $(".wrapper_chat").on('click', '.chat_open_button', function (e) {
-        $(".container_chat").show();
-        $(".chat_open_button").hide();
-        $(".wrapper_chat").removeAttr('style');
     });
 
     // checks and authoriser user
@@ -674,7 +676,7 @@ socket.on('getWaitingListResponse', function (data){
 
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
-    console.log(data);
+    // console.log(data);
 
     var i = 1;
     var tableBody = $('#online_chats_list').find('tbody').html('');
@@ -705,10 +707,11 @@ socket.on('getActiveChatsResponse', function (data){
 });
 
 function joinToRoom(chatUniqId, joinType) {
-    socket.emit('joinToRoom', {chatUniqId:chatUniqId, joinType: joinType});
+    let exit = confirm("ნამდვილად გსურთ საუბარში ჩარევა?");
+    if (exit === true) {
+        socket.emit('joinToRoom', {chatUniqId:chatUniqId, joinType: joinType});
+    }
 }
-
-
 
 //აიღებს პირველ მოლოდინში მყოფ კლიენტს და აბრუნებს ჩატის იდ-ს
 socket.on('getNextWaitingClientResponse', function (data){
