@@ -109,7 +109,7 @@
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                         <input type="password" name="post_pass" class="form-control" id="pwd" name="post_pass" placeholder="პაროლი" value="12345">
+                         <input type="password" name="post_pass" class="form-control" id="pwd" name="post_pass" placeholder="პაროლი" value="">
                     </div>                                                                  
 					  
                     <div class="form-group">
