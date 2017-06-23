@@ -12,7 +12,7 @@ function GuestUser(user) {
     this.lastName    = user.hasOwnProperty('lastName')    ? user.lastName    : null;
     this.mail        = user.hasOwnProperty('mail')        ? user.mail        : null;
     this.ip_string   = user.hasOwnProperty('ip')          ? user.ip          : null;
-    this.sockets     = {};
+    this.sockets     = new Set();
 }
 
 GuestUser.prototype.getInsertObject = function (socketId) {
@@ -29,6 +29,14 @@ GuestUser.prototype.getLimited = function () {
         firstName   : this.firstName ,
         lastName    : this.lastName
     }
+};
+
+GuestUser.prototype.addSocket = function (id) {
+    this.sockets.add(id);
+};
+
+GuestUser.prototype.removeSocket = function (id) {
+    this.sockets.delete(id);
 };
 
 module.exports = GuestUser;

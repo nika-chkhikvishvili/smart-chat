@@ -54,9 +54,9 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             return;
         }
 
-        var startTime = Date.parse('01/01/2000 ' + res[0].start_time);
-        var endTime = Date.parse('01/01/2000 ' + res[0].end_time);
-        var nowTime = new Date();
+        let startTime = Date.parse('01/01/2000 ' + res[0].start_time);
+        let endTime = Date.parse('01/01/2000 ' + res[0].end_time);
+        let nowTime = new Date();
         nowTime.setFullYear(2000, 0, 1);
 
         if (startTime !== endTime) {
@@ -66,22 +66,23 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             }
         }
 
-        var guestUser = new GuestUser({firstName: data.firstName, lastName: data.lastName, ip: socket.conn.remoteAddress});
+        let guestUser = new GuestUser({firstName: data.firstName, lastName: data.lastName, ip: socket.conn.remoteAddress});
 
         app.connection.query('INSERT INTO `online_users` SET ? ', guestUser.getInsertObject(), function (err, res) {
             if (err) {
                 return app.databaseError(socket, err);
             }
 
-            guestUser.guestUserId = res.insertId;
+            guestUser.guestUserId = parseInt(res.insertId);
             socket.guestUserId = guestUser.guestUserId;
-
+            socket.guestUser = guestUser;
+            guestUser.addSocket(socket.id);
 
             if (!app.waitingClients[data.serviceId] || app.waitingClients[data.serviceId] === null) {
                 app.waitingClients[data.serviceId] = fifo();
             }
 
-            var chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser});
+            let chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser});
 
             app.connection.query('INSERT INTO `chats` SET ? ', chat.getInsertObject(), function (err, res) {
                 if (err) {
@@ -89,7 +90,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
                 }
                 chat.chatId = res.insertId;
 
-                var chatRoom = new ChatRoom({chat: chat});
+                let chatRoom = new ChatRoom({chat: chat});
                 chatRoom.guests = [socket.id];
 
                 app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertGuestObject(), function (err, res1) {
@@ -133,13 +134,13 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
             return;
         }
 
-        var ans = res[0];
+        let ans = res[0];
         socket.guestUserId = ans.online_user_id;
         socket.chatUniqId = data.chatUniqId;
 
         //ამოწმებს არის თუ არა ეს მომხმარებელი დამატებული ჩატის ოთახში
-        var isAdded = false;
-        var chatRoom = app.chatRooms[data.chatUniqId];
+        let isAdded = false;
+        let chatRoom = app.chatRooms[data.chatUniqId];
 
         chatRoom.guests.forEach(function (socketId) {
             isAdded = isAdded || (socketId === socket.id);
@@ -160,7 +161,7 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
                 return;
             }
 
-            var user = res[0];
+            let user = res[0];
             app.connection.query('SELECT m.`chat_message_id` as `messageId`, m.`chat_id` as `chatId`, m.`person_id` as `userId`, ' +
                     'm.`online_user_id` as `guestUserId`, m.`chat_message` as `message`, m.`message_date` as `messageDate`, ' +
                     "'ოპერატორი' as `sender`, 'message' as `messageType` " +
@@ -191,8 +192,8 @@ ChatClient.prototype.clientMessage = function (socket, data) {
         return;
     }
 
-    var chat = app.chatRooms[socket.chatUniqId];
-    var message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: data.message});
+    let chat = app.chatRooms[socket.chatUniqId];
+    let message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: data.message});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
         if (err) {

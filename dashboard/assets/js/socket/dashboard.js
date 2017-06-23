@@ -268,6 +268,7 @@ var createChatWindowAndLoadDataSimple = function(data){
         '<span class="new_message_icon"></span>'+
         '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+
         '<span class="time"></span>'+
+        '<span class="only_view close_readonly">X</span>'+
         '<span class="preview">...</span>'+
         '</li>');
 
@@ -442,7 +443,13 @@ $(document).ready(function () {
         }
     });
 
-    //სასაუბრო ფანჯრის დამალვა
+
+    $(".person").on('click', '.close_readonly', function (e) {
+        console.log(this);
+
+    });
+
+    //სასაუბრო ფანჯრის დამალვა1
     $(".wrapper_chat").on('click', '.send', function (e) {
 
         var elChatbox = $('.active-chat');
@@ -570,7 +577,6 @@ socket.on('operatorIsWorking', function (data) {
 
 });
 
-
 socket.on('message', function (data) {
     console.log('execute: message');
     console.log(data);
@@ -671,8 +677,6 @@ socket.on('getWaitingListResponse', function (data){
     }
     $("#clients_queee_body").html(ans);
 });
-
-
 
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');

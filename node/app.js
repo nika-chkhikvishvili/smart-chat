@@ -1,19 +1,19 @@
 'use strict';
 
 
-var app = {};
+let app = {};
 
-var GuestUser = require('./models/GuestUser');
-var Chat = require('./models/Chat');
-var ChatRoom = require('./models/ChatRoom');
-var AutoAnswering = require('./models/AutoAnswering');
-var Message = require('./models/Message');
+let GuestUser = require('./models/GuestUser');
+let Chat = require('./models/Chat');
+let ChatRoom = require('./models/ChatRoom');
+let AutoAnswering = require('./models/AutoAnswering');
+let Message = require('./models/Message');
 
 app.log = require('npmlog');
-var app1 = require('express')();
-var http_server = require('http').createServer(app1);
-var mysql = require('mysql');
-var fifo = require('fifo');
+let app1 = require('express')();
+let http_server = require('http').createServer(app1);
+let mysql = require('mysql');
+let fifo = require('fifo');
 http_server.listen(3000);
 
 app.connection = mysql.createConnection({
@@ -27,8 +27,8 @@ app.connection.connect();
 
 app.io = require('socket.io')(http_server);
 
-var redis = require("redis");
-var redisClient = redis.createClient();
+let redis = require("redis");
+let redisClient = redis.createClient();
 
 redisClient.on("error", function (err) {
     console.log("Error " + err);
@@ -49,10 +49,11 @@ redisClient.hkeys("hash key", function (err, replies) {
 app.chatRooms = {};
 app.waitingClients = [];
 app.onlineUsers = {};
+app.onlineGuests= new Map();
 app.autoAnswering = {};
 
-var client = require('./client.js')(app);
-var server = require('./server.js')(app);
+let client = require('./client.js')(app);
+let server = require('./server.js')(app);
 
 
 // for debug
@@ -105,19 +106,19 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
         process.exit(1);
     }
     rows.forEach(function (row) {
-        var guestUser = new GuestUser({
+        let guestUser = new GuestUser({
             guestUserId: row.online_user_id,
             firstName: row.first_name,
             lastName: row.last_name
         });
-        var chat = new Chat({
+        let chat = new Chat({
             chatId: row.chat_id,
             chatUniqId: row.chat_uniq_id,
             serviceId: row.service_id,
             guestUser: guestUser,
             guestUserId: guestUser.guestUserId
         });
-        var chatRoom = new ChatRoom({chat: chat});
+        let chatRoom = new ChatRoom({chat: chat});
 
         app.chatRooms[row.chat_uniq_id] = chatRoom;
 
@@ -145,14 +146,14 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
 });
 
 app.sendMessageToRoomUsers = function (socket, message) {
-    var chat = app.chatRooms[message.chatUniqId];
+    let chat = app.chatRooms[message.chatUniqId];
     if (!chat) {
         return;
     }
 
-    var chatRoom = app.chatRooms[message.chatUniqId];
+    let chatRoom = app.chatRooms[message.chatUniqId];
     chatRoom.users.forEach(function (status, userId) {
-        var user = app.onlineUsers[userId];
+        let user = app.onlineUsers[userId];
         if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
                 socket.broadcast.to(socketId).emit('message', message);
@@ -166,11 +167,11 @@ app.sendMessageToRoomUsers = function (socket, message) {
 };
 
 app.sendMessageToRoomGuests = function (socket, message) {
-    var chat = app.chatRooms[message.chatUniqId];
+    let chat = app.chatRooms[message.chatUniqId];
     if (!chat) {
         return;
     }
-    var guests = chat.guests;
+    let guests = chat.guests;
     guests.forEach(function (socketId) {
         socket.broadcast.to(socketId).emit('message', message);
     });
@@ -180,7 +181,7 @@ app.sendMessageToRoom = function (socket, message, sendToMe) {
     if (!message) {
         return;
     }
-    var chat = app.chatRooms[message.chatUniqId];
+    let chat = app.chatRooms[message.chatUniqId];
     if (!chat) {
         return;
     }
@@ -203,7 +204,7 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
 
 
 app.checkAvailableServiceForOperator = function (socket) {
-    var user = socket.user;
+    let user = socket.user;
     if (!user.canTakeMore()) {
         return ;
     }
@@ -337,8 +338,8 @@ app.io.on('connection', function (socket) {
     socket.on('clientMessageReceived', function (data) {
         client.clientMessageReceived(socket, data);
     });
-    socket.on('clientCloseChat', function (data) {
-        client.clientCloseChat(socket, data);
+    socket.on('clientCloseChat', function () {
+        client.clientCloseChat(socket);
     });
     socket.on('userIsWriting', function (data) {
         client.userIsWriting(socket, data);
@@ -402,6 +403,15 @@ app.io.on('connection', function (socket) {
         if (socket.hasOwnProperty('user')) {
             delete app.onlineUsers[socket.user.userId].sockets[socket.id];
             app.onlineUsers[socket.user.userId].isOnline = Object.keys(app.onlineUsers[socket.user.userId].sockets).length > 0;
+        }
+
+        if (socket.hasOwnProperty('guestUser')) {
+            let guestUser = socket.guestUser;
+            guestUser.removeSocket(socket.id);
+
+            if (guestUser.sockets.size() === 0) {
+                client.clientCloseChat(socket);
+            }
         }
         app.io.emit('userDisconnect', {
             id: socket.id
