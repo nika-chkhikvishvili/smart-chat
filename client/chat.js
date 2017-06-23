@@ -14,29 +14,29 @@ function Chat($, socket) {
     var elChatbox = $("#chat-body-ul");
     var scroolDiv = $("#scrooldiv");
     var meTemplate = $.validator.format('<li class="mar-btm">' +
-            '<div class="media-right">' +
-            '<img src="/assets/images/me.png" class="img-circle img-sm" alt="Profile Picture"> ' +
-            '</div> ' +
+            // '<div class="media-right">' +
+            // '<img src="/assets/images/me.png" class="img-circle img-sm" alt="Profile Picture"> ' +
+            // '</div> ' +
             '<div class="media-body pad-hor speech-right"> ' +
             '<div class="speech"> ' +
             '<a href="#" class="media-heading">{2}</a> ' +
             '<p>{3}</p> ' +
-            '<p class="speech-time"> ' +
-            '<i class="fa fa-clock-o fa-fw"></i> {1} ' +
+            // '<p class="speech-time"> ' +
+            // '<i class="fa fa-clock-o fa-fw"></i> {1} ' +
             '</p> ' +
             '</div> ' +
             '</div> ' +
             '</li>');
     var othTemplate = $.validator.format('<li class="mar-btm">' +
-            '<div class="media-left">' +
-            '<img src="/assets/images/you.png" class="img-circle img-sm" alt="Profile Picture">' +
-            '</div>' +
+            // '<div class="media-left">' +
+            // '<img src="/assets/images/you.png" class="img-circle img-sm" alt="Profile Picture">' +
+            // '</div>' +
             '<div class="media-body pad-hor">' +
             '<div class="speech"> ' +
             '<a href="#" class="media-heading">{1}</a>' +
             '<p>{2}</p>' +
-            '<p class="speech-time">' +
-            '<i class="fa fa-clock-o fa-fw"></i> {0}' +
+            // '<p class="speech-time">' +
+            // '<i class="fa fa-clock-o fa-fw"></i> {0}' +
             '</p>' +
             '</div>' +
             '</div>' +

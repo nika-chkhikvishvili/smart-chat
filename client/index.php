@@ -103,9 +103,11 @@
         position: relative;
         /*background: #b7dcfe;*/
         background: #7ab800;
-        color: #317787;
+        /*color: #317787;*/
+        color: white;
         display: inline-block;
-        border-radius: 0;
+        border-radius: 24px;
+        max-width: 80%;
         padding: 12px 20px;
     }
     .speech:before {
@@ -132,7 +134,8 @@
     }
     .speech .media-heading {
         font-size: 1.2em;
-        color: #317787;
+        /*color: #317787;*/
+        color: white;
         display: block;
         border-bottom: 1px solid rgba(0,0,0,0.1);
         margin-bottom: 10px;
@@ -157,12 +160,14 @@
     }
     .speech-right>.speech {
         /*background: #ffda87;*/
-        background: #fed100;
-        color: #a07617;
+        background: #8d8a8a;
+        /*color: #a07617;*/
+        /*color: white;*/
         text-align: right;
     }
     .speech-right>.speech .media-heading {
-        color: #a07617;
+        /*color: #a07617;*/
+        /*color: white;*/
     }
     .btn-primary, .btn-primary:focus, .btn-hover-primary:hover, .btn-hover-primary:active, .btn-hover-primary.active, .btn.btn-active-primary:active, .btn.btn-active-primary.active, .dropdown.open>.btn.btn-active-primary, .btn-group.open .dropdown-toggle.btn.btn-active-primary {
         background-color: #579ddb;
@@ -267,7 +272,7 @@
     		<!--Widget body-->
     		<div id="chat-body" class="collapse in" style="height:100%">
     			<div class="nano has-scrollbar" style="height:90%">
-    				<div class="nano-content pad-all" tabindex="0" style="right: -17px;" id="scrooldiv">
+    				<div class="nano-content pad-all" tabindex="0" style="/*right: -17px;*/" id="scrooldiv">
     					<ul class="list-unstyled media-block" id="chat-body-ul">
     						<li class="mar-btm">
     							<div class="media-left">
@@ -322,7 +327,7 @@
     						<input type="text" placeholder="Enter your text" class="form-control chat-input" id="usermsg">
     					</div>
     					<div class="col-xs-3">
-    						<button class="btn btn-primary btn-block" type="submit" id="submitmsg">Send</button>
+    						<button class="btn btn-primary btn-block" style="background: black;" type="submit" id="submitmsg">Send</button>
     					</div>
     				</div>
     			</div>
