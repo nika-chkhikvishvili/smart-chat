@@ -110,7 +110,7 @@
         max-width: 80%;
         padding: 12px 20px;
     }
-    .speech:before {
+   /* .speech:before {
         content: "";
         display: block;
         position: absolute;
@@ -131,7 +131,7 @@
         border-left: 7px solid #ffdc91;
         border-right: 0;
         margin: 15px -6px 0 0;
-    }
+    }*/
     .speech .media-heading {
         font-size: 1.2em;
         /*color: #317787;*/
