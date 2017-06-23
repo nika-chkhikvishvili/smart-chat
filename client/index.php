@@ -264,9 +264,10 @@
     				</div>-->
                     <span id="operator_is_working"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span>
                     <span id="operator_is_writing"> <img src="/assets/images/typing.gif" style="height: 16px;margin-left: 10px;" > </span>
-                    <a id="disconnect-chat" href="#" data-target="#chat-body">საუბრის დასრულება</a>
+                    <a id="disconnect-chat" href="#" data-target="#chat-body"><img src="assets/images/close.png"
+                       style="margin-top: 13px;height: 20px;" /></a>
     			</div>
-    			<h3 class="panel-title">Chat</h3>
+<!--    			<h3 class="panel-title">Chat</h3>-->
     		</div>
 
     		<!--Widget body-->
