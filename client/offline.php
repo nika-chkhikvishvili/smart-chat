@@ -18,7 +18,7 @@
 <body>
 <div class="container">
 <div class="col-lg-9">
-
+<div class="alert"></div>
   <form class="form-horizontal" action=" " method="post"  id="reg_form">
     <fieldset>
       
@@ -84,13 +84,16 @@
           </div>
         </div>
       </div>
+	  
+	  
        
 	   <div class="form-group">
-        <label class="col-md-4 control-label">უსაფრთხოების კოდი</label>
+        <label class="col-md-4 control-label" id="captchaOperation">უსაფრთხოების კოდი</label>
         <div class="col-md-6  inputGroupContainer">
           <div class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-ok"></i></span>
-            <input name="code" placeholder="უსაფრთხოების კოდი" class="form-control"  type="text">
-			<img src="get_captcha.php" alt="" id="captcha" />
+		  
+            <input name="captcha" placeholder="უსაფრთხოების კოდი" class="form-control"  type="text">
+			
           </div>
         </div>
       </div>
@@ -103,7 +106,8 @@
       <div class="form-group">
         <label class="col-md-4 control-label"></label>
         <div class="col-md-4">
-          <button type="buttom" class="btn btn-success" id="Send" >გაგზავნა <span class="glyphicon glyphicon-send"></span></button>
+        
+		  <button type="submit" class="btn btn-primary">გაგზავნა</button>
 		  <input type="reset" class="btn btn-warning" name="res" value="უარყოფა" />
         </div>
       </div>
@@ -119,7 +123,7 @@
 
 </div>
 <!-- /.container --> 
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
 
@@ -129,6 +133,11 @@
 
 
 $(document).ready(function() {
+	 function randomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    };
+    $('#captchaOperation').html([randomNumber(1, 10), '+', randomNumber(1, 20), '='].join(' '));
+
 	   var str_validation = true; 
     $('#reg_form').bootstrapValidator({
         // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
@@ -136,7 +145,25 @@ $(document).ready(function() {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
             validating: 'glyphicon glyphicon-refresh'
-        },
+        }, submitHandler: function(validator, form, submitButton) {
+
+         //alert("made it to submit handler block!");
+        
+        $.ajax({
+          type: "POST",
+          url: "process.php",
+          data: $('#reg_form').serialize(),
+          success: function(msg){
+            
+              alert("made it to success block!");
+              alert(msg);
+              //document.location.href = 'form.php';
+          },
+          error: function(){
+            alert("We found an error in your data.  Please return to home page and try again.");
+          }
+        });//close ajax
+    },
         fields: {
             first_name: {
 				
@@ -202,17 +229,21 @@ $(document).ready(function() {
                     }
                 }
             },
+	captcha: {
+		validators: {
+			callback: {
+				message: 'გთხოვთ მიუთითოთ პასუხი',
+				callback: function(value, validator) {
+					var items = $('#captchaOperation').html().split(' '), sum = parseInt(items[0]) + parseInt(items[2]);
+					return value == sum;
+				}
+			}
+		}
+	}		
             
             }
         })
-		
- 	
-        .on('success.form.bv', function(e) {
-			 var $form     = $(e.target),
-                validator = $form.data('bootstrapValidator');
-				$form.find('.alert').html('Thanks for signing up. Now you can sign in as ' + validator.getFieldElements('first_name').val()).show();
-        });
-	
+
 });
 
 
