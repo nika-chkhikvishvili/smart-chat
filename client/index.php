@@ -211,7 +211,7 @@
         display : none;
         color :red;
     }
-    .panel {
+    .panel, #wait_operator {
         display: none;
     }
     #asarchevi{
@@ -245,7 +245,11 @@
         <button class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
     </div>
 
-    <div class="col-md-12 col-lg-8 center-block" style="height:90%">
+    <div id="wait_operator" class="col-md-12 col-lg-8 center-block" style="height:90%">
+        გთხოვთ დაელოდოთ ოპერატორს, თუ არ გსურთ ლოდინი, თქვენი შეკითხვა შეგიძლიათ გამოაგზავნოთ <a href="/offline.php" >მაილზე</a>
+    </div>
+
+    <div class="col-md-8 col-lg-4 center-block" style="height:90%">
         <div class="panel"style="height:100%">
         	<!--Heading-->
     		<div class="panel-heading">

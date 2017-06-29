@@ -409,7 +409,7 @@ app.io.on('connection', function (socket) {
             let guestUser = socket.guestUser;
             guestUser.removeSocket(socket.id);
 
-            if (guestUser.sockets.size() === 0) {
+            if (guestUser.sockets.size === 0) {
                 client.clientCloseChat(socket);
             }
         }

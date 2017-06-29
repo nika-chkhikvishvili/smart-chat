@@ -1,5 +1,4 @@
 /**
-test comment
  * Created by jedi on 2016-07-01.
  */
 
@@ -103,11 +102,16 @@ socket.io.on('reconnect', function () {
 
 socket.on('clientCheckChatIfAvailableResponse', function (data) {
     console.log('execute: clientCheckChatIfAvailableResponse');
-    // console.log(data);
+    console.log(data);
     if (data && data.hasOwnProperty('isValid') && data.isValid) {
         chat.setUserInformation(data.firstName, data.lastName);
         $('#asarchevi').hide();
-        $('.panel').show();
+        if (data.chatStatusId == 0) {
+            $('#wait_operator').show();
+        } else {
+            $('.panel').show();
+        }
+
         if (data.messages && Array.isArray(data.messages)) {
             chat.cleanChatWindow();
             data.messages.forEach(function (item) {
@@ -158,6 +162,12 @@ socket.on('clientInitParamsResponse', function (data) {
     chat.cleanChatWindow();
     chat.setChatUniqId(data.chatUniqId);
     $('#asarchevi').hide();
+    $('#wait_operator').show();
+});
+socket.on('operatorJoined', function (data) {
+    console.log('execute: message');
+    console.log(data);
+    $('#wait_operator').hide();
     $('.panel').show();
 });
 

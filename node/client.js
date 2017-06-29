@@ -174,7 +174,8 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
                     isValid: true,
                     firstName: user.online_users_name,
                     lastName: user.online_users_lastname,
-                    messages: res
+                    messages: res,
+                    chatStatusId : ans.chat_status_id
                 });
             });
         });
