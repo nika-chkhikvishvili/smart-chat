@@ -249,7 +249,7 @@
         გთხოვთ დაელოდოთ ოპერატორს, თუ არ გსურთ ლოდინი, თქვენი შეკითხვა შეგიძლიათ გამოაგზავნოთ <a href="/offline.php" >მაილზე</a>
     </div>
 
-    <div class="col-md-8 col-lg-4 center-block" style="height:90%">
+    <div class="col-md-12 col-lg-8 center-block" style="height:90%">
         <div class="panel"style="height:100%">
         	<!--Heading-->
     		<div class="panel-heading">

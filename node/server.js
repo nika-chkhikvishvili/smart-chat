@@ -367,7 +367,7 @@ ChatServer.prototype.sendFile = function (socket, data) {
 
         var message = {
             chatUniqId: data.chatUniqId,
-            message: '<a href="#' + file.file_name +'">' + file.file_name +'</a>',
+            message: '<a href="http://dashboard-smartchat.cloud.gov.ge/uploads/' + file.file_name +'">' + file.file_name +'</a>',
             id: -157
         };
         me.sendMessage(socket, message)
