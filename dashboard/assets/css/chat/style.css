@@ -356,10 +356,10 @@
 }
 .container_chat .right .write .write-link.send:before {
   display: inline-block;
-  float: left;
+  float: right;
   width: 20px;
   height: 42px;
-  margin-left: 11px;
+  margin-right: 11px;
   content: '';
   background-image: url("http://s30.postimg.org/nz9dho0pp/send.png");
   background-repeat: no-repeat;

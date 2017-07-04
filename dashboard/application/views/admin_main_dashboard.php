@@ -40,6 +40,9 @@
                 <div class="content">
                     <div class="container">
                         <!-- Start Widget -->
+
+                        <?php if ($user->is_admin == 1) : ?>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-default">
@@ -71,6 +74,7 @@
                                 </div>
                             </div>
                         </div> <!-- end row -->
+
 
                         <div class="row">
                            <div class="col-md-12">
@@ -124,7 +128,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- end row -->
+                        </div> <!-- end row --><?php endif;  ?>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-default">

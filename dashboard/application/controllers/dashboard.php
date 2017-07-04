@@ -21,6 +21,7 @@ class Dashboard extends CI_Controller{
         $data['all_services'] = $this->dashboard_model->get_all_full_services();
         $data['params'] = $this->dashboard_model->get_answering();
         $data['files'] = $this->dashboard_model->get_files($session_data->repo_id);
+        $data['user'] = $session_data;
         $this->load->view('admin_main_dashboard',$data);
     }
     
