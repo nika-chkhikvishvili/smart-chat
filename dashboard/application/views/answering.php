@@ -116,6 +116,13 @@ img:hover {
 <input class="form-control" id="cname" name="mail_offline" value="<?=$get_answering['mail_offline'];?>" type="text">
 </div>
 </div>
+
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-2">კლიენტის ლოდინის ტექსტი</label>
+    <div class="col-lg-9">
+        <input class="form-control" id="cname" name="waiting_message" value="<?=$get_answering['waiting_message'];?>" type="text">
+    </div>
+</div>
      
 <div class="form-group">
     <label for="cname" class="control-label col-lg-2">კლიენტთან ჩატის გაწყვეტის ტექსტი</label>
