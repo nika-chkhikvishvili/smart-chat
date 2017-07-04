@@ -1,7 +1,7 @@
 <?php
 if($_POST['email']){
 
-$mysqli = new mysqli('localhost','root','','smartchat');
+$mysqli = new mysqli('localhost','smartchat','smartchat','smartchat');
 
 if ($mysqli->connect_error) {
     die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
