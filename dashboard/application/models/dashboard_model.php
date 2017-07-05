@@ -396,10 +396,22 @@ class dashboard_model extends CI_Model{
       return $query->num_rows();
    }
    
-   function get_statistic_byarg($service_id=false, $persons_id=false,$chat_status_id)
+   function get_statistic_byarg($service_id, $persons_id, $by_date ,$chat_status_id)
    {
       $this->db->select('*');
-      $this->db->from('chats'); 
+      $this->db->from('chats');
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      
+      if($service_id>=1)
+      {
+        $this->db->where('service_id', $service_id); 
+      }
+      
+      if($persons_id>=1)
+      {
+        $this->db->where('person_id', $by_date); 
+      }
+      
       $this->db->where('chat_status_id', $chat_status_id); 
       $query = $this->db->get();
       return $query->num_rows();
