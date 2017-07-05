@@ -99,7 +99,7 @@ window.setTimeout(function() {
                                     <label for="cname" class="control-label col-lg-3">აირჩიეთ სერვისი</label>
                                  
                                    <select class="select2 form-control" name='catID' id='catID'>
-                                       <option value="#">ყველა სერვისი</option>
+                                      
                                        <?php
                                        if(is_array($get_services))
                                        {
@@ -122,7 +122,7 @@ window.setTimeout(function() {
                                        <?php
                                         var_dump($get_persons);
                                        ?>
-                                       <option value="#">ყველა მომხმარებელი</option>
+                                      
                                        <?php
                                        if(is_array($get_persons))
                                        {
@@ -135,10 +135,13 @@ window.setTimeout(function() {
                                         <?php                                        
                                        endforeach; }
                                         ?>        
-                                     </select>
+                                     </select><br />
+                                    <div class="input-group">
+                                   <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text"/>
+                                        </div><!-- input-group -->
                                     <br />
                                     <button type="button" id="submit" class="btn btn-primary">დამუშავება</button>
-                                 </div>
+                                     </div>
                                     </form>
                                 </div></div>
                                 
@@ -208,8 +211,29 @@ window.setTimeout(function() {
       
         <!--script for this page only-->
         <script src="<?=base_url();?>assets/plugins/nestable/jquery.nestable.js"></script>
-       
-       
+        
+         <script src="<?=base_url();?>assets/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/toggles/toggles.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/colorpicker/bootstrap-colorpicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.multi-select.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.quicksearch.js"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+         <script>
+	$(document).ready(function(){
+		var date_input=$('input[name="date"]'); //our date input has the name "date"
+		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+		date_input.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+	})
+</script>
+
     
     </body>
 
