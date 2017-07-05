@@ -157,16 +157,19 @@
                                                             </div>
                                                             <div class="right">
                                                                 <div class="top"><span>To: <span class="name"> </span></span>
-                                                                    <span style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/redirect.png"></a></span>
-                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/close.png"></a></span>
-                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/ban_user.png"></a></span>
-                                                                    <span style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>            </div>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/redirect.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/close.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/ban_user.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                                                                    <span class="close_on_readonly" style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>
+                                                                    <span class="show_on_readonly" style="float:right;"><a href="javascript:takeRoom()">ჩარევა</a></span>
+
+                                                                </div>
                                                                 <div class="chats_container"  style="height: 567px;">
                                                                 </div>
-                                                                <div class="write">
+                                                                <div class="write close_on_readonly">
                                                                     <a href="javascript:;" class="write-link attach"></a>
                                                                     <a href="javascript:;" class="write-link draft"></a>
                                                                     <input type="text" />

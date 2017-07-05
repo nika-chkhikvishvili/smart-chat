@@ -398,7 +398,12 @@ app.io.on('connection', function (socket) {
     socket.on('approveBan', function (data) {
         server.approveBan(socket, data);
     });
-
+    socket.on('leaveReadOnlyRoom', function (data) {
+        server.leaveReadOnlyRoom(socket, data);
+    });
+    socket.on('takeRoom', function (data) {
+        server.takeRoom(socket, data);
+    });
     socket.on('disconnect', function () {
         if (socket.hasOwnProperty('user')) {
             delete app.onlineUsers[socket.user.userId].sockets[socket.id];

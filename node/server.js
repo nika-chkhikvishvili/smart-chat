@@ -246,6 +246,8 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
             });
         }
 
+        chatRoom.joinType = joinType;
+
         socket.emit('newChatWindow', chatRoom);
 
         socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: joinType});
@@ -341,6 +343,28 @@ ChatServer.prototype.checkToken = function (socket, data) {
             socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
         });
     });
+};
+
+ChatServer.prototype.leaveReadOnlyRoom = function (socket, data) {
+    var chatId = app.chatRooms[data.chat_uniq_id].chatId;
+
+    // app.connection.query('update * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
+    //     if (err) {
+    //         return app.databaseError(socket, err);
+    //     }
+    //
+    // });
+};
+
+ChatServer.prototype.takeRoom = function (socket, data) {
+    var chatId = app.chatRooms[data.chat_uniq_id].chatId;
+
+    // app.connection.query('update * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
+    //     if (err) {
+    //         return app.databaseError(socket, err);
+    //     }
+    //
+    // });
 };
 
 ChatServer.prototype.sendWelcomeMessage = function (socket, data) {

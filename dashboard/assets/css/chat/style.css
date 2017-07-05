@@ -527,6 +527,14 @@
   display: inline;
 }
 
-li.readonly .write{
+.readonly .close_on_readonly{
   display: none;
+}
+
+.show_on_readonly{
+  display: none;
+}
+
+.readonly .show_on_readonly{
+  display: inline;
 }

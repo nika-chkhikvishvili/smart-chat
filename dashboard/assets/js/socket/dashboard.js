@@ -268,7 +268,7 @@ var createChatWindowAndLoadDataSimple = function(data){
         '<span class="new_message_icon"></span>'+
         '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+
         '<span class="time"></span>'+
-        '<span class="only_view close_readonly">X</span>'+
+        '<span class="only_view close_readonly"><a href=\'javascript:leaveReadOnlyRoom("'+ data.chatUniqId + '");\'>X</a></span>'+
         '<span class="preview">...</span>'+
         '</li>');
 
@@ -277,6 +277,23 @@ var createChatWindowAndLoadDataSimple = function(data){
     socket.emit('getAllChatMessages', { chatUniqId: data.chatUniqId});
 
 };
+
+
+function leaveReadOnlyRoom(chatId) {
+    socket.emit('leaveReadOnlyRoom', chatId);
+    $('[data-chat='+ chatId + ']').remove();
+}
+
+function takeRoom() {
+    var elChatbox = $('.active-chat');
+    var chatUniqId = elChatbox.data('chat');
+    // $('[data-chat='+ chatUniqId + ']').remove();
+    socket.emit('takeRoom', chatUniqId);
+    $('.right').removeClass('readonly');
+    $('.person').removeClass('readonly');
+    socket.emit('joinToRoom', {chatUniqId:chatUniqId, joinType: 1});
+}
+
 
 var createChatWindowAndLoadData = function(data){
     console.log('execute: createChatWindowAndLoadData');
@@ -293,7 +310,8 @@ var createChatWindowAndLoadData = function(data){
     var d = {
         chatUniqId : data.chatUniqId,
         firstName : data.chat.guestUser.firstName || '',
-        lastName : data.chat.guestUser.lastName || ''
+        lastName : data.chat.guestUser.lastName || '',
+        joinType: data.joinType || 1
     };
     createChatWindowAndLoadDataSimple(d);
 };
@@ -338,7 +356,7 @@ socket.on('checkTokenResponse', function (data){
                     chatUniqId : i.chatUniqId,
                     firstName : i.first_name || '',
                     lastName : i.last_name || '',
-                    joinType: i.joinType || ''
+                    joinType: i.joinType || 1
                 };
                 createChatWindowAndLoadDataSimple(d)
             })
@@ -382,9 +400,9 @@ $(document).ready(function () {
             var findChat = $(this).attr('data-chat');
             console.log();
             if ($(this).attr('data-type') === 'readonly') {
-                $('.write').hide();
+                $('.right').addClass('readonly');
             } else {
-                $('.write').show();
+                $('.right').removeClass('readonly');
             }
 
             var personName = $(this).find('.name').text();
