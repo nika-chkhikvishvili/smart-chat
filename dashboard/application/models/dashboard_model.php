@@ -123,9 +123,8 @@ class dashboard_model extends CI_Model{
 	
     // persons    
     public function get_persons(){
-        $this->db->select('*');
-        $this->db->from('persons');
-        #$this->db->where('is_admin', 0);
+        $this->db->select('* from persons WHERE is_admin IS NULL');
+    
         $query = $this->db->get();
         return $query->result_array();
 
@@ -387,4 +386,23 @@ class dashboard_model extends CI_Model{
             $query = $this->db->get();
             return $query->result_array();
 	}
+        
+   function get_statistic_waiting($chat_status_id)
+   {
+      $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->where('chat_status_id', $chat_status_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+   function get_statistic_byarg($service_id=false, $persons_id=false,$chat_status_id)
+   {
+      $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->where('chat_status_id', $chat_status_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
 }
