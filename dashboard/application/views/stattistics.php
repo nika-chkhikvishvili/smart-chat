@@ -23,7 +23,7 @@ window.setTimeout(function() {
         $(document).ready(function(){
          $.ajax({
             type: "POST", 
-            url: "http://localhost/chat/stattistics/get_all_data/",
+            url: "<?=base_url();?>stattistics/get_all_data/",
             data: data,
             success: function(html) {
                 $("#response").html(html);
@@ -36,7 +36,7 @@ window.setTimeout(function() {
         data['user_id'] = $("#by_users").val(); 
         $.ajax({
             type: "POST", 
-            url: "http://localhost/chat/stattistics/get_all_data/",
+            url: "<?=base_url();?>stattistics/get_all_data/",
             data: data,
             success: function(html) {
                 $("#response").html(html);
