@@ -15,13 +15,13 @@ $to = $row["mail_offline"];
 			
 $subject = 'Website Change Reqest';
 
+$message = strip_tags($_POST['comment']);	
+	
 $headers = "From: " . strip_tags($_POST['email']) . "\r\n";
 $headers .= "MIME-Version: 1.0\r\n";
 $headers .= "Content-type: text/html; charset=utf-8";
 
-$message = strip_tags($_POST['comment']);
-$subject = strip_tags($_POST['first_name']).strip_tags($_POST['first_name']);
-$message = strip_tags($_POST['comment']);
+
 	
 if (mail($to, $subject, $message, $headers)) {
   echo 'შეტყობინება გაგზავნილია';
