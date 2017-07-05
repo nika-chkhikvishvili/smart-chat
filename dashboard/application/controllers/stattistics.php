@@ -28,14 +28,21 @@ class stattistics extends CI_Controller{
         $session_data = $this->session->userdata('user');
         $this->load->model('dashboard_model');
         
+        if(@$_POST['service_id'] || @$_POST['user_id'] || @$_POST['date']){
+        $service_id = "";
+        $user_id = "";
+        $by_date = "";
+        if(@$_POST['service_id']>=1 || @$_POST['user_id'] || $_POST['date']!="")
+        {
+          $service_id = @$_POST['service_id'];
+          $user_id = @$_POST['user_id'];
+          $by_date = @$_POST['date'];
+        }
+        $waiting = $this->dashboard_model->get_statistic_byarg($service_id,$user_id,$by_date,0);
+        $active = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,1);
+        $redirecting = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,2);
+        $closed = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,3); 
        
-       
-        
-        if(@$_POST['service_id'] or @$_POST['user_id']){
-        $waiting = $this->dashboard_model->get_statistic_waiting(0,0,0);
-        $active = $this->dashboard_model->get_statistic_waiting(1);
-        $redirecting = $this->dashboard_model->get_statistic_waiting(2);
-        $closed = $this->dashboard_model->get_statistic_waiting(3);    
         echo '
 	<ul class="list-group">
         <li class="list-group-item">
@@ -55,10 +62,12 @@ class stattistics extends CI_Controller{
            სულ საუბრები
         </li>
         </ul>';
+        
+        
         }
         else 
         {
-        $waiting = $this->dashboard_model->get_statistic_waiting(0,0,0);
+        $waiting = $this->dashboard_model->get_statistic_waiting(0);
         $active = $this->dashboard_model->get_statistic_waiting(1);
         $redirecting = $this->dashboard_model->get_statistic_waiting(2);
         $closed = $this->dashboard_model->get_statistic_waiting(3);    
@@ -81,6 +90,7 @@ class stattistics extends CI_Controller{
            სულ საუბრები
         </li>
         </ul>';
+        
         }
         
        
