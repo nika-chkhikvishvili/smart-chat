@@ -83,8 +83,11 @@ $route['^()(/:any)?$'] = 'files/$0';
 
 
 
+
 $route['^()(/:any)?$'] = 'logout/$0';
 
+$route['^()(/:any)?$'] = 'stattistics/$0';
+$route['^(get_all_data)(/:any)?$'] = 'stattistics/$0';
 #$route['^(update_service)(/:any)?$'] = 'dashboard/$0';
 
 /* End of file routes.php */
