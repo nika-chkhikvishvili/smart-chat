@@ -111,6 +111,9 @@
 		  <input type="reset" class="btn btn-warning" name="res" value="უარყოფა" />
         </div>
       </div>
+	  <div class="form-group">
+       <div id="response"></div>
+      </div>
     </fieldset>
   </form>
 </div>
@@ -153,14 +156,11 @@ $(document).ready(function() {
           type: "POST",
           url: "process.php",
           data: $('#reg_form').serialize(),
-          success: function(msg){
-            
-              alert("made it to success block!");
-              alert(msg);
-              //document.location.href = 'form.php';
+          success: function(msg){            
+              $("#response").html(msg);
           },
-          error: function(){
-            alert("We found an error in your data.  Please return to home page and try again.");
+          error: function(){           
+			$("#response").html("შეტყობინების გაგზავნა ვერ ხორციელდება.");
           }
         });//close ajax
     },
