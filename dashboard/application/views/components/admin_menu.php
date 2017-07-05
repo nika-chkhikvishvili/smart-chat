@@ -10,6 +10,17 @@ $session_data = $this->session->userdata('user');
     <li>
     <a href="#" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
     </li>
+	<?php
+    
+    if($session_data->is_admin ==1){        
+    
+    ?>
+     <li>
+    <a href="<?= base_url(); ?>stattistics" class="waves-effect"><i class="fa fa-database"></i><span> სტატისტიკა </span></a>
+    </li>
+	<?php
+    };
+	?>
     <?php
     
     if($session_data->is_admin ==1){        
