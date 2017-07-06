@@ -285,8 +285,8 @@ function leaveReadOnlyRoom(chatId) {
 }
 
 function takeRoom() {
-    var elChatbox = $('.active-chat');
-    var chatUniqId = elChatbox.data('chat');
+    let elChatbox = $('.active-chat');
+    let chatUniqId = elChatbox.data('chat');
     // $('[data-chat='+ chatUniqId + ']').remove();
     socket.emit('takeRoom', chatUniqId);
     $('.right').removeClass('readonly');
@@ -721,7 +721,7 @@ socket.on('getActiveChatsResponse', function (data){
         ' <a href="#" class="hidden on-editing save-row"><i class="fa fa-save"></i></a>'+
         ' <a href="#" class="hidden on-editing cancel-row"><i class="fa fa-times"></i></a>'+
         ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id +'\',2);" class="on-default edit-row"><i class="fa md-pageview" data-toggle="tooltip" data-placement="left" title="დათვალიერება"></i></a>&nbsp;&nbsp;'+
-        ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',1);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
+        // ' <a href="javascript:joinToRoom(\''+item.chat_uniq_id+'\',1);" class="on-default edit-row"><i class="fa fa-play-circle-o" data-toggle="tooltip" data-placement="right" title="საუბარში ჩართვა"></i></a>'+
         ' </td>'+
         ' </tr>'
         );

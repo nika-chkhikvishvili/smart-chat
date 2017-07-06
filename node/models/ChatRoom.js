@@ -42,13 +42,11 @@ ChatRoom.prototype.getInsertUserObject = function (userId, person_mode, person_j
     };
 };
 
-ChatRoom.prototype.addUser = function (userId, userMode, user) {
-    if (!userId) return false;
-    if (!!user){
-        user.addChat(this.chatUniqId);
-    }
-    if (this.users.has(userId)) return false;
-    this.users.set(userId, userMode || 1);
+ChatRoom.prototype.addUser = function (user, userMode) {
+    if (!user) return false;
+    user.addChat(this.chatUniqId);
+    if (this.users.has(user.userId)) return false;
+    this.users.set(user.userId, userMode || 1);
 };
 
 ChatRoom.prototype.removeUser = function (user) {

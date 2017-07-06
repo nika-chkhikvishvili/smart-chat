@@ -12,7 +12,6 @@ function User(user) {
     }
     this.userId      = user.userId      || null;
     this.isValid     = user.isValid     || null;
-    this.nickname    = user.nickname    || null;
     this.userName    = user.userName    || null;
     this.firstName   = user.firstName   || null;
     this.lastName    = user.lastName    || null;
@@ -20,22 +19,31 @@ function User(user) {
     this.isAdmin     = user.isAdmin     || null;
     this.statusId    = user.statusId    || null;
     this.isOnline    = user.isOnline    || null;
-    this.sockets     = {};
-    this.tokens      = {};
+    this.sockets     = new Set();
+    // this.tokens      = {};
     this.chatRooms = new Map();
 }
 
-User.prototype.addSocket = function (socketId) {
-    if (!socketId) {
+User.prototype.addSocket = function (socket) {
+    if (!socket) {
         return;
     }
-    if (!this.sockets.hasOwnProperty(socketId)) this.sockets[socketId] = null;
+    this.sockets.add(socket.id);
+    this.isOnline = true;
 };
 
-User.prototype.addToken = function (token) {
-    if (!token) return ;
-    if (!this.tokens.hasOwnProperty(token)) this.tokens[token] = null;
+User.prototype.removeSocket = function (socket) {
+    if (!socket) {
+        return;
+    }
+    this.sockets.delete(socket.id);
+    this.isOnline = this.sockets.size > 0;
 };
+
+// User.prototype.addToken = function (token) {
+//     if (!token) return ;
+//     if (!this.tokens.hasOwnProperty(token)) this.tokens[token] = null;
+// };
 
 User.prototype.getLimited = function () {
     return {

@@ -5,6 +5,7 @@ let app = {};
 
 let GuestUser = require('./models/GuestUser');
 let Chat = require('./models/Chat');
+let User = require('./models/User');
 let ChatRoom = require('./models/ChatRoom');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
@@ -48,8 +49,8 @@ redisClient.hkeys("hash key", function (err, replies) {
 
 app.chatRooms = {};
 app.waitingClients = [];
-app.onlineUsers = {};
-app.onlineGuests= new Map();
+app.users = new Map();
+app.onlineGuests = new Map();
 app.autoAnswering = {};
 
 let client = require('./client.js')(app);
@@ -67,6 +68,24 @@ app.databaseError = function (socket, err) {
         socket.emit('serverError');
     }
 };
+
+app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function(err, rows, fields) {
+    if(err) {
+        console.log(err);
+        process.exit(1);
+    }
+    rows.forEach(function (row){
+            app.users.set(row.person_id, new User({
+                userId    : row.person_id,
+                isValid   : true,
+                userName  : row.nickname,
+                firstName : row.first_name,
+                lastName  : row.last_name,
+                isAdmin   : row.is_admin,
+                isOnline : 0
+            }));
+    });
+});
 
 // initialite services
 /*app.connection.query('SELECT `t`.`token`, `t`.`person_id`, `t`.`add_date`, `t`.`expire`, `t`.`expired` ' +
@@ -130,7 +149,7 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
                 }
                 if (chatRoomRows !== null && Array.isArray(chatRoomRows)) {
                     chatRoomRows.forEach(function (chatRoomRow) {
-                        app.chatRooms[rowVal.chat_uniq_id].addUser(chatRoomRow.person_id, chatRoomRow.person_mode);
+                        app.chatRooms[rowVal.chat_uniq_id].addUser(app.users.get(chatRoomRow.person_id), chatRoomRow.person_mode);
                     });
                 }
             });
@@ -153,9 +172,9 @@ app.sendMessageToRoomUsers = function (socket, message) {
 
     let chatRoom = app.chatRooms[message.chatUniqId];
     chatRoom.users.forEach(function (status, userId) {
-        let user = app.onlineUsers[userId];
+        let user = app.users.get(userId);
         if (!!user && !!user.sockets) {
-            Object.keys(user.sockets).forEach(function (socketId) {
+            user.sockets.forEach(function (socketId) {
                 socket.broadcast.to(socketId).emit('message', message);
             });
         }
@@ -243,9 +262,9 @@ app.addOperatorToService = function(socket, userId, serviceId, joinedModeId){
             if (err) {
                 return app.databaseError(socket, err);
             }
-            chatRoom.addUser(userId, 1);
+            chatRoom.addUser(app.users.get(userId), 1);
 
-            var user = app.onlineUsers[userId];
+            var user = app.users.get(userId);
             if (user && user.sockets) {
                 Object.keys(user.sockets).forEach(function (socketId) {
                     socket.broadcast.to(socketId).emit('newChatWindow', chatRoom);
@@ -281,9 +300,9 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
 
     var wh = '-1';
 
-    Object.keys(app.onlineUsers).forEach(function (id) {
-        if (app.onlineUsers[id].isOnline) {
-            wh = wh + ',' + id;
+    app.users.forEach(function (user) {
+        if (user.isOnline && user.chatRooms.size <5 ) {
+            wh = wh + ',' + user.userId;
         }
     });
 
@@ -406,17 +425,13 @@ app.io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         if (socket.hasOwnProperty('user')) {
-            delete app.onlineUsers[socket.user.userId].sockets[socket.id];
-            app.onlineUsers[socket.user.userId].isOnline = Object.keys(app.onlineUsers[socket.user.userId].sockets).length > 0;
+            socket.user.removeSocket(socket);
         }
 
         if (socket.hasOwnProperty('guestUser')) {
             let guestUser = socket.guestUser;
             guestUser.removeSocket(socket.id);
 
-            if (guestUser.sockets.size === 0) {
-                client.clientCloseChat(socket);
-            }
         }
         app.io.emit('userDisconnect', {
             id: socket.id

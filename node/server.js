@@ -78,8 +78,8 @@ ChatServer.prototype.getActiveChats = function (socket) {
                 item.users = [];
                 var chatRoom = app.chatRooms[item.chat_uniq_id];
                 chatRoom.users.forEach(function (status, userId) {
-                    if (app.onlineUsers[userId]) {
-                        item.users.push(app.onlineUsers[userId].getLimited());
+                    if (app.users.has(userId)) {
+                        item.users.push(app.users.get(userId).getLimited());
                     }
                 });
             }
@@ -166,9 +166,9 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
             return app.databaseError(null, err);
         }
 
-        chatRoom.addUser(data.personId);
-        var user = app.onlineUsers[data.personId];
-        if (user && user.sockets) {
+        chatRoom.addUser(app.users.get(data.personId), 1);
+        var user = app.users.get(data.personId);
+        if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
                 socket.broadcast.to(socketId).emit('newChatWindow', chatRoom );
             });
@@ -238,7 +238,7 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         }
 
         var user = socket.user;
-        chatRoom.addUser(user.userId, joinType, user);
+        chatRoom.addUser(user, joinType);
 
         if (!!user && !!user.sockets) {
             Object.keys(user.sockets).forEach(function (socketId) {
@@ -262,7 +262,7 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
                     var message = new Message();
                     message.chatUniqId = data.chatUniqId;
                     message.messageType = 'leave';
-                    var user = app.onlineUsers[userId];
+                    var user = app.users.get(userId);
                     if (!!user) {
                         chatRoom.removeUser(user);
                         Object.keys(user.sockets).forEach(function (socketId) {
@@ -308,14 +308,12 @@ ChatServer.prototype.checkToken = function (socket, data) {
 
         var ans = res[0];
 
-        if (!app.onlineUsers.hasOwnProperty(ans.person_id)) {
-            app.onlineUsers[ans.person_id] = new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, nickname: ans.nickname});
+        if (!app.users.has(ans.person_id)) {
+            app.users.set(ans.person_id, new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, userName: ans.nickname}));
         }
 
-        var user = app.onlineUsers[ans.person_id];
-        user.addSocket(socket.id);
-        user.addToken(data.token);
-        user.isOnline = true;
+        var user = app.users.get(ans.person_id);
+        user.addSocket(socket);
         socket.user = user;
 
         app.connection.query('SELECT r.person_mode, c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
@@ -329,7 +327,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
             if (resChat && Array.isArray(resChat)) {
                 resChat.forEach(function (row) {
                     var chatRoom = app.chatRooms[row.chat_uniq_id];
-                    chatRoom.addUser(user.userId, row.person_mode, user);
+                    chatRoom.addUser(user, row.person_mode);
 
                     chatAns.push({
                         chatUniqId: row.chat_uniq_id,
@@ -346,25 +344,58 @@ ChatServer.prototype.checkToken = function (socket, data) {
 };
 
 ChatServer.prototype.leaveReadOnlyRoom = function (socket, data) {
-    var chatId = app.chatRooms[data.chat_uniq_id].chatId;
-
-    // app.connection.query('update * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
-    //     if (err) {
-    //         return app.databaseError(socket, err);
-    //     }
-    //
-    // });
+    let chat = app.chatRooms[data.chat_uniq_id];
+    let user = socket.user;
+    if (!chat.users.has(user.userId)) {
+        socket.emit("leaveReadOnlyRoomResponse", {success: false});
+        return ;
+    }
+    let userMode = chat.users.get(user.userId);
+    if (userMode != 2) {
+        socket.emit("leaveReadOnlyRoomResponse", {success: false});
+    }
+    app.connection.query('UPDATE chat_rooms SET person_mode = 3 WHERE person_mode = 2 AND chat_id = ? AND person_id = ?', [chat.chatId, user.userId], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+        chat.users.delete(user.userId);
+        socket.emit("leaveReadOnlyRoomResponse", {success: true});
+    });
 };
 
 ChatServer.prototype.takeRoom = function (socket, data) {
-    var chatId = app.chatRooms[data.chat_uniq_id].chatId;
+    let chat = app.chatRooms[data];
+    let user = socket.user;
+    if (!chat.users.has(user.userId)) {
+        socket.emit("takeRoomResponse", {isValid: false});
+        return ;
+    }
+    let userMode = chat.users.get(user.userId);
+    if (userMode != 2) {
+        socket.emit("takeRoomResponse", {isValid: false});
+    }
+    app.connection.query('UPDATE chat_rooms SET person_mode = 3 WHERE person_mode = 2 AND chat_id = ? AND person_id = ?', [chat.chatId, user.userId], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
 
-    // app.connection.query('update * FROM chats WHERE chat_id = ?', [chatId], function (err, res) {
-    //     if (err) {
-    //         return app.databaseError(socket, err);
-    //     }
-    //
-    // });
+        app.connection.query('INSERT INTO `chat_rooms` SET ? ', chat.getInsertUserObject(user.userId, 1, 5), function (err, res1) {
+            if (err) {
+                return app.databaseError(socket, err);
+            }
+
+            app.connection.query('UPDATE chat_rooms SET person_mode = 4 WHERE person_mode = 1 AND chat_id = ? AND person_id != ?', [chat.chatId, user.userId], function (err, res) {
+                if (err) {
+                    return app.databaseError(socket, err);
+                }
+
+                chat.users.forEach(function(val, idx) {
+                    if(val == 1) chat.removeUser(app.users[idx]);
+                });
+                chat.addUser(user, 1);
+            });
+        });
+    });
 };
 
 ChatServer.prototype.sendWelcomeMessage = function (socket, data) {
@@ -426,7 +457,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
 
         message.messageId = res.insertId;
         message.messageUniqId = data.id;
-        message.sender = app.onlineUsers[socket.user.userId].nickname;
+        message.sender = app.users.get(socket.user.userId).username;
 
         app.sendMessageToRoom(socket, message);
         socket.emit("sendMessageResponse", {isValid: true});
