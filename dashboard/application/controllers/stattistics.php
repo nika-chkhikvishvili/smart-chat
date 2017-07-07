@@ -27,7 +27,7 @@ class stattistics extends CI_Controller{
     {
         $session_data = $this->session->userdata('user');
         $this->load->model('dashboard_model');
-       
+        date_default_timezone_set('Asia/Baku');
         $service_id = false;
         $user_id = false;
         $start_date = false;
