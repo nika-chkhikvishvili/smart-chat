@@ -90,7 +90,7 @@ class stattistics extends CI_Controller{
                                    '.$all_chats.'</span></td>
                 </tr>
                 ';
-                /*
+                
                 //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :
                 $sql_get_services = $this->dashboard_model->get_all_services(); 
                 foreach($sql_get_services as $keys => $values){                 
@@ -207,7 +207,7 @@ class stattistics extends CI_Controller{
                 echo '</tbody>
                 </table>';  
         
-         */
+         
         }
         
        
