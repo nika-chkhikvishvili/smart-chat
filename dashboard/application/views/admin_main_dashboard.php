@@ -167,7 +167,7 @@
                                                                     <span class="show_on_readonly" style="float:right;"><a href="javascript:takeRoom()">ჩარევა</a></span>
 
                                                                 </div>
-                                                                <div class="chats_container"  style="height: 567px;">
+                                                                <div class="chats_container"  style="height: 480px;">
                                                                 </div>
                                                                 <div class="write close_on_readonly">
                                                                     <a href="javascript:;" class="write-link attach"></a>
