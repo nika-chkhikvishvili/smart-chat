@@ -136,7 +136,7 @@ class stattistics extends CI_Controller{
                 
                 //   // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
-                $datetime1 = new DateTime($get_sql_mindate['add_date']);
+               echo  $datetime1 = new DateTime($get_sql_mindate['add_date']);
         
                 echo $curdate = date("Y-m-d");
                 $datetime2 = new DateTime($curdate);
