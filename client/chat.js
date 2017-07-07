@@ -5,15 +5,16 @@
 'use strict';
 
 function Chat($, socket) {
-    var me = this;
-    var chatUniqId = localStorage.getItem("chatUniqId") || '';
-    var firstName = '';
-    var lastName = '';
-    var lastWriteTime = 0;
+    let me = this;
+    let chatUniqId = localStorage.getItem("chatUniqId") || '';
+    let firstName = '';
+    let lastName = '';
+    let lastWriteTime = 0;
+    let lastWorkingTime = 0;
 
-    var elChatbox = $("#chat-body-ul");
-    var scroolDiv = $("#scrooldiv");
-    var meTemplate = $.validator.format('<li class="mar-btm">' +
+    let elChatbox = $("#chat-body-ul");
+    let scroolDiv = $("#scrooldiv");
+    let meTemplate = $.validator.format('<li class="mar-btm">' +
             // '<div class="media-right">' +
             // '<img src="/assets/images/me.png" class="img-circle img-sm" alt="Profile Picture"> ' +
             // '</div> ' +
@@ -27,7 +28,7 @@ function Chat($, socket) {
             '</div> ' +
             '</div> ' +
             '</li>');
-    var othTemplate = $.validator.format('<li class="mar-btm">' +
+    let othTemplate = $.validator.format('<li class="mar-btm">' +
             // '<div class="media-left">' +
             // '<img src="/assets/images/you.png" class="img-circle img-sm" alt="Profile Picture">' +
             // '</div>' +
@@ -57,7 +58,7 @@ function Chat($, socket) {
 
     function addOtherMessageFn(data, dontScrool) {
         // console.log(data);
-        var time = data.messageDate || (new Date()).toISOString();
+        let time = data.messageDate || (new Date()).toISOString();
         elChatbox.append(othTemplate(time.substr(11, 8), data.sender, data.message));
         if (dontScrool !== true) {
             this.scrollDown();
@@ -70,11 +71,8 @@ function Chat($, socket) {
 
     function operatorIsWorkingShowFn() {
         $('#operator_is_working').show();
-        setTimeout(chat.operatorIsWorkingHide, 10000);
-    }
-
-    function operatorIsWorkingHide() {
-        $('#operator_is_working').hide();
+        lastWorkingTime = Date.now();
+        setTimeout(chat.operatorIsWorkingHide, 5000);
     }
 
     function operatorIsWritingShowFn() {
@@ -86,6 +84,12 @@ function Chat($, socket) {
     function operatorIsWritingHideFn() {
         if (Date.now() - lastWriteTime > 2000) {
             $('#operator_is_writing').hide();
+        }
+    }
+
+    function operatorIsWorkingHideFn() {
+        if (Date.now() - lastWorkingTime > 4900) {
+            $('#operator_is_working').hide();
         }
     }
 
@@ -143,6 +147,7 @@ function Chat($, socket) {
         setUserInformation: setUserInformationFn,
         banUser: banUserFn,
         operatorIsWorkingShow: operatorIsWorkingShowFn,
+        operatorIsWorkingHide: operatorIsWorkingHideFn,
         operatorIsWritingHide:operatorIsWritingHideFn,
         operatorIsWritingShow: operatorIsWritingShowFn
     };

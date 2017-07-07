@@ -266,7 +266,7 @@
     						<li><a id="demo-disconnect-chat" href="#" data-target="#chat-body">Disconect</a></li>
     					</ul>
     				</div>-->
-                    <span id="operator_is_working"> &nbsp;&nbsp;&nbsp;გთხოვთ დაელოდოთ</span>
+                    <span id="operator_is_working"> &nbsp;&nbsp;&nbsp; გთხოვთ დაელოდოთ</span>
                     <span id="operator_is_writing"> <img src="/assets/images/typing.gif" style="height: 16px;margin-left: 10px;" > </span>
                     <a id="disconnect-chat" href="#" data-target="#chat-body"><img src="assets/images/close.png"
                        style="margin-top: 13px;height: 20px;" /></a>

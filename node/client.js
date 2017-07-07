@@ -4,13 +4,12 @@
 
 'use strict';
 
-var fifo = require('fifo');
+let fifo = require('fifo');
 
-var Message = require('./models/Message');
-var GuestUser = require('./models/GuestUser');
-var Chat = require('./models/Chat');
-var ChatRoom = require('./models/ChatRoom');
-var app;
+let Message = require('./models/Message');
+let GuestUser = require('./models/GuestUser');
+let Chat = require('./models/Chat');
+let app;
 
 
 function ChatClient(data) {
@@ -21,10 +20,17 @@ function ChatClient(data) {
     // log = data.log;
 }
 
+function isNotValidDataChatUniqueId(data) {
+    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
+        return true;
+    }
+    return !app.chats.has(data.chatUniqId);
+}
+
 ChatClient.prototype.clientGetServices = function (socket) {
     app.connection.query('SELECT `cs`.`category_service_id`, `rc`.`repository_id`, `rc`.`category_name`, `cs`.`service_name_geo`, `cs`.`start_time`, `cs`.`end_time` ' +
-            ' FROM `category_services` cs, `repo_categories` rc ' +
-            ' WHERE cs.`repo_category_id` = rc.`repo_category_id`', function (err, rows) {
+        ' FROM `category_services` cs, `repo_categories` rc ' +
+        ' WHERE cs.`repo_category_id` = rc.`repo_category_id`', function (err, rows) {
         if (err) {
             return app.databaseError(socket, err);
         }
@@ -89,25 +95,23 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
                     return app.databaseError(socket, err);
                 }
                 chat.chatId = res.insertId;
+                chat.guests.add(socket.id);
+                app.chats.set(chat.chatUniqId, chat);
 
-                let chatRoom = new ChatRoom({chat: chat});
-                chatRoom.guests = [socket.id];
-
-                app.connection.query('INSERT INTO `chat_rooms` SET ? ', chatRoom.getInsertGuestObject(), function (err, res1) {
+                app.connection.query('INSERT INTO `chat_rooms` SET ? ', chat.getInsertGuestObject(), function (err, res1) {
                     if (err) {
                         return app.databaseError(socket, err);
                     }
-                    chatRoom.chatRoomId = res1.insertId;
+
                     socket.chatUniqId = chat.chatUniqId;
 
-                    app.chatRooms[chat.chatUniqId] = chatRoom;
-                    app.waitingClients[data.serviceId].push(chatRoom);
-                    //შეამოწმებს ვის შეუძლია უპასუხოს ამ კლიენტს და ავტომატურად დაამატებს ჩატში
-                    app.checkAvailableOperatorForService(socket, data.serviceId);
+                    app.waitingClients[data.serviceId].push(chat);
                     //უგზავნის სუყველას შეტყობინებას რომ ახალი მომხმარებელი შემოვიდა
                     app.io.emit('checkClientCount');
                     app.io.emit('checkActiveChats');
                     socket.emit("clientInitParamsResponse", {chatUniqId: chat.chatUniqId});
+                    //შეამოწმებს ვის შეუძლია უპასუხოს ამ კლიენტს და ავტომატურად დაამატებს ჩატში
+                    setTimeout(function () {app.checkAvailableOperatorForService(socket, data.serviceId);}, 1000);
                 });
             });
         });
@@ -138,18 +142,8 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
         socket.guestUserId = ans.online_user_id;
         socket.chatUniqId = data.chatUniqId;
 
-        //ამოწმებს არის თუ არა ეს მომხმარებელი დამატებული ჩატის ოთახში
-        let isAdded = false;
-        let chatRoom = app.chatRooms[data.chatUniqId];
-
-        chatRoom.guests.forEach(function (socketId) {
-            isAdded = isAdded || (socketId === socket.id);
-        });
-
-        if (!isAdded) {
-            //თუ არ არის დაამატებს
-            chatRoom.guests.push(socket.id);
-        }
+        let chat = app.chats.get(data.chatUniqId);
+        chat.guests.add(socket.id);
 
         app.connection.query('SELECT * FROM  `online_users` WHERE online_user_id = ?', [ans.online_user_id], function (err, res) {
             if (err) {
@@ -163,9 +157,10 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
 
             let user = res[0];
             app.connection.query('SELECT m.`chat_message_id` as `messageId`, m.`chat_id` as `chatId`, m.`person_id` as `userId`, ' +
-                    'm.`online_user_id` as `guestUserId`, m.`chat_message` as `message`, m.`message_date` as `messageDate`, ' +
-                    "'ოპერატორი' as `sender`, 'message' as `messageType` " +
-                    'FROM `smartchat`.`chat_messages` m where m.`chat_id` = ? order by   m.`message_date` asc', [ans.chat_id], function (err, res) {
+                'm.`online_user_id` as `guestUserId`, m.`chat_message` as `message`, m.`message_date` as `messageDate`, ' +
+                "persons.nickname as `sender`, 'message' as `messageType` " +
+                'FROM chat_messages m left join persons on persons.person_id = m.person_id ' +
+                ' where m.`chat_id` = ? order by   m.`message_date` asc', [ans.chat_id], function (err, res) {
                 if (err) {
                     return app.databaseError(socket, err);
                 }
@@ -175,7 +170,7 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
                     firstName: user.online_users_name,
                     lastName: user.online_users_lastname,
                     messages: res,
-                    chatStatusId : ans.chat_status_id
+                    chatStatusId: ans.chat_status_id
                 });
             });
         });
@@ -188,12 +183,12 @@ ChatClient.prototype.clientMessage = function (socket, data) {
         return;
     }
 
-    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(socket.chatUniqId)) {
+    if (!app.chats.has(socket.chatUniqId)) {
         socket.emit("clientMessageResponse", {isValid: false, error: 'chatRooms'});
         return;
     }
 
-    let chat = app.chatRooms[socket.chatUniqId];
+    let chat = app.chats.get(socket.chatUniqId);
     let message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: data.message});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
@@ -218,27 +213,26 @@ ChatClient.prototype.clientMessageReceived = function (socket, msgId) {
 };
 
 ChatClient.prototype.clientCloseChat = function (socket) {
-    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId) {
-        return;
+    if (isNotValidDataChatUniqueId(socket)) {
+        return ;
     }
 
-    if (!app.chatRooms || !app.chatRooms.hasOwnProperty(socket.chatUniqId)) {
-        return;
-    }
+    let chat = app.getChat(socket.chatUniqId);
 
     app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [socket.chatUniqId], function (err) {
         if (err) {
             return app.databaseError(socket, err);
         }
-        var message = new Message();
+        let message = new Message();
         message.chatUniqId = socket.chatUniqId;
         message.messageType = 'close';
 
         app.sendMessageToRoom(socket, message, true);
 
-        app.checkAvailableOperatorForService(socket, app.chatRooms[socket.chatUniqId].serviceId);
+        app.checkAvailableOperatorForService(socket, chat.serviceId);
         app.io.emit('checkClientCount');
         app.io.emit('checkActiveChats');
+        chat.closeChat(app);
     });
 };
 

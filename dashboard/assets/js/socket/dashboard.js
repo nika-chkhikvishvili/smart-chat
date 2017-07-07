@@ -12,15 +12,15 @@ let filesDialog;
 
 
 function close_chat(){
-    let chat_uniq_id = $('.active-chat').attr('data-chat');
-    if (!chat_uniq_id  || chat_uniq_id === '') return;
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
 
 
     let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
     if (exit === true) {
-        socket.emit('operatorCloseChat', {chatUniqId : chat_uniq_id});
-        $(".person[data-chat = " + chat_uniq_id + "]").remove();
-        $(".chat[data-chat = " + chat_uniq_id + "]").remove();
+        socket.emit('operatorCloseChat', {chatUniqId : chatUniqueId});
+        $(".person[data-chat = " + chatUniqueId + "]").remove();
+        $(".chat[data-chat = " + chatUniqueId + "]").remove();
     }
 }
 
@@ -210,10 +210,10 @@ function choose_redirect_type(){
 
 
 function ban_person(){
-    var chat_uniq_id = $('.active-chat').attr('data-chat');
-    if (!chat_uniq_id  || chat_uniq_id === '') return;
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
 
-    var dialog = $( "#block-dialog" ).dialog({
+    let dialog = $( "#block-dialog" ).dialog({
         autoOpen: false,
         height: 400,
         width: 550,
@@ -223,7 +223,7 @@ function ban_person(){
 
                 var msg= $('#block-dialog textarea').val();
                 socket.emit('banPerson', {
-                    chat_uniq_id:  chat_uniq_id ,
+                    chatUniqId:  chatUniqueId ,
                     message: msg
                 });
 
@@ -247,7 +247,7 @@ function isChatWindowHidden(id) {
 }
 
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
-var createChatWindowAndLoadDataSimple = function(data){
+function createChatWindowAndLoadDataSimple(data){
     console.log('execute: createChatWindowAndLoadData');
     // console.log(data);
     console.log(data.joinType);
@@ -274,9 +274,9 @@ var createChatWindowAndLoadDataSimple = function(data){
 
     $('.wrapper_chat .container_chat .right .chats_container').append('<div> <div class="chat" data-chat="' + data.chatUniqId + '"></div></div>');
 
-    socket.emit('getAllChatMessages', { chatUniqId: data.chatUniqId});
+    socket.emit('getChatAllMessages', { chatUniqId: data.chatUniqId});
 
-};
+}
 
 
 function leaveReadOnlyRoom(chatId) {
@@ -309,8 +309,8 @@ var createChatWindowAndLoadData = function(data){
 
     var d = {
         chatUniqId : data.chatUniqId,
-        firstName : data.chat.guestUser.firstName || '',
-        lastName : data.chat.guestUser.lastName || '',
+        firstName : data.guestUser.firstName || '',
+        lastName : data.guestUser.lastName || '',
         joinType: data.joinType || 1
     };
     createChatWindowAndLoadDataSimple(d);
@@ -352,7 +352,7 @@ socket.on('checkTokenResponse', function (data){
             data.ans.forEach(function(i){
                 // console.log(i);
 
-                var d = {
+                let d = {
                     chatUniqId : i.chatUniqId,
                     firstName : i.first_name || '',
                     lastName : i.last_name || '',
@@ -394,30 +394,29 @@ $(document).ready(function () {
     //$('.left .person').mousedown(function(){
 
     $('.left').on('mousedown','.person', function(){
-        if ($(this).hasClass('.active')) {
+        let element = $(this);
+
+        if (element.hasClass('.active')) {
             return false;
         } else {
-            var findChat = $(this).attr('data-chat');
-            console.log();
-            if ($(this).attr('data-type') === 'readonly') {
+            let findChat = element.data('chat');
+
+            if (element.data('type') === 'readonly') {
                 $('.right').addClass('readonly');
             } else {
                 $('.right').removeClass('readonly');
             }
 
-            var personName = $(this).find('.name').text();
+            let personName = element.find('.name').text();
             $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
             $('.chat').removeClass('active-chat');
             $('.left .person').removeClass('active');
-            $(this).addClass('active');
-            $(this).removeClass('new_message');
-            $('.chat[data-chat = '+findChat+']').addClass('active-chat');
-
-            // $(this).attr('data-chat')
-            $('#im_working_checkbox')[0].checked=$(this).data('ImWorking');
-
-            var elChatbox = $('.active-chat');
-            elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
+            element.addClass('active');
+            element.removeClass('new_message');
+            let chat = $('.chat[data-chat = '+findChat+']');
+            chat.addClass('active-chat');
+            $('#im_working_checkbox')[0].checked = chat.data('ImWorking');
+            chat.animate({scrollTop: chat[0].scrollHeight}, 'normal');
         }
     });
 
@@ -576,8 +575,8 @@ $(document).ready(function () {
 
     setInterval(function(){
         $('.chat').each(function(key,val){
-            var element = $(val);
-            if(!element.data('lastSendTime')) element.data('lastSendTime', Date.now());
+            let element = $(val);
+            if(!element.data('lastSendTime')) element.data('lastSendTime', Date.now() - imWorkingDelay - 100);
 
             if (element.data('ImWorking')) {
                 if (Date.now() - element.data('lastSendTime') > imWorkingDelay ) {
@@ -687,7 +686,7 @@ socket.on('getWaitingListResponse', function (data){
             if (value) {
                 ans = ans + '<tr><td>'+services[key]+"</td><td>";
                 $.each(value, function(i, val){
-                    ans = ans + val.chat.guestUser.firstName + " " + val.chat.guestUser.lastName + ", ";
+                    ans = ans + val.guestUser.firstName + " " + val.guestUser.lastName + ", ";
                 });
                 ans = ans + "</td></tr>"
             }
