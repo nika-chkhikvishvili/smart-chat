@@ -386,7 +386,81 @@ class dashboard_model extends CI_Model{
             $query = $this->db->get();
             return $query->result_array();
 	}
-        
+  // statistics      
+   function get_statistic_allchats($service_id=false,$start_date=false,$end_date=false)
+   {
+      $this->db->select('*');
+      $this->db->from('chats');
+      
+      if($service_id)
+      {
+        $this->db->where('service_id',$service_id);  
+      }
+      
+      if($start_date == $end_date)
+      {
+          if($start_date && $end_date)
+          {
+              $this->db->like("add_date", $start_date);  
+          }
+      }
+      else 
+      {
+       if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }  
+      }    
+      
+      
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+   function get_all_persons()
+   {
+      $this->db->select("* from persons where is_admin IS NULL");
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+   
+   function get_all_persons_id($person_id)
+   {
+      $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id','LEFT');
+      $this->db->where('person_id', $person_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+   function get_all_services()
+   {
+      $this->db->select('*');
+      $this->db->where('repo_category_id',1);
+      $this->db->from('category_services');
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+   
+   
+   
+   function get_by_service_id($service_id)
+   {
+      $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->where('service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
    function get_statistic_waiting($chat_status_id)
    {
       $this->db->select('*');
@@ -413,6 +487,36 @@ class dashboard_model extends CI_Model{
       }
       
       $this->db->where('chat_status_id', $chat_status_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+   
+   function get_mindate_chat()
+   {
+     $this->db->select('*');
+      $this->db->from('chats'); 
+       $this->db->limit("1");
+      $this->db->order_by("add_date", "asc");
+    //  $this->db->where('chat_status_id', $chat_status_id); 
+      $query = $this->db->get();
+      return $query->row_array();
+   }
+   
+   function get_count_banlist($argument)
+   {
+      $this->db->select('*');
+      $this->db->from('banlist'); 
+      $this->db->where('person_id >=',$argument); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+     function get_count_banlist_admn($argument)
+   {
+      $this->db->select('*');
+      $this->db->from('banlist'); 
+      $this->db->where('person_id =',$argument); 
       $query = $this->db->get();
       return $query->num_rows();
    }
