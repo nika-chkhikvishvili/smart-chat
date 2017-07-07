@@ -295,7 +295,7 @@ function takeRoom() {
 }
 
 
-var createChatWindowAndLoadData = function(data){
+function createChatWindowAndLoadData(data){
     console.log('execute: createChatWindowAndLoadData');
     console.log(data);
 
@@ -314,7 +314,7 @@ var createChatWindowAndLoadData = function(data){
         joinType: data.joinType || 1
     };
     createChatWindowAndLoadDataSimple(d);
-};
+}
 
 socket.on('getAllChatMessagesResponse', function (data) {
     console.log('execute: getAllChatMessagesResponse');

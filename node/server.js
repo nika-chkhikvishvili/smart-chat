@@ -257,6 +257,8 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
 
         let user = socket.user;
         chat.addUser(user, joinType);
+        chat.joinType = joinType;
+
 
         user.sockets.forEach(function (socketId) {
             socket.broadcast.to(socketId).emit('newChatWindow', chat);
