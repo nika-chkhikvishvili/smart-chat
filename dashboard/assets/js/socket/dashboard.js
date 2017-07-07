@@ -57,15 +57,14 @@ function redirect_to_service(serviceId){
 socket.on('redirectToServiceResponse', function (data) {
     console.log('execute: redirectToServiceResponse');
     console.log(data);
-    if (!data.isValid){
+    if (!data.success){
         alert('ვერ მოხერხდა გადამისამართება');
         return ;
     }
 
-    if (data.redirectType === 1) {
-        $(".person[data-chat = " + data.chatUniqId + "]").remove();
-        $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-    }
+    $(".person[data-chat = " + data.chatUniqId + "]").remove();
+    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
+
 });
 
 

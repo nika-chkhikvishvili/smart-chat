@@ -385,38 +385,29 @@ ChatServer.prototype.operatorCloseChat = function (socket,data) {
         app.io.emit('checkActiveChats');
     });
 };
-//TODO
+
 ChatServer.prototype.redirectToService = function (socket, data) {
-    if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10
-        || !data.hasOwnProperty('serviceId') || !data.serviceId) {
-        socket.emit("redirectToServiceResponse", {isValid: false});
-        return;
+    if (isNotValidDataChatUniqueId( data ) || !data.hasOwnProperty('serviceId') || !data.serviceId) {
+        return socket.emit("redirectToServiceResponse", {success: false});
     }
 
-    var chatRoom = app.chatRooms[data.chatUniqId];
-    chatRoom.serviceId = data.serviceId;
-    chatRoom.chat.serviceId = data.serviceId;
+    let chat = app.getChat(data.chatUniqId);
+    chat.serviceId = data.serviceId;
+    chat.chatStatusId = 0;
 
-    app.connection.query('UPDATE chats SET service_id = ?, chat_status_id= 0 WHERE  chat_id = ?', [data.serviceId, chatRoom.chatId], function(err, res){
-        if (err) {
-            return app.databaseError(socket, err);
-        }
+    app.connection.query('UPDATE chats SET service_id = ?, chat_status_id= 0 WHERE  chat_id = ?', [data.serviceId, chat.chatId], function(err, res) {
+        if (err) {return app.databaseError(socket, err);}
 
-        app.connection.query('UPDATE chat_rooms SET person_mode = 5  WHERE  chat_id = ? and person_id = ?', [chatRoom.chat.chatId, socket.user.userId], function (err, res){
-            if (err) {
-                return app.databaseError(socket, err);
-            }
+        app.connection.query('UPDATE chat_rooms SET person_mode = 5  WHERE  chat_id = ? and person_id = ?', [chat.chatId, socket.user.userId], function (err, res) {
+            if (err) {return app.databaseError(socket, err);}
 
-            if (!app.waitingClients[data.serviceId]) {
-                app.waitingClients[data.serviceId] = fifo();
-            }
+            app.addChatToQueue(socket, chat);
+            socket.emit("redirectToServiceResponse", {success: true, chatUniqId: data.chatUniqId});
 
-            app.waitingClients[data.serviceId].push(chatRoom);
-            socket.emit("redirectToServiceResponse", {isValid: true, chatUniqId: data.chatUniqId});
-            app.checkAvailableOperatorForService(socket, data.serviceId);
+            app.io.emit('checkClientCount');
+            app.io.emit('checkActiveChats');
         });
     });
-
 };
 
 ChatServer.prototype.getPersonsForRedirect = function (socket, data) {

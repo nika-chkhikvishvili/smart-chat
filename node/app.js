@@ -76,6 +76,18 @@ app.getUser = function(userId){
     return app.users.get(userId);
 };
 
+app.addChatToQueue = function(socket, chat){
+    if (!chat || !chat.hasOwnProperty('serviceId')) {
+        return ;
+    }
+    if (!app.waitingClients[chat.serviceId]) {
+        app.waitingClients[chat.serviceId] = fifo();
+    }
+    app.waitingClients[chat.serviceId].push(chat);
+    setTimeout(function () {app.checkAvailableOperatorForService(socket, chat.serviceId);}, 1000);
+
+};
+
 app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function (err, rows, fields) {
     if (err) {
         console.log(err);

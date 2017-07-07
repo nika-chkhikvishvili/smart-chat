@@ -84,10 +84,6 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             socket.guestUser = guestUser;
             guestUser.addSocket(socket.id);
 
-            if (!app.waitingClients[data.serviceId] || app.waitingClients[data.serviceId] === null) {
-                app.waitingClients[data.serviceId] = fifo();
-            }
-
             let chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser});
 
             app.connection.query('INSERT INTO `chats` SET ? ', chat.getInsertObject(), function (err, res) {
@@ -105,13 +101,13 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
 
                     socket.chatUniqId = chat.chatUniqId;
 
-                    app.waitingClients[data.serviceId].push(chat);
+                    app.addChatToQueue(socket, chat);
+
                     //უგზავნის სუყველას შეტყობინებას რომ ახალი მომხმარებელი შემოვიდა
                     app.io.emit('checkClientCount');
                     app.io.emit('checkActiveChats');
                     socket.emit("clientInitParamsResponse", {chatUniqId: chat.chatUniqId});
-                    //შეამოწმებს ვის შეუძლია უპასუხოს ამ კლიენტს და ავტომატურად დაამატებს ჩატში
-                    setTimeout(function () {app.checkAvailableOperatorForService(socket, data.serviceId);}, 1000);
+
                 });
             });
         });
