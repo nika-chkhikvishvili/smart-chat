@@ -26,8 +26,8 @@ class stattistics extends CI_Controller{
     function get_all_data()
     {
         $session_data = $this->session->userdata('user');
-        $this->load->model('dashboard_model');
-        date_default_timezone_set('Asia/Baku');
+        $this->load->model('dashboard_model');       
+        
         $service_id = false;
         $user_id = false;
         $start_date = false;
@@ -37,8 +37,8 @@ class stattistics extends CI_Controller{
         {
           $service_id = @$_POST['service_id'];
           $user_id = @$_POST['user_id'];
-          @$start_date = date("Y-m-d", strtotime(@$_POST['start_date']));
-          @$end_date = date("Y-m-d", strtotime(@$_POST['end_date']));
+          $start_date = @date("Y-m-d", strtotime(@$_POST['start_date']));
+          $end_date = @date("Y-m-d", strtotime(@$_POST['end_date']));
         }
        
        
