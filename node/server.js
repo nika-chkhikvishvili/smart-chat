@@ -259,14 +259,13 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
         chat.addUser(user, joinType);
         chat.joinType = joinType;
 
-
         user.sockets.forEach(function (socketId) {
             socket.broadcast.to(socketId).emit('newChatWindow', chat);
         });
 
         socket.emit('newChatWindow', chat);
         socket.emit("joinToRoomResponse", {isValid: true, chatUniqId: data.chatUniqId, joinType: joinType});
-
+        delete chat.joinType;
 
         function disableUsers(chatId, userId){
             app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE person_mode = 1 AND chat_id =? AND person_id = ?', [chatId, userId], function (err, res1) {
@@ -274,9 +273,8 @@ ChatServer.prototype.joinToRoom = function (socket, data) {
                     return app.databaseError(socket, err);
                 }
 
-                let message = new Message();
-                message.chatUniqId = data.chatUniqId;
-                message.messageType = 'leave';
+                let message = new Message({chatUniqId: data.chatUniqId, messageType : 'leave'});
+
                 let user = app.users.get(userId);
                 if (!!user) {
                     chat.removeUser(user);
@@ -337,16 +335,30 @@ ChatServer.prototype.takeRoom = function (socket, data) {
                 return app.databaseError(socket, err);
             }
 
-            app.connection.query('UPDATE chat_rooms SET person_mode = 4 WHERE person_mode = 1 AND chat_id = ? AND person_id != ?', [chat.chatId, user.userId], function (err, res) {
-                if (err) {
-                    return app.databaseError(socket, err);
-                }
+            function disableUsers(chatId, userId){
+                app.connection.query('UPDATE `chat_rooms` SET person_mode = 4 WHERE person_mode = 1 AND chat_id =? AND person_id = ?', [chatId, userId], function (err, res1) {
+                    if (err) {
+                        return app.databaseError(socket, err);
+                    }
 
-                chat.users.forEach(function(val, idx) {
-                    if(val === 1) chat.removeUser(app.users[idx]);
+                    let message = new Message({chatUniqId: data, messageType : 'leave'});
+
+                    let user = app.users.get(userId);
+                    if (!!user) {
+                        chat.removeUser(user);
+                        user.sockets.forEach(function (socketId) {
+                            socket.broadcast.to(socketId).emit('message', message);
+                        });
+                    }
                 });
-                chat.addUser(user, 1);
+            }
+
+            chat.users.forEach(function (status, userId) {
+                if (socket.user.userId !== userId && status === 1) {
+                    disableUsers(chat.chatId, userId);
+                }
             });
+            chat.addUser(user, 1);
         });
     });
 };

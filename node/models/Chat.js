@@ -4,7 +4,7 @@
 
 'use strict';
 
-var randomStringGenerator = require("randomstring");
+let randomStringGenerator = require("randomstring");
 
 
 function Chat(initParams) {
@@ -57,13 +57,9 @@ Chat.prototype.addUser = function (user, userMode) {
 };
 
 Chat.prototype.removeUser = function (user) {
-    if (!user) return false;
-
-    let st = this.users.get(user.userId);
-    if (st && isFinite(st) && parseInt(st) === 1) {
-        this.users.delete(user.userId);
-        user.removeChat(this.chatUniqId );
-    }
+    if (!user || !this.users.has(user.userId)) return false;
+    this.users.delete(user.userId);
+    user.chatRooms.delete(this.chatUniqId);
 };
 
 Chat.prototype.isAlreadyInTheRoom = function (userId) {
@@ -75,7 +71,7 @@ Chat.prototype.closeChat = function (app) {
     let chatUniqId = this.chatUniqId;
     this.users.forEach(function(userId){
         let user = app.users.get(userId);
-        user.removeChat(chatUniqId);
+        user.chatRooms.delete(chatUniqId);
     });
 };
 
