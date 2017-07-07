@@ -37,8 +37,8 @@ class stattistics extends CI_Controller{
         {
           $service_id = @$_POST['service_id'];
           $user_id = @$_POST['user_id'];
-          $start_date = date("Y-m-d", strtotime(@$_POST['start_date']));
-          $end_date = date("Y-m-d", strtotime(@$_POST['end_date']));
+          @$start_date = date("Y-m-d", strtotime(@$_POST['start_date']));
+          @$end_date = date("Y-m-d", strtotime(@$_POST['end_date']));
         }
        
        
