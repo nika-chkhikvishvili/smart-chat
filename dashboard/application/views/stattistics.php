@@ -25,28 +25,67 @@ window.setTimeout(function() {
             type: "POST", 
             url: "<?=base_url();?>stattistics/get_all_data/",
             data: data,
-            success: function(html) {
-                $("#response").html(html);
+            success: function(html) {               
+                $("#table-responsive").html(html);
             }
         });    
             
         $('#submit').click(function() {
         data = {};
         data['service_id'] = $("#catID").val();
-        data['user_id'] = $("#by_users").val(); 
+        data['user_id'] = $("#by_users").val();
+        data['start_date'] = $("#start_date").val();
+        data['end_date'] = $("#end_date").val();
+        data['submit'] = $("#submit").val();
         $.ajax({
             type: "POST", 
             url: "<?=base_url();?>stattistics/get_all_data/",
             data: data,
             success: function(html) {
-                $("#response").html(html);
+                 $("#table-responsive").load('ვიტვირთებით...');
+                $("#table-responsive").html(html);
             }
         });     
         });
         });
 </script>  
 
+<style type="text/css">
 
+thead tr:first-child {
+  background: #ed1c40;
+  color: #fff;
+  border: none;
+}
+
+th:first-child,
+td:first-child {
+  padding: 0 15px 0 20px;
+}
+
+thead tr:last-child th {
+  border-bottom: 3px solid #ddd;
+}
+
+tbody tr:hover {
+  background-color: #FAFAFA;
+  cursor: default;
+}
+
+tbody tr:last-child td {
+  border: none;
+}
+
+tbody td {
+  border-bottom: 1px solid #ddd;
+}
+
+td:last-child {
+  text-align: right;
+  padding-right: 10px;
+}
+  
+</style>
     </head>
 
 
@@ -87,19 +126,22 @@ window.setTimeout(function() {
     <!-- Start content -->
     <div class="content">
         <div class="container">
-            <!-- Start Widget -->
-  <div class="row">
-                            <div class="col-lg-6">
-                                <div class="panel panel-border panel-primary">
-                                    <div class="panel-heading"> 
-                                        <h3 class="panel-title">პარამეტრები</h3> 
-                                    </div>
-                                    <form action="" method="post" />
-                                    <div class="panel-body"> 
-                                    <label for="cname" class="control-label col-lg-3">აირჩიეთ სერვისი</label>
-                                 
+   
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>სისტემაში არსებული საერთო მონაცემების სტატისტიკა:</strong></h3>
+    			</div>
+    			<div class="panel-body">
+                               <div class="panel panel-border panel-primary">
+                                    <div class="row">
+                                         <form action="" method="post" />
+                                    <div class="col-sm-4">
+                                   
+                                   <label for="cname" class="control-label col-lg-5">აირჩიეთ სერვისი</label>
                                    <select class="select2 form-control" name='catID' id='catID'>
-                                      
+                                      <option value="0">ყველა სერვისი</option>
                                        <?php
                                        if(is_array($get_services))
                                        {
@@ -112,16 +154,14 @@ window.setTimeout(function() {
                                         <?php                                        
                                        endforeach; }
                                         ?>        
-                                     </select>
-                                </div>
-                                    
-                                 <div class="panel-body"> 
-                                    <label for="cname" class="control-label col-lg-3">აირჩიეთ მომხმარებელი</label>
+                                    </select>                                    
+                                    </div>
+                                        
+                                    <div class="col-sm-4">
+                                    <label for="cname" class="control-label col-lg-5">აირჩიეთ ოპერატორი</label>
                                 
-                                   <select class="select2 form-control" name='by_users' id='by_users'>
-                                       <?php
-                                        var_dump($get_persons);
-                                       ?>
+                                       <select class="select2 form-control" name='by_users' id='by_users'>
+                                        <option value="0">ყველა ოპერატორი</option>
                                       
                                        <?php
                                        if(is_array($get_persons))
@@ -135,35 +175,32 @@ window.setTimeout(function() {
                                         <?php                                        
                                        endforeach; }
                                         ?>        
-                                     </select><br />
-                                    <div class="input-group">
-                                   <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text"/>
-                                        </div><!-- input-group -->
+                                       </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                       <label for="cname" class="control-label col-lg-12">კიდური თარიღები</label> 
+                                      <input class="form-control" id="start_date" name="start_date" placeholder="DD/MM/YYYY-დან" type="text" style="width: 150px; float:left; margin-right: 15px;"/>
+                                    
+                                  
+                                        
+                                      <input class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY-მდე" type="text" style="width: 150px;"/>
+                                    </div>
+                                  </div>
+                                   
                                     <br />
-                                    <button type="button" id="submit" class="btn btn-primary">დამუშავება</button>
+                                    <button type="button" id="submit" name="submit" class="btn btn-primary">დამუშავება</button>
+                                    <button type="button" id="submit" class="btn btn-primary">გასუფთავება</button>
                                      </div>
                                     </form>
-                                </div></div>
-                                
-                            <div class="col-lg-6">
-                                <div class="panel panel-border panel-primary">
-                                    <div class="panel-heading"> 
-                                        <h3 class="panel-title">სტატისტიკური მონაცემები</h3> 
-                                    </div> 
-                                    <div class="panel-body"> 
-                                        <div id="pie-chart">
-                                            <div id="pie-chart-container" class="flot-chart" style="height: 320px">
-                                                 <div name='response' id='response'></div>
-                                            </div>
-                                        </div>
-                                    </div> 
                                 </div>
-                            </div>
-                            
-                        </div>
-                                    <!-- end row -->
+    				<div class="table-responsive" id="table-responsive">
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>
 
-        </div> <!-- container -->
 
     </div> <!-- content -->
 
@@ -223,9 +260,16 @@ window.setTimeout(function() {
         <script src="<?=base_url();?>assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
          <script>
 	$(document).ready(function(){
-		var date_input=$('input[name="date"]'); //our date input has the name "date"
+		var start_date=$('input[name="start_date"]'); //our date input has the name "date"		
+		var end_date=$('input[name="end_date"]'); //our date input has the name "date"		
 		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-		date_input.datepicker({
+		start_date.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+                end_date.datepicker({
 			format: 'dd-mm-yyyy',
 			container: container,
 			todayHighlight: true,
