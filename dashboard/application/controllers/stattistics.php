@@ -207,7 +207,7 @@ class stattistics extends CI_Controller{
                 echo '</tbody>
                 </table>';  
         
-         
+        
         }
         
        
