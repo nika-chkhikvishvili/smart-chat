@@ -45,11 +45,11 @@ class stattistics extends CI_Controller{
          
          if($start_date=='1970-01-01')
          {
-             $start_date = "";
+             $start_date = false;
          }
          if($end_date=='1970-01-01')
          {
-             $end_date = "";
+             $end_date = false;
          }
         }
        
