@@ -37,8 +37,20 @@ class stattistics extends CI_Controller{
         {
           $service_id = @$_POST['service_id'];
           $user_id = @$_POST['user_id'];
-          $start_date = @date("Y-m-d", @strtotime(@$_POST['start_date']));
-          $end_date = @date("Y-m-d", @strtotime(@$_POST['end_date']));
+         
+          
+         $start_date = @date("Y-m-d", @strtotime(@$_POST['start_date']));
+          
+         $end_date = @date("Y-m-d", @strtotime(@$_POST['end_date'])); 
+         
+         if($start_date=='1970-01-01')
+         {
+             $start_date = "";
+         }
+         if($end_date=='1970-01-01')
+         {
+             $end_date = "";
+         }
         }
        
        
@@ -57,10 +69,10 @@ class stattistics extends CI_Controller{
         }
         else {
         
-       
-        
-        // საერთო ვიზიტორების რაოდენობა
         echo $start_date;
+        echo "<br />";
+        echo $end_date;
+      
         $all_chats = $this->dashboard_model->get_statistic_allchats($service_id,$start_date,$end_date);
       
         echo '  <table class="table table-condensed">
