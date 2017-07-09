@@ -13,7 +13,13 @@ class stattistics extends CI_Controller{
 
 
     public function index(){
-     echo '123';
+      $data['notify'] = ""; 
+       $this->load->model('dashboard_model'); 
+       $session_data = $this->session->userdata('user');
+       $data['get_services'] = $this->dashboard_model->get_services($session_data->repo_id);
+       $data['get_persons'] = $this->dashboard_model->get_persons();
+      
+       $this->load->view('stattistics', $data);
     }
     
     
