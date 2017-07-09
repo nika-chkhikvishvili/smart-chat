@@ -9,8 +9,6 @@ class stattistics extends CI_Controller{
         $this->load->library('vsession');
         $this->vsession->check_person_sessions($session_data);
         $this->lang->load('ge');
-        
-        
     }
 
 
@@ -136,7 +134,7 @@ class stattistics extends CI_Controller{
                         </tr>";          
                 }
                 
-                // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
+                //   // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
                 $datetime1 = new DateTime($get_sql_mindate['add_date']);
         
