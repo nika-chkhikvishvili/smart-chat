@@ -135,7 +135,42 @@ class stattistics extends CI_Controller{
                         <td class='thick-line text-right'>".$operators['all_persons_chats']."</td>
                         </tr>";          
                 }
+                
+                // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
+                $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
+                $datetime1 = new DateTime($get_sql_mindate['add_date']);
+        
+                $curdate = date("Y-m-d");
+                $datetime2 = new DateTime($curdate);
+
+                $interval = $datetime1->diff($datetime2);
+                $interval_val =  $interval->format('%a');
+
+                $sul_sashualo = ($all_chats / $interval_val);
+                
+                echo "<tr>
+                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა</td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'></td>
+                        <td class='thick-line text-right'>".round($sul_sashualo)."</td>
+                        </tr>";
+                
+                echo "<tr class='warning'>
+                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'></td>
+                        <td class='thick-line text-right'></td>
+                        </tr>";
                
+                 foreach($sql_get_services as $services){
+                       $sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
+                  echo "<tr>
+                        <td class='thick-line'></td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
+                        <td class='thick-line text-right'>".round($sul_sashualo_byserv)."</td>
+                        </tr>";          
+                }
                 
                  // საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა
                 $sashualo_visitori_operatorze = ( $all_chats / count($sql_get_operators));
