@@ -1,217 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<?php require_once ('components/styles.php');?>
+<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">      
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+if($notify==1){
+?>
+<script type="text/javascript">
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove(); 
+    });
+   window.location.assign("<?=base_url();?>institution");
+}, 2000);
+</script>
+<?php
+};
+?>
+<script type="text/javascript">
+        data = {};
+        $(document).ready(function(){
+         $.ajax({
+            type: "POST", 
+            url: "<?=base_url();?>stattistics/get_all_data/",
+            data: data,
+            success: function(html) {               
+                $("#table-responsive").html(html);
+            }
+        });    
+            
+        $('#submit').click(function() {
+        data = {};
+        data['service_id'] = $("#catID").val();
+        data['user_id'] = $("#by_users").val();
+        data['start_date'] = $("#start_date").val();
+        data['end_date'] = $("#end_date").val();
+        data['submit'] = $("#submit").val();
+        $.ajax({
+            type: "POST", 
+            url: "<?=base_url();?>stattistics/get_all_data/",
+            data: data,
+            success: function(html) {
+                 $("#table-responsive").load('ვიტვირთებით...');
+                $("#table-responsive").html(html);
+            }
+        });     
+        });
+        });
+</script>  
 
-class stattistics extends CI_Controller{
+<style type="text/css">
 
-    function __construct(){
-        parent::__construct();
-        $session_data = $this->session->userdata('user');
-        $this->load->library('vsession');
-        $this->vsession->check_person_sessions($session_data);
-        $this->lang->load('ge');
-    }
-
-
-    public function index(){
-       $data['notify'] = ""; 
-       $this->load->model('dashboard_model'); 
-       $session_data = $this->session->userdata('user');
-       $data['get_services'] = $this->dashboard_model->get_services($session_data->repo_id);
-       $data['get_persons'] = $this->dashboard_model->get_persons();
-      
-       $this->load->view('stattistics', $data);
-    }
-    
-    
-    function get_all_data()
-    {
-        $session_data = $this->session->userdata('user');
-        $this->load->model('dashboard_model');
-        
-        if(@$_POST['service_id'] || @$_POST['user_id'] || @$_POST['date']){
-        $service_id = "";
-        $user_id = "";
-        $by_date = "";
-        if(@$_POST['service_id']>=1 || @$_POST['user_id'] || $_POST['date']!="")
-        {
-          $service_id = @$_POST['service_id'];
-          $user_id = @$_POST['user_id'];
-          $by_date = @$_POST['date'];
-        }
-        $waiting = $this->dashboard_model->get_statistic_byarg($service_id,$user_id,$by_date,0);
-        $active = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,1);
-        $redirecting = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,2);
-        $closed = $this->dashboard_model->get_statistic_waiting($service_id,$user_id,$by_date,3); 
-       
-        echo '
-	<ul class="list-group">
-        <li class="list-group-item">
-            <span class="badge badge-primary">'.$waiting.'</span>
-           საუბრის დაწყების მოლოდინში
-        </li>
-        <li class="list-group-item">
-            <span class="badge badge-purple">'.$active.'</span>
-            საუბარში ჩართული მომხამრებლები
-        </li>
-        <li class="list-group-item">
-            <span class="badge badge-inverse">'.$redirecting.'</span>
-            სულ გადამისამართებული
-        </li>
-        <li class="list-group-item">
-            <span class="badge badge-pink">'.$closed.'</span>
-           სულ საუბრები
-        </li>
-        </ul>';
-        
-        
-        }
-        else 
-        {
-        $waiting = $this->dashboard_model->get_statistic_waiting(0);
-        
-        $active = $this->dashboard_model->get_statistic_waiting(1);
-        $redirecting = $this->dashboard_model->get_statistic_waiting(2);
-        $closed = $this->dashboard_model->get_statistic_waiting(3); 
-        
-        // საერთო ვიზიტორების რაოდენობა
-        $all_chats = $this->dashboard_model->get_statistic_allchats(); 
-        echo '  <table class="table table-condensed">
-                <thead>
-                <tr>
-                </tr>
-                </thead>
-                <tbody>
-                
-                <tr class="success">
-                <td>საერთო ვიზიტორების რაოდენობა</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"><span class="badge"> 
-                                   '.$all_chats.'</span></td>
-                </tr>
-                ';
-                
-                //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :
-                $sql_get_services = $this->dashboard_model->get_all_services(); 
-                foreach($sql_get_services as $keys => $values){                 
-		  $sql_get_services[$keys]['all_chats'] = $this->dashboard_model->get_by_service_id($values['category_service_id']); 
-                }
-               
-                echo '<tr class="warning"><td>საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"></td>
-                </tr>';
-                foreach($sql_get_services as $services){
-
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
-                        <td class='thick-line text-right'>".$services['all_chats']."</td>
-                        </tr>";          
-                }
-                // საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით 
-                echo '<tr class="warning"> <td>საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით :</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"></td>
-                </tr>';
-                
-                 $sql_get_operators = $this->dashboard_model->get_all_persons();
-                 foreach($sql_get_operators as $p_keys => $p_values)
-                 {                 
-		  $sql_get_operators[$p_keys]['all_persons_chats'] = $this->dashboard_model->get_all_persons_id($p_values['person_id']); 
-                 }
-                 
-                 foreach($sql_get_operators as $operators){
-
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$operators['first_name'] ."&nbsp;". $operators['last_name']."</td>
-                        <td class='thick-line text-right'>".$operators['all_persons_chats']."</td>
-                        </tr>";          
-                }
-                
-                //   // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
-                $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
-                $datetime1 = new DateTime($get_sql_mindate['add_date']);
-        
-                $curdate = date("Y-m-d");
-                $datetime2 = new DateTime($curdate);
-
-                $interval = $datetime1->diff($datetime2);
-                $interval_val =  $interval->format('%a');
-
-                $sul_sashualo = ($all_chats / $interval_val);
-                
-                echo "<tr>
-                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".round($sul_sashualo)."</td>
-                        </tr>";
-                
-                echo "<tr class='warning'>
-                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'></td>
-                        </tr>";
-               
-                 foreach($sql_get_services as $services){
-                       $sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
-                        <td class='thick-line text-right'>".round($sul_sashualo_byserv)."</td>
-                        </tr>";          
-                }
-                
-                 // საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა
-                $sashualo_visitori_operatorze = ( $all_chats / count($sql_get_operators));
-                 echo "<tr>
-                        <td class='thick-line'>საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".round($sashualo_visitori_operatorze)."</td>
-                        </tr>";
-                 // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
-                 echo "<tr>
-                        <td class='thick-line'>ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>0</td>
-                        </tr>";
-                 
-                // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
-                 $get_sql_banlist = $this->dashboard_model->get_count_banlist(1);
-                 echo "<tr>
-                        <td class='thick-line'>ოპერატორების მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>$get_sql_banlist</td>
-                        </tr>";
-                 
-                 // ადმინისტრატორის მიერ დაბლოკილი ვიზიტორების რაოდენობა
-                 $get_sql_banlist = $this->dashboard_model->get_count_banlist_admn(0);
-                 echo "<tr>
-                        <td class='thick-line'>ადმინისტრატორის მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>$get_sql_banlist</td>
-                        </tr>";
-               
-                echo '</tbody>
-                </table>';
-        
-        }
-    }
-   
-
-    function logout(){
-        redirect('logout');
-    }
+thead tr:first-child {
+  background: #ed1c40;
+  color: #fff;
+  border: none;
 }
+
+th:first-child,
+td:first-child {
+  padding: 0 15px 0 20px;
+}
+
+thead tr:last-child th {
+  border-bottom: 3px solid #ddd;
+}
+
+tbody tr:hover {
+  background-color: #FAFAFA;
+  cursor: default;
+}
+
+tbody tr:last-child td {
+  border: none;
+}
+
+tbody td {
+  border-bottom: 1px solid #ddd;
+}
+
+td:last-child {
+  text-align: right;
+  padding-right: 10px;
+}
+  
+</style>
+    </head>
+
+
+    <body class="fixed-left">
+        
+        <!-- Begin page -->
+        <div id="wrapper">
+        
+            <!-- Top Bar Start -->
+<?php require_once('components/admin_topbar.php');?>
+            <!-- Top Bar End -->
+
+
+            <!-- ========== Left Sidebar Start ========== -->
+
+<div class="left side-menu">
+    <div class="sidebar-inner slimscrollleft">
+        <div class="user-details">
+            <div class="pull-left">
+                <img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+            </div>
+            <div class="user-info">
+              <?php require_once 'components/user_info.php'; ?>
+            </div>
+        </div>
+        <!--- Divider -->
+        <div id="sidebar-menu">
+         <?php require_once('components/admin_menu.php'); ?>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- Left Sidebar End --> 
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->                      
+<div class="content-page">
+    <!-- Start content -->
+    <div class="content">
+        <div class="container">
+   
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>სისტემაში არსებული საერთო მონაცემების სტატისტიკა:</strong></h3>
+    			</div>
+    			<div class="panel-body">
+                               <div class="panel panel-border panel-primary">
+                                    <div class="row">
+                                         <form action="" method="post" />
+                                    <div class="col-sm-4">
+                                   
+                                   <label for="cname" class="control-label col-lg-5">აირჩიეთ სერვისი</label>
+                                   <select class="select2 form-control" name='catID' id='catID'>
+                                      <option value="0">ყველა სერვისი</option>
+                                       <?php
+                                       if(is_array($get_services))
+                                       {
+                                           foreach($get_services as $services):
+                                       
+                                       
+                                       ?>
+                                       <option value="<?=$services['category_service_id'];?>"><?=$services['service_name_geo'];?></option>
+                                               
+                                        <?php                                        
+                                       endforeach; }
+                                        ?>        
+                                    </select>                                    
+                                    </div>
+                                        
+                                    <div class="col-sm-4">
+                                    <label for="cname" class="control-label col-lg-5">აირჩიეთ ოპერატორი</label>
+                                
+                                       <select class="select2 form-control" name='by_users' id='by_users'>
+                                        <option value="0">ყველა ოპერატორი</option>
+                                      
+                                       <?php
+                                       if(is_array($get_persons))
+                                       {
+                                           foreach($get_persons as $person):
+                                       
+                                       
+                                       ?>
+                                       <option value="<?=$person['person_id'];?>"><?=$person['first_name'];?>&nbsp;<?=$person['last_name'];?>&nbsp;</option>
+                                               
+                                        <?php                                        
+                                       endforeach; }
+                                        ?>        
+                                       </select>
+                                    </div>
+                                    <div class="col-sm-4">
+                                       <label for="cname" class="control-label col-lg-12">კიდური თარიღები</label> 
+                                      <input class="form-control" id="start_date" name="start_date"  placeholder="DD/MM/YYYY-დან" type="text" style="width: 150px; float:left; margin-right: 15px;"/>
+                                    
+                                  
+                                        
+                                      <input class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY-მდე" type="text" style="width: 150px;"/>
+                                    </div>
+                                  </div>
+                                   
+                                    <br />
+                                    <button type="button" id="submit" name="submit" class="btn btn-primary">დამუშავება</button>
+                                    <button type="button" id="submit" class="btn btn-primary">გასუფთავება</button>
+                                     </div>
+                                    </form>
+                                </div>
+    				<div class="table-responsive" id="table-responsive">
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>
+
+
+    </div> <!-- content -->
+
+    <footer class="footer text-right">
+        2016 © Smart Logic.
+    </footer>
+
+</div>
+            <!-- ============================================================== -->
+            <!-- End Right content here -->
+            <!-- ============================================================== -->
+
+
+            <!-- Right Sidebar -->
+            <?php require_once('components/admin_online_chatlist.php');?>
+            <!-- /Right-bar -->
+
+        </div>
+        <!-- END wrapper -->
+
+
+    
+  
+         <script>
+            var resizefunc = [];
+        </script>
+
+        <!-- jQuery  -->
+        
+      
+        <script src="<?=base_url();?>assets/js/detect.js"></script>
+        <script src="<?=base_url();?>assets/js/fastclick.js"></script>
+        <script src="<?=base_url();?>assets/js/jquery.slimscroll.js"></script>
+        <script src="<?=base_url();?>assets/js/jquery.blockUI.js"></script>
+        <script src="<?=base_url();?>assets/js/waves.js"></script>
+        <script src="<?=base_url();?>assets/js/wow.min.js"></script>
+        <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
+        <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
+
+        <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
+     
+	<script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/notifications/notify-metro.js"></script>
+        <script src="<?=base_url();?>assets/plugins/notifications/notifications.js"></script>
+      
+        <!--script for this page only-->
+        <script src="<?=base_url();?>assets/plugins/nestable/jquery.nestable.js"></script>
+        
+         <script src="<?=base_url();?>assets/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/toggles/toggles.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/colorpicker/bootstrap-colorpicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.multi-select.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.quicksearch.js"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+         <script>
+	$(document).ready(function(){
+		var start_date=$('input[name="start_date"]'); //our date input has the name "date"		
+		var end_date=$('input[name="end_date"]'); //our date input has the name "date"		
+		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+		start_date.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+                end_date.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+	})
+</script>
+
+    
+    </body>
+
+</html>
