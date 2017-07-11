@@ -90,7 +90,7 @@ class stattistics extends CI_Controller{
                                    '.$all_chats.'</span></td>
                 </tr>
                 ';
-                /*
+                
                 //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :
                 $sql_get_services = $this->dashboard_model->get_all_services(); 
                 foreach($sql_get_services as $keys => $values){                 
@@ -135,7 +135,7 @@ class stattistics extends CI_Controller{
                         </tr>";          
                 }
                 
-                
+                /*
                 // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
                 $datetime1 = new DateTime($get_sql_mindate['add_date']);
