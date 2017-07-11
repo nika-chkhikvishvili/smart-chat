@@ -102,6 +102,7 @@ class stattistics extends CI_Controller{
                 <td class="text-center"></td>
                 <td class="text-right"></td>
                 </tr>';
+                
                 foreach($sql_get_services as $services){
 
                   echo "<tr>
@@ -134,7 +135,8 @@ class stattistics extends CI_Controller{
                         </tr>";          
                 }
                 
-                //   // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
+                /*
+                // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
                 $datetime1 = new DateTime($get_sql_mindate['add_date']);
         
@@ -203,7 +205,13 @@ class stattistics extends CI_Controller{
                         <td class='thick-line text-center'></td>
                         <td class='thick-line text-right'>$get_sql_banlist</td>
                         </tr>";
-               
+               */
+                 echo "<tr class='warning'>
+                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'></td>
+                        <td class='thick-line text-right'></td>
+                        </tr>";
                 echo '</tbody>
                 </table>';  
         
