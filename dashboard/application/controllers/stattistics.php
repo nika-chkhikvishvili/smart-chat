@@ -210,7 +210,7 @@ class stattistics extends CI_Controller{
                         <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
                         <td class='thick-line'></td>
                         <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'></td>
+                        <td class='thick-line text-right'>qwerty</td>
                         </tr>";
                 echo '</tbody>
                 </table>';  
