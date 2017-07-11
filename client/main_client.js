@@ -4,15 +4,15 @@
 
 'use strict';
 
-var socket = io(window.location.origin + ':3000');
-var chat = new Chat($, socket);
+let socket = io(window.location.origin + ':3000');
+let chat = new Chat($, socket);
 
 $(document).ready(function () {
 
     socket.emit('clientCheckChatIfAvailable', chat.getChatUniqObject());
 
     $("#disconnect-chat").click(function () {
-        var exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
+        let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
         if (exit === true) {
             socket.emit('clientCloseChat');
         }
@@ -21,9 +21,9 @@ $(document).ready(function () {
 
     $("#begin_btn").click(function ()  {
         $('#begin_btn').attr({disabled: true});
-        var select_theme = $('#select_theme').val();
-        var firstName = $('#first_name').val();
-        var lastName = $('#last_name').val();
+        let select_theme = $('#select_theme').val();
+        let firstName = $('#first_name').val();
+        let lastName = $('#last_name').val();
 
         if (!select_theme || select_theme === '') {
             alert('აირჩიეთ სერვისი');
@@ -51,9 +51,9 @@ $(document).ready(function () {
     });
 
     $("#submitmsg").click(function () {
-        var usermsg = $('#usermsg');
-        var message = usermsg.val();
-        var ran = Math.floor(Math.random() * 10000000);
+        let usermsg = $('#usermsg');
+        let message = usermsg.val();
+        let ran = Math.floor(Math.random() * 10000000);
         socket.emit('clientMessage', {chatUniqId: chat.getChatUniqId(), message: message, id: ran});
         usermsg.val('');
         chat.addMyMessage(ran, null, message);
@@ -106,7 +106,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
     if (data && data.hasOwnProperty('isValid') && data.isValid) {
         chat.setUserInformation(data.firstName, data.lastName);
         $('#asarchevi').hide();
-        if (data.chatStatusId == 0) {
+        if (parseInt(data.chatStatusId) === 0) {
             $('#wait_operator').show();
         } else {
             $('.panel').show();

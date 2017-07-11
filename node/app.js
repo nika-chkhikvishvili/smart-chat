@@ -207,7 +207,7 @@ app.sendMessageToRoomGuests = function (socket, message) {
     if (!chat) {
         return;
     }
-    chat.guests.forEach(function (socketId) {
+    chat.guestUser.sockets.forEach(function (socketId) {
         socket.broadcast.to(socketId).emit('message', message);
     });
 };
@@ -288,7 +288,7 @@ app.addOperatorToService = function (socket, userId, serviceId, joinedModeId) {
                 }
             }
 
-            chat.guests.forEach(function (socketId) {
+            chat.guestUser.sockets.forEach(function (socketId) {
                 if (socket.id === socketId) {
                     socket.emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
                 } else {
@@ -441,10 +441,11 @@ app.io.on('connection', function (socket) {
             socket.user.removeSocket(socket);
         }
 
-        if (socket.hasOwnProperty('guestUser')) {
-            let guestUser = socket.guestUser;
-            guestUser.removeSocket(socket.id);
-
+        if (socket.hasOwnProperty('guestUserId')) {
+            let chat = app.getChat(socket.chatUniqId);
+            if (!!chat) {
+                chat.guestLeave(socket);
+            }
         }
         app.io.emit('userDisconnect', {
             id: socket.id

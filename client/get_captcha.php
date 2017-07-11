@@ -43,4 +43,3 @@ imagettftext ($image, 30, 0, 10, 40, $color, $dir.$font, $_SESSION['random_numbe
 header("Content-type: image/png");
 imagepng($image);
 
-?>

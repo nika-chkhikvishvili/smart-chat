@@ -250,7 +250,7 @@
     </div>
 
     <div class="col-md-12 col-lg-8 center-block" style="height:90%">
-        <div class="panel"style="height:100%">
+        <div class="panel" style="height:100%">
         	<!--Heading-->
     		<div class="panel-heading">
     			<div class="panel-control">

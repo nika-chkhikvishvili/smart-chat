@@ -20,8 +20,8 @@ function Chat(initParams) {
     this.guestUser    = initParams.hasOwnProperty('guestUser')    ? initParams.guestUser       : null;
     this.serviceId    = initParams.hasOwnProperty('serviceId')    ? parseInt(initParams.serviceId)    : null;
     this.chatStatusId = initParams.hasOwnProperty('chatStatusId') ? parseInt(initParams.chatStatusId) : null;
+    this.guestUserLeaveTime = -1;
     this.users        = new Map();
-    this.guests       = new Set();
 }
 
 Chat.prototype.getInsertObject = function () {
@@ -69,12 +69,28 @@ Chat.prototype.isAlreadyInTheRoom = function (userId) {
 Chat.prototype.closeChat = function (app) {
     this.chatStatusId = 3;
     let chatUniqId = this.chatUniqId;
-    this.users.forEach(function(userId){
+    this.users.forEach(function(status, userId){
         let user = app.users.get(userId);
         user.chatRooms.delete(chatUniqId);
     });
 };
 
+Chat.prototype.guestLeave = function (socket) {
+    this.guestUser.removeSocket(socket.id);
+    if (this.guestUser.sockets.size === 0 ){
+        this.guestUserLeaveTime = Date.now();
+    }
+};
+
+Chat.prototype.isAvailable = function (app) {
+    if (this.guestUserLeaveTime === -1 ) return true;
+    return  Date.now() - this.guestUserLeaveTime < 30000 ;
+};
+
+Chat.prototype.addGuestSocket = function (socket) {
+    this.guestUser.addSocket(socket.id);
+    this.guestUserLeaveTime = -1;
+};
 
 
 module.exports = Chat;

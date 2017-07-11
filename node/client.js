@@ -81,8 +81,6 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
 
             guestUser.guestUserId = parseInt(res.insertId);
             socket.guestUserId = guestUser.guestUserId;
-            socket.guestUser = guestUser;
-            guestUser.addSocket(socket.id);
 
             let chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser});
 
@@ -91,7 +89,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
                     return app.databaseError(socket, err);
                 }
                 chat.chatId = res.insertId;
-                chat.guests.add(socket.id);
+                chat.addGuestSocket(socket);
                 app.chats.set(chat.chatUniqId, chat);
 
                 app.connection.query('INSERT INTO `chat_rooms` SET ? ', chat.getInsertGuestObject(), function (err, res1) {
@@ -121,9 +119,9 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
     }
 
     if (!data || !data.hasOwnProperty('chatUniqId') || !data.chatUniqId || data.chatUniqId.length < 10) {
-        socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
-        return;
+        return socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
     }
+
     app.connection.query('SELECT * FROM  `chats` WHERE chat_status_id in (0,1,2) AND chat_uniq_id = ? ', [data.chatUniqId], function (err, res) {
         if (err) {
             return app.databaseError(socket, err);
@@ -134,12 +132,16 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
             return;
         }
 
+        let chat = app.chats.get(data.chatUniqId);
+        if (! chat.isAvailable()) {
+            return socket.emit("clientCheckChatIfAvailableResponse", {isValid: false});
+        }
+
         let ans = res[0];
         socket.guestUserId = ans.online_user_id;
         socket.chatUniqId = data.chatUniqId;
 
-        let chat = app.chats.get(data.chatUniqId);
-        chat.guests.add(socket.id);
+        chat.addGuestSocket(socket);
 
         app.connection.query('SELECT * FROM  `online_users` WHERE online_user_id = ?', [ans.online_user_id], function (err, res) {
             if (err) {
@@ -152,6 +154,7 @@ ChatClient.prototype.clientCheckChatIfAvailable = function (socket, data) {
             }
 
             let user = res[0];
+
             app.connection.query('SELECT m.`chat_message_id` as `messageId`, m.`chat_id` as `chatId`, m.`person_id` as `userId`, ' +
                 'm.`online_user_id` as `guestUserId`, m.`chat_message` as `message`, m.`message_date` as `messageDate`, ' +
                 "persons.nickname as `sender`, 'message' as `messageType` " +
@@ -219,9 +222,7 @@ ChatClient.prototype.clientCloseChat = function (socket) {
         if (err) {
             return app.databaseError(socket, err);
         }
-        let message = new Message();
-        message.chatUniqId = socket.chatUniqId;
-        message.messageType = 'close';
+        let message = new Message({chatUniqId: socket.chatUniqId, messageType: 'close'});
 
         app.sendMessageToRoom(socket, message, true);
 
@@ -241,7 +242,7 @@ ChatClient.prototype.userIsWriting = function (socket) {
         return;
     }
 
-    var message = new Message();
+    let message = new Message();
     message.chatUniqId = socket.chatUniqId;
     message.messageType = 'writing';
 
