@@ -16,7 +16,7 @@ class stattistics extends CI_Controller{
        $data['notify'] = ""; 
        $this->load->model('dashboard_model'); 
        $session_data = $this->session->userdata('user');
-       $data['get_services'] = $this->dashboard_model->$session_data->repo_id();
+       $data['get_services'] = $this->dashboard_model->get_all_services();
        $data['get_persons'] = $this->dashboard_model->get_persons();
       
        $this->load->view('stattistics', $data);
