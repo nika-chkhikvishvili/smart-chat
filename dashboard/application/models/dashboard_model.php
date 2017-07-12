@@ -444,7 +444,7 @@ class dashboard_model extends CI_Model{
    function get_all_services()
    {
       $this->db->select('*');
-      $this->db->where('repo_category_id',1);
+     // $this->db->where('repo_category_id',1);
       $this->db->from('category_services');
       $query = $this->db->get();
       return $query->result_array();
