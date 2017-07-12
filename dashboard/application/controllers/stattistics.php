@@ -102,7 +102,6 @@ class stattistics extends CI_Controller{
                 <td class="text-center"></td>
                 <td class="text-right"></td>
                 </tr>';
-                
                 foreach($sql_get_services as $services){
 
                   echo "<tr>
@@ -135,24 +134,24 @@ class stattistics extends CI_Controller{
                         </tr>";          
                 }
                 
-                /*
                 // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
-                $datetime1 = new DateTime($get_sql_mindate['add_date']);
-        
-                $curdate = date("Y-m-d");
-                $datetime2 = new DateTime($curdate);
+                
+                $now = time(); // or your date as well
+                $your_date = strtotime($get_sql_mindate['add_date']);
+                $datediff = $now - $your_date;
 
-                $interval = $datetime1->diff($datetime2);
-                $interval_val =  $interval->format('%a');
-
+                $interval_val =  floor($datediff / (60 * 60 * 24));
+               
                 $sul_sashualo = ($all_chats / $interval_val);
+                
+               
                 
                 echo "<tr>
                         <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა</td>
                         <td class='thick-line'></td>
                         <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".round($sul_sashualo)."</td>
+                        <td class='thick-line text-right'>".ceil($sul_sashualo)."</td>
                         </tr>";
                 
                 echo "<tr class='warning'>
@@ -168,7 +167,7 @@ class stattistics extends CI_Controller{
                         <td class='thick-line'></td>
                         <td class='thick-line'></td>
                         <td class='thick-line text-center'>".$services['service_name_geo']."</td>
-                        <td class='thick-line text-right'>".round($sul_sashualo_byserv)."</td>
+                        <td class='thick-line text-right'>".ceil($sul_sashualo_byserv)."</td>
                         </tr>";          
                 }
                 
@@ -178,7 +177,7 @@ class stattistics extends CI_Controller{
                         <td class='thick-line'>საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა</td>
                         <td class='thick-line'></td>
                         <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".round($sashualo_visitori_operatorze)."</td>
+                        <td class='thick-line text-right'>".ceil($sashualo_visitori_operatorze)."</td>
                         </tr>";
                  // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
                  echo "<tr>
@@ -205,15 +204,7 @@ class stattistics extends CI_Controller{
                         <td class='thick-line text-center'></td>
                         <td class='thick-line text-right'>$get_sql_banlist</td>
                         </tr>";
-               */
-		
-		
-                 echo "<tr class='warning'>
-                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>qwerty</td>
-                        </tr>";
+               
                 echo '</tbody>
                 </table>';  
         
