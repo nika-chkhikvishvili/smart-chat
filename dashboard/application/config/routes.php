@@ -90,5 +90,9 @@ $route['^()(/:any)?$'] = 'stattistics/$0';
 $route['^(get_all_data)(/:any)?$'] = 'stattistics/$0';
 #$route['^(update_service)(/:any)?$'] = 'dashboard/$0';
 
+$route['^(history)(/:any)?$'] = 'history/$0';
+$route['^(get_all_data)(/:any)?$'] = 'history/$0';
+$route['^(view_history)(/:any)?$'] = 'history/$0';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
