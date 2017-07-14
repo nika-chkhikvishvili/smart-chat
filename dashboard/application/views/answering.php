@@ -104,60 +104,118 @@ img:hover {
 <form class="cmxform form-horizontal tasi-form" id="commentForm" method="POST" action="">
 
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">მისასალმებელი ტექსტი</label>
+    <label for="cname" class="control-label col-lg-3">მისასალმებელი ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="start_chating" value="<?=$get_answering['start_chating'];?>" type="text">
+<input class="form-control" id="cname" name="start_chating_geo" value="<?=$get_answering['start_chating_geo'];?>" type="text">
 </div>
-</div>    
-
+</div>
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">მეილი, რომელზეც offline მიღებული შეტყობინებები მოვა</label>
+    <label for="cname" class="control-label col-lg-3">მისასალმებელი ტექსტი <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="start_chating_rus" value="<?=$get_answering['start_chating_rus'];?>" type="text">
+</div>
+</div>     
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">მისასალმებელი ტექსტი <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip" data-placement="bottom" title="რუსული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="start_chating_eng" value="<?=$get_answering['start_chating_eng'];?>" type="text">
+</div>
+</div>  
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">მეილი, რომელზეც offline <br />მიღებული შეტყობინებები მოვა </label>
 <div class="col-lg-9">
 <input class="form-control" id="cname" name="mail_offline" value="<?=$get_answering['mail_offline'];?>" type="text">
 </div>
 </div>
-
-<div class="form-group">
-    <label for="cname" class="control-label col-lg-2">კლიენტის ლოდინის ტექსტი</label>
-    <div class="col-lg-9">
-        <input class="form-control" id="cname" name="waiting_message" value="<?=$get_answering['waiting_message'];?>" type="text">
-    </div>
-</div>
      
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">კლიენტთან ჩატის გაწყვეტის ტექსტი</label>
+    <label for="cname" class="control-label col-lg-3">კლიენტთან ჩატის გაწყვეტის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="connect_failed" value="<?=$get_answering['connect_failed'];?>" type="text">
+<input class="form-control" id="cname" name="connect_failed_geo" value="<?=$get_answering['connect_failed_geo'];?>" type="text">
 </div>
-</div>     
-  
+</div>
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">მომხმარებლის დაბოლიკვის ტექსტი</label>
+    <label for="cname" class="control-label col-lg-3">კლიენტთან ჩატის გაწყვეტის ტექსტი <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="user_block" value="<?=$get_answering['user_block'];?>" type="text">
+<input class="form-control" id="cname" name="connect_failed_rus" value="<?=$get_answering['connect_failed_rus'];?>" type="text">
+</div>
+</div>      
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">კლიენტთან ჩატის გაწყვეტის ტექსტი <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="connect_failed_eng" value="<?=$get_answering['connect_failed_eng'];?>" type="text">
+</div>
+</div>  
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">მომხმარებლის დაბოლიკვის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="user_block_geo" value="<?=$get_answering['user_block_geo'];?>" type="text">
 </div>
 </div> 
-     
+ 
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">ავტომოპასუხის ტექსტი</label>
+ <label for="cname" class="control-label col-lg-3">მომხმარებლის დაბოლიკვის ტექსტი <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="auto_answering" value="<?=$get_answering['auto_answering'];?>" type="text">
+<input class="form-control" id="cname" name="user_block_rus" value="<?=$get_answering['user_block_rus'];?>" type="text">
 </div>
-</div>
-     
+</div> 
+
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">ავტომოპასუხის განმეორების ინტერვალი</label>
+<label for="cname" class="control-label col-lg-3">მომხმარებლის დაბოლიკვის ტექსტი <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="user_block_eng" value="<?=$get_answering['user_block_eng'];?>" type="text">
+</div>
+</div> 
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">ავტომოპასუხის ტექსტი <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="auto_answering_geo" value="<?=$get_answering['auto_answering_geo'];?>" type="text">
+</div>
+</div>
+
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">ავტომოპასუხის ტექსტი <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="auto_answering_rus" value="<?=$get_answering['auto_answering_rus'];?>" type="text">
+</div>
+</div> 
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">ავტომოპასუხის ტექსტი <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="auto_answering_eng" value="<?=$get_answering['auto_answering_eng'];?>" type="text">
+</div>
+</div>  
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">ავტომოპასუხის განმეორების ინტერვალი</label>
 <div class="col-lg-9">
 <input class="form-control" id="cname" name="repeat_auto_answering" value="<?=$get_answering['repeat_auto_answering'];?>" type="text">
 </div>
 </div>
      
 <div class="form-group">
-    <label for="cname" class="control-label col-lg-2">არასამუშაო საათების შემთხვევაში ავტომოპასუხის</label>
+    <label for="cname" class="control-label col-lg-3">არასამუშაო საათების შემთხვევაში ავტომოპასუხის <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
 <div class="col-lg-9">
-<input class="form-control" id="cname" name="time_off" value="<?=$get_answering['time_off'];?>" type="text">
+<input class="form-control" id="cname" name="time_off_geo" value="<?=$get_answering['time_off_geo'];?>" type="text">
 </div>
-</div>       
+</div>
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">არასამუშაო საათების შემთხვევაში ავტომოპასუხის <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="time_off_rus" value="<?=$get_answering['time_off_rus'];?>" type="text">
+</div>
+</div>
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">არასამუშაო საათების შემთხვევაში ავტომოპასუხის <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="time_off_eng" value="<?=$get_answering['time_off_eng'];?>" type="text">
+</div>
+</div>      
 		
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
