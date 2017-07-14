@@ -257,7 +257,7 @@ class stattistics extends CI_Controller{
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
                 
                 $now = time(); // or your date as well
-                $your_date = strtotime($get_sql_mindate['add_date']);
+                $your_date = @strtotime($get_sql_mindate['add_date']);
                 $datediff = $now - $your_date;
 
                 $interval_val =  floor($datediff / (60 * 60 * 24));
