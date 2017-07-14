@@ -8,7 +8,7 @@ $session_data = $this->session->userdata('user');
 
 
     <li>
-    <a href="#" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
+    <a href="<?= base_url(); ?>history" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
     </li>
 	<?php
     
