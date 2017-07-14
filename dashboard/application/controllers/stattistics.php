@@ -57,15 +57,134 @@ class stattistics extends CI_Controller{
         // არჩეულია სერვისით ფილტრი 
         if(@$_POST['service_id']>=1 && @$_POST['user_id']<1)
         {
-             echo  'არჩეულია სერვისი';
+           $byservice = $this->dashboard_model->get_count_byservices($start_date,$end_date,$_POST['service_id']);
+            echo '<table class="table table-condensed">
+                <thead>
+                <tr>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <tr class="success">
+                <td>საერთო ვიზიტორების რაოდენობა</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right"><span class="badge"> 
+                                   '.$byservice.'</span></td>
+                </tr>
+                ';
         }
         // არჩეულია user_id ფილტრი
         elseif (@$_POST['service_id']<1 && @$_POST['user_id']>=1){
-             echo  'არჩეულია ოპერატორი';
+            #///////////////
+            # არჩეულია ოპერატორი
+            $all_chats = $this->dashboard_model->statistic_byperson($_POST['user_id'],$service_id,$start_date,$end_date);
+            $person_services = $this->dashboard_model->get_all_services();
+            
+            foreach($person_services as $keys => $values){                 
+		  $person_services[$keys]['all_chats'] = $this->dashboard_model->statservices_by_person($_POST['user_id'],$values['category_service_id'],$start_date,$end_date); 
+                }
+          
+            echo '<table class="table table-condensed">
+                <thead>
+                <tr>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <tr class="success">
+                <td>ოპერატორის მიერ ჯამში გაწეული მომსახურება</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right"><span class="badge"> 
+                                   '.$all_chats.'</span></td>
+                </tr>
+                ';
+                
+                echo '<tr class="warning"><td>ოპერატორის მიერ ჯამში გაწეული მომსახურება საკურატორო სერვისების მიხედვით:</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right"></td>
+                </tr>';
+                foreach($person_services as $services){
+
+                  echo "<tr>
+                        <td class='thick-line'></td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
+                        <td class='thick-line text-right'>".$services['all_chats']."</td>
+                        </tr>";          
+                }
+                 // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
+                 echo "<tr>
+                        <td class='thick-line'>კონკრეტულ ოპერატორთან საუბრის დროს ცენზურის ფილტრის მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'></td>
+                        <td class='thick-line text-right'>0</td>
+                        </tr>";
+                 
+                // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
+                 $get_sql_banlist = $this->dashboard_model->get_count_banlist_admn($_POST['user_id']);
+                 echo "<tr>
+                        <td class='thick-line'>ოპერატორების მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
+                        <td class='thick-line'></td>
+                        <td class='thick-line text-center'></td>
+                        <td class='thick-line text-right'>$get_sql_banlist</td>
+                        </tr>";
+            
+            # არჩეულია ოპერატორი
+            # /////////////////
         }
         // არჩეულია service_id da user_id ფილტრი
         elseif (@$_POST['service_id']>=1 && @$_POST['user_id']>=1){
-           echo  'არჩეულია ოპერატორი და სერვისი';
+          
+            // check person service 
+            $check_service_by_user = $this->dashboard_model->check_person_service($_POST['service_id'],$_POST['user_id']);
+            if($check_service_by_user){
+              // თუ ოპერატორის საკურატორო სივრცეშია სერვისი
+              $get_service_name = $this->dashboard_model->get_service_name($_POST['service_id']);
+              $count_person_chat_service = $this->dashboard_model->get_peron_services($start_date,$end_date,$_POST['user_id'],$_POST['service_id']);
+           
+              $service_name =  $get_service_name['service_name_geo'];
+               echo'<table class="table table-condensed">
+                <thead>
+                <tr>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <tr class="info">
+                <td>'.$service_name.'</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right"><span class="badge">'.$count_person_chat_service.' 
+                 </span></td>
+                </tr>';
+                
+                echo '</tbody>
+                </table>'; 
+                
+            } else
+            {
+                echo'<table class="table table-condensed">
+                <thead>
+                <tr>
+                </tr>
+                </thead>
+                <tbody>
+                
+                <tr class="danger">
+                <td>თქვენს მიერ არჩეული სერვისი არ შედის ოპერატორის საკურატორო სირვცეში</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-right"><span class="badge"> 
+                 </span></td>
+                </tr>';
+                
+                echo '</tbody>
+                </table>'; 
+            }
+            
         }
         else {
         
@@ -94,7 +213,7 @@ class stattistics extends CI_Controller{
                 //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :
                 $sql_get_services = $this->dashboard_model->get_all_services(); 
                 foreach($sql_get_services as $keys => $values){                 
-		  $sql_get_services[$keys]['all_chats'] = $this->dashboard_model->get_by_service_id($values['category_service_id']); 
+		  $sql_get_services[$keys]['all_chats'] = $this->dashboard_model->get_by_service_id($values['category_service_id'],$start_date,$end_date); 
                 }
                
                 echo '<tr class="warning"><td>საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :</td>
@@ -121,7 +240,7 @@ class stattistics extends CI_Controller{
                  $sql_get_operators = $this->dashboard_model->get_all_persons();
                  foreach($sql_get_operators as $p_keys => $p_values)
                  {                 
-		  $sql_get_operators[$p_keys]['all_persons_chats'] = $this->dashboard_model->get_all_persons_id($p_values['person_id']); 
+		  $sql_get_operators[$p_keys]['all_persons_chats'] = $this->dashboard_model->get_all_persons_id($p_values['person_id'],$start_date,$end_date); 
                  }
                  
                  foreach($sql_get_operators as $operators){
@@ -138,7 +257,7 @@ class stattistics extends CI_Controller{
                 $get_sql_mindate = $this->dashboard_model->get_mindate_chat();
                 
                 $now = time(); // or your date as well
-                $your_date = @strtotime($get_sql_mindate['add_date']);
+                $your_date = strtotime($get_sql_mindate['add_date']);
                 $datediff = $now - $your_date;
 
                 $interval_val =  floor($datediff / (60 * 60 * 24));

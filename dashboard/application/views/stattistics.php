@@ -42,7 +42,7 @@ window.setTimeout(function() {
             url: "<?=base_url();?>stattistics/get_all_data/",
             data: data,
             success: function(html) {
-                 $("#table-responsive").load('ვიტვირთებით...');
+                
                 $("#table-responsive").html(html);
             }
         });     
@@ -129,74 +129,74 @@ td:last-child {
    
     <div class="row">
     	<div class="col-md-12">
-    		<div class="panel panel-default">
-    			<div class="panel-heading">
-    				<h3 class="panel-title"><strong>სისტემაში არსებული საერთო მონაცემების სტატისტიკა:</strong></h3>
-    			</div>
-    			<div class="panel-body">
-                               <div class="panel panel-border panel-primary">
-                                    <div class="row">
-                                         <form action="" method="post" />
-                                    <div class="col-sm-4">
-                                   
-                                   <label for="cname" class="control-label col-lg-5">აირჩიეთ სერვისი</label>
-                                   <select class="select2 form-control" name='catID' id='catID'>
-                                      <option value="0">ყველა სერვისი</option>
-                                       <?php
-                                       if(is_array($get_services))
-                                       {
-                                           foreach($get_services as $services):
-                                       
-                                       
-                                       ?>
-                                       <option value="<?=$services['category_service_id'];?>"><?=$services['service_name_geo'];?></option>
-                                               
-                                        <?php                                        
-                                       endforeach; }
-                                        ?>        
-                                    </select>                                    
-                                    </div>
-                                        
-                                    <div class="col-sm-4">
-                                    <label for="cname" class="control-label col-lg-5">აირჩიეთ ოპერატორი</label>
-                                
-                                       <select class="select2 form-control" name='by_users' id='by_users'>
-                                        <option value="0">ყველა ოპერატორი</option>
-                                      
-                                       <?php
-                                       if(is_array($get_persons))
-                                       {
-                                           foreach($get_persons as $person):
-                                       
-                                       
-                                       ?>
-                                       <option value="<?=$person['person_id'];?>"><?=$person['first_name'];?>&nbsp;<?=$person['last_name'];?>&nbsp;</option>
-                                               
-                                        <?php                                        
-                                       endforeach; }
-                                        ?>        
-                                       </select>
-                                    </div>
-                                    <div class="col-sm-4">
-                                       <label for="cname" class="control-label col-lg-12">კიდური თარიღები</label> 
-                                      <input class="form-control" id="start_date" name="start_date"  placeholder="DD/MM/YYYY-დან" type="text" style="width: 150px; float:left; margin-right: 15px;"/>
-                                    
-                                  
-                                        
-                                      <input class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY-მდე" type="text" style="width: 150px;"/>
-                                    </div>
-                                  </div>
-                                   
-                                    <br />
-                                    <button type="button" id="submit" name="submit" class="btn btn-primary">დამუშავება</button>
-                                    <button type="button" id="submit" class="btn btn-primary">გასუფთავება</button>
-                                     </div>
-                                    </form>
-                                </div>
-    				<div class="table-responsive" id="table-responsive">
-    				</div>
-    			</div>
-    		</div>
+<div class="panel panel-default">
+        <div class="panel-heading">
+                <h3 class="panel-title"><strong>სისტემაში არსებული საერთო მონაცემების სტატისტიკა:</strong></h3>
+        </div>
+        <div class="panel-body">
+               <div class="panel panel-border panel-primary">
+                    <div class="row">
+                         <form action="" method="post" />
+                    <div class="col-sm-4">
+
+                   <label for="cname" class="control-label col-lg-5">აირჩიეთ სერვისი</label>
+                   <select class="select2 form-control" name='catID' id='catID'>
+                      <option value="0">ყველა სერვისი</option>
+                       <?php
+                       if(is_array($get_services))
+                       {
+                           foreach($get_services as $services):
+
+
+                       ?>
+                       <option value="<?=$services['category_service_id'];?>"><?=$services['service_name_geo'];?></option>
+
+                        <?php                                        
+                       endforeach; }
+                        ?>        
+                    </select>                                    
+                    </div>
+
+                    <div class="col-sm-4">
+                    <label for="cname" class="control-label col-lg-5">აირჩიეთ ოპერატორი</label>
+
+                       <select class="select2 form-control" name='by_users' id='by_users'>
+                        <option value="0">ყველა ოპერატორი</option>
+
+                       <?php
+                       if(is_array($get_persons))
+                       {
+                           foreach($get_persons as $person):
+
+
+                       ?>
+                       <option value="<?=$person['person_id'];?>"><?=$person['first_name'];?>&nbsp;<?=$person['last_name'];?>&nbsp;</option>
+
+                        <?php                                        
+                       endforeach; }
+                        ?>        
+                       </select>
+                    </div>
+                    <div class="col-sm-4">
+                       <label for="cname" class="control-label col-lg-12">კიდური თარიღები</label> 
+                      <input class="form-control" id="start_date" name="start_date"  placeholder="DD/MM/YYYY-დან" type="text" style="width: 150px; float:left; margin-right: 15px;"/>
+
+
+
+                      <input class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY-მდე" type="text" style="width: 150px;"/>
+                    </div>
+                  </div>
+
+                    <br />
+                    <button type="button" id="submit" name="submit" class="btn btn-primary">დამუშავება</button>
+                    <a href=""  id="submit" class="btn btn-primary">გასუფთავება</a>
+                     </div>
+                    </form>
+                </div>
+                <div class="table-responsive" id="table-responsive">
+                </div>
+        </div>
+</div>
     	</div>
     </div>
 </div>

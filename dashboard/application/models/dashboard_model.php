@@ -431,11 +431,24 @@ class dashboard_model extends CI_Model{
       return $query->result_array();
    }
    
-   function get_all_persons_id($person_id)
+   function get_all_persons_id($person_id,$start_date,$end_date)
    {
       $this->db->select('*');
       $this->db->from('chats'); 
       $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id','LEFT');
+      
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }
+      
       $this->db->where('person_id', $person_id); 
       $query = $this->db->get();
       return $query->num_rows();
@@ -452,10 +465,21 @@ class dashboard_model extends CI_Model{
    
    
    
-   function get_by_service_id($service_id)
+   function get_by_service_id($service_id,$start_date,$end_date)
    {
       $this->db->select('*');
       $this->db->from('chats'); 
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }
       $this->db->where('service_id', $service_id); 
       $query = $this->db->get();
       return $query->num_rows();
@@ -512,13 +536,233 @@ class dashboard_model extends CI_Model{
       return $query->num_rows();
    }
    
-     function get_count_banlist_admn($argument)
+   function get_count_banlist_admn($argument)
    {
       $this->db->select('*');
       $this->db->from('banlist'); 
       $this->db->where('person_id =',$argument); 
       $query = $this->db->get();
       return $query->num_rows();
+   }
+   
+   
+   
+   # start 
+   # სტატისტიკა ოპერატორის მიხედვით
+   
+   function statistic_byperson($person_id,$service_id=false,$start_date=false,$end_date=false)
+   {
+      $this->db->select('*');
+      $this->db->from('chats');
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      if($service_id)
+      {
+        $this->db->where('service_id',$service_id);  
+      }
+      
+      if($start_date == $end_date)
+      {
+          if($start_date && $end_date)
+          {
+              $this->db->like("add_date", $start_date);  
+          }
+      }
+      else 
+      {
+       if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }  
+      }    
+      
+      $this->db->where('person_id',$person_id);
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+    function stat_services_byperson($person_id)
+    {
+      $this->db->select('*');
+      $this->db->from('person_services');
+      $this->db->join('category_services', 'category_services.category_service_id = person_services.service_id');
+      $this->db->where('person_id',$person_id);
+      $query = $this->db->get();
+      return $query->result_array();
+    }
+    
+    function statservices_by_person($person_id,$service_id,$start_date,$end_date)
+   {
+      $this->db->select('*');
+      $this->db->from('chats');
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }
+      $this->db->where('person_id', $person_id); 
+      $this->db->where('service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   # end of 
+   # სტატისტიკა ოპერატორის მიხედვით
+   # 
+   # 
+   # 
+   # 
+   # start 
+   # სერვისი და ოპერატორი
+   function check_person_service($service_id,$person_id)
+   {
+      $this->db->select('*');
+      $this->db->from('person_services');
+      $this->db->where('person_id', $person_id); 
+      $this->db->where('service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+   
+   function get_service_name($service_id)
+   {
+      $this->db->select('*');
+      $this->db->from('category_services');  
+      $this->db->where('category_service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->row_array();
+   }
+   
+   function get_peron_services($start_date,$end_date,$person_id,$service_id){
+      $this->db->select('*');
+      $this->db->from('chats');
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }
+      $this->db->where('person_id', $person_id); 
+      $this->db->where('service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+    # 
+   # end of  
+   # სერვისი და ოპერატორი
+   # 
+   # start 
+   # სერვისი
+   
+ function get_count_byservices($start_date,$end_date,$service_id){
+      $this->db->select('*');
+      $this->db->from('chats');
+     
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("add_date <=", $end_date);   
+      }      
+      $this->db->where('service_id', $service_id); 
+      $query = $this->db->get();
+      return $query->num_rows();
+   }
+
+   # 
+   # end of  
+   # სერვისი
+    // chat history 
+    function get_all_history($service_id=false,$start_date=false,$end_date=false,$start)
+   {
+      $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      $this->db->join('online_users', 'online_users.online_user_id = chats.online_user_id');
+      $this->db->join('category_services', 'category_services.category_service_id = chats.service_id');     
+      $this->db->join('persons', 'persons.person_id = chat_rooms.person_id');
+      
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("person_id", $end_date);   
+      }
+      $where = "chat_rooms.person_id is  NOT NULL"; 
+      $this->db->where($where);
+      $this->db->where('chat_status_id','3');
+      $this->db->limit('25', $start);
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+   
+   function count_history($service_id,$start_date,$end_date){
+    $this->db->select('*');
+      $this->db->from('chats'); 
+      $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
+      $this->db->join('online_users', 'online_users.online_user_id = chats.online_user_id');
+      $this->db->join('category_services', 'category_services.category_service_id = chats.service_id');     
+      $this->db->join('persons', 'persons.person_id = chat_rooms.person_id');
+      
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";    
+        $this->db->where("person_id", $end_date);   
+      }
+      $where = "chat_rooms.person_id is  NOT NULL"; 
+      $this->db->where($where);
+      $this->db->where('chat_status_id','3');
+    
+      $query = $this->db->get();
+      return $query->result_array();
+   }
+   
+   
+    function view_chat_history($chat_id)
+   {
+        $this->db->select('*');
+        $this->db->from('chat_messages');
+        $this->db->where('chat_id', $chat_id);
+        $this->db->join('persons', 'persons.person_id = chat_messages.person_id','LEFT'); 
+        $this->db->join('online_users', 'online_users.online_user_id = chat_messages.online_user_id','LEFT');
+        $this->db->order_by("message_date", "asc");
+        $query = $this->db->get();
+        return $query->result_array();
+     
    }
    
 }
