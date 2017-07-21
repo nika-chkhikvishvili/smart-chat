@@ -137,6 +137,7 @@
         <div class="panel-heading"> 
             <h3 class="panel-title">
                 <a href="<?=base_url();?>history"  class="btn btn-danger btn-custom waves-effect waves-light m-b-5" id="">ჩეთის ისტორია</a>
+		 <a href="<?=base_url();?>export_history/<?=$his['chat_id'];?>"> <img src="<?=base_url();?>assets/images/pdf.png" align="right" /></a>   
             </h3> 
         </div> 
         <div class="panel-body"> 
