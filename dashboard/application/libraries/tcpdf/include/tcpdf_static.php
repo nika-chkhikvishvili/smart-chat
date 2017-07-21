@@ -393,7 +393,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getFormattedDate($time) {
-		return substr_replace(date('YmdHisO', intval($time)), '\'', (0 - 2), 0).'\'';
+		return substr_replace(@date('YmdHisO', intval($time)), '\'', (0 - 2), 0).'\'';
 	}
 
 	/**
