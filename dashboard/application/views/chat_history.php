@@ -70,6 +70,73 @@
  <div class="row">
 <div class="col-md-12">
 <div class="panel panel-default">
+    <div class="panel-heading bg-light">
+        <h3 class="panel-title">საძიებო პანელი</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+
+
+                <div class="col-md-1">
+                    <div class="">
+                        <label for="firstname" class="control-label">მომხ.სახელი</label>
+                        <input type="text" class="form-control" id="firstname" placeholder="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label for="lastname" class="control-label">მომხ.გვარი</label>
+                        <input type="text" class="form-control" id="lastname" placeholder="">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <label for="lastname" class="control-label">სერვისი</label>
+                        <input type="text" class="form-control" id="lastname" placeholder="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="input-group">
+                        <label for="lastname" class="control-label">ოპერატორი</label>
+                        <input type="text" class="form-control" id="lastname" placeholder="">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <label for="lastname" class="control-label">საუბრის დასაწყისი</label>
+                        <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="start_date"  id="lastname">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <label for="lastname" class="control-label">საუბრის დასასრული</label>
+                        <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="end_date"  id="lastname">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="submit" name="submit" class="btn btn-primary" style="margin-top: 23px;">დამუშავება</button>
+                    &nbsp;
+                    <a href=""  id="submit" class="btn btn-primary" style="margin-top: 23px;">გასუფთავება</a>
+                   
+                </div>
+               
+                   
+            </div>
+        </div>
+<div class="row">
+<div class="col-lg-4">
+
+</div>
+</div>
+        </div>
+    </div>
+</div>
+</div>                        
+                        
+ <div class="row">
+<div class="col-md-12">
+<div class="panel panel-default">
     <div class="panel-heading bg-warning">
         <h3 class="panel-title">ჩეთის ისტორია</h3>
     </div>
@@ -189,8 +256,35 @@
       
         <!--script for this page only-->
         <script src="<?=base_url();?>assets/plugins/nestable/jquery.nestable.js"></script>
+        <script src="<?=base_url();?>assets/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/toggles/toggles.min.js"></script>
+        <script src="<?=base_url();?>assets/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/colorpicker/bootstrap-colorpicker.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.multi-select.js"></script>
+        <script type="text/javascript" src="<?=base_url();?>assets/plugins/jquery-multi-select/jquery.quicksearch.js"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-inputmask/bootstrap-inputmask.min.js" type="text/javascript"></script>
+        <script src="<?=base_url();?>assets/plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
        
-    
+     <script>
+	$(document).ready(function(){
+		var start_date=$('input[name="start_date"]'); //our date input has the name "date"		
+		var end_date=$('input[name="end_date"]'); //our date input has the name "date"		
+		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+		start_date.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+                end_date.datepicker({
+			format: 'dd-mm-yyyy',
+			container: container,
+			todayHighlight: true,
+			autoclose: true,
+		})
+	})
+</script>
     </body>
 
 </html>
