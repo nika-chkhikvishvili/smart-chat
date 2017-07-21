@@ -126,8 +126,9 @@ app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function (err
  });*/
 
 //გლობალური პარამეტრების ინიციალიზაცია
-app.connection.query('SELECT auto_answering_id, repository_id, start_chating, mail_offline, connect_failed, user_block, ' +
-    'auto_answering, repeat_auto_answering, time_off FROM  auto_answering', function (err, rows) {
+app.connection.query('SELECT auto_answering_id, repository_id, start_chating_geo, start_chating_rus, start_chating_eng, mail_offline, waiting_message_geo,' +
+    ' waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, user_block_geo, user_block_rus, user_block_eng, ' +
+    ' auto_answering_geo, auto_answering_rus, auto_answering_eng, repeat_auto_answering, time_off_geo, time_off_rus, time_off_eng FROM  auto_answering', function (err, rows) {
     if (err) {
         console.log(err);
         process.exit(1);
