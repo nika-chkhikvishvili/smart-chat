@@ -61,7 +61,7 @@ class History extends CI_Controller{
         $data["links"] = $this->pagination->create_links(); 
         $data['history'] = $this->dashboard_model->get_all_history('','','',$page);	
         
-       
+       $data['get_services'] = $this->dashboard_model->get_all_services();
         $this->load->view('chat_history',$data);
     }
     
