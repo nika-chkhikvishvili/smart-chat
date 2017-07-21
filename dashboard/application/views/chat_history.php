@@ -93,7 +93,21 @@
                 <div class="col-md-2">
                     <div class="input-group">
                         <label for="lastname" class="control-label">სერვისი</label>
-                        <input type="text" class="form-control" id="lastname" placeholder="">
+                        <select class="select2 form-control" name='catID' id='catID'>
+                      <option value="0">ყველა სერვისი</option>
+                       <?php
+                       if(is_array($get_services))
+                       {
+                           foreach($get_services as $services):
+
+
+                       ?>
+                       <option value="<?=$services['category_service_id'];?>"><?=$services['service_name_geo'];?></option>
+
+                        <?php                                        
+                       endforeach; }
+                        ?>        
+                    </select>
                     </div>
                 </div>
                 <div class="col-md-1">
