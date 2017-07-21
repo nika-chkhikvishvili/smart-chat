@@ -75,6 +75,56 @@ class History extends CI_Controller{
         $this->load->view('view_history',$data);
     }
     
+        function export_history()
+    {
+        $chat_id =  $this->uri->segment(2);
+        $this->load->model('dashboard_model');
+        $data['get_chat'] = $this->dashboard_model->view_chat_history($chat_id);
+        
+        $this->load->library('Pdf');
+
+        $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetTitle('ჩეთის ისტორია');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+        $pdf->SetFont('dejavusans', '', 10, '', true);
+      
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $pdf->AddPage();
+        
+
+$date = "";
+$name = "";
+$text = "";
+
+
+$html = '<table>';
+
+foreach($data['get_chat'] as $get_chats) {
+    if($get_chats['online_user_id']>=1){
+    $html .= '<tr align="left">
+        <td>' . $get_chats['message_date'] ."&nbsp;<br />". $get_chats['online_users_name']."&nbsp;<br />". $get_chats['chat_message']. '</td>
+    </tr>';
+    } 
+    else
+    {
+      $html .= '<tr align="right">
+        <td>' . $get_chats['message_date'] ."&nbsp;<br />". $get_chats['first_name'] ."&nbsp;". $get_chats['last_name']."&nbsp;<br />". $get_chats['chat_message']. '</td>       
+    </tr>';  
+    }    
+}
+
+$html .= '</table>';
+
+
+// Print text using writeHTMLCell()
+   $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, 'J', true);
+       
+   $pdf->Output('My-File-Name.pdf', 'I');
+    }
+    
  
     
     
