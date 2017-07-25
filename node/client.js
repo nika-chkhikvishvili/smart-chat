@@ -223,13 +223,14 @@ ChatClient.prototype.clientCloseChat = function (socket) {
             return app.databaseError(socket, err);
         }
         let message = new Message({chatUniqId: socket.chatUniqId, messageType: 'close'});
+        chat.closeChat(app);
 
         app.sendMessageToRoom(socket, message, true);
 
         app.checkAvailableOperatorForService(socket, chat.serviceId);
         app.io.emit('checkClientCount');
         app.io.emit('checkActiveChats');
-        chat.closeChat(app);
+
     });
 };
 

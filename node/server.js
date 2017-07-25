@@ -364,7 +364,7 @@ ChatServer.prototype.takeRoom = function (socket, data) {
 };
 
 ChatServer.prototype.operatorCloseChat = function (socket,data) {
-    if (isNotValidDataChatUniqueId(data) || !app.chats.has(data.chatUniqId)) {
+    if (isNotValidDataChatUniqueId(data)) {
         return socket.emit("operatorCloseChat", {isValid: false});
     }
 
@@ -375,9 +375,7 @@ ChatServer.prototype.operatorCloseChat = function (socket,data) {
         let chat = app.getChat(data.chatUniqId);
         chat.closeChat(app);
 
-        let message = new Message();
-        message.chatUniqId = data.chatUniqId;
-        message.messageType = 'close';
+        let message = new Message({chatUniqId: data.chatUniqId, messageType: 'close'});
 
         app.sendMessageToRoom(socket, message, true);
         app.checkAvailableServiceForOperator(socket);
