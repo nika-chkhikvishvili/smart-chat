@@ -296,7 +296,7 @@
 .container_chat .right .write input {
   font-size: 16px;
   float: left;
-  width: 347px;
+  width: 468px;
   height: 40px;
   padding: 0 10px;
   color: #1a1a1a;
@@ -312,9 +312,11 @@
   width: 20px;
   height: 42px;
   content: '';
+  background-size: 14px 25px;
   background-image: url("http://s1.postimg.org/s5gfy283f/attachemnt.png");
   background-repeat: no-repeat;
   background-position: center;
+  margin-right: 5px;
 }
 .container_chat .right .write .write-link.smiley:before {
   display: inline-block;
@@ -333,7 +335,7 @@
   height: 42px;
   content: '';
   background-size: 25px 25px;
-  background-image: url("/assets/chat/draft.png");
+  background-image: url("/assets/chat/images/draft.png");
   background-repeat: no-repeat;
   background-position: center;
 }

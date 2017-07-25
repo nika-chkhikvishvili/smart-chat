@@ -206,7 +206,7 @@ ChatServer.prototype.sendFile = function (socket, data) {
         let file = res[0];
         let message = {
             chatUniqId: data.chatUniqId,
-            message: '<a href="http://dashboard-smartchat.cloud.gov.ge/uploads/' + file.file_name +'">' + file.file_name +'</a>',
+            message: '<a target="_blank" href="http://dashboard-smartchat.cloud.gov.ge/uploads/' + file.file_name +'">' + file.file_name +'</a>',
             id: -157
         };
         me.sendMessage(socket, message)

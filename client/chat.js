@@ -72,7 +72,7 @@ function Chat($, socket) {
     function operatorIsWorkingShowFn() {
         $('#operator_is_working').show();
         lastWorkingTime = Date.now();
-        setTimeout(chat.operatorIsWorkingHide, 5000);
+        setTimeout(chat.operatorIsWorkingHide, 60000);
     }
 
     function operatorIsWritingShowFn() {

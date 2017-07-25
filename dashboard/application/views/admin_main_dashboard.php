@@ -142,11 +142,7 @@
                                                     <div class="wrapper_chat">
                                                         <div class="container_chat">
                                                             <div class="left">
-                                                                <div class="top">
-                                                                    <input type="text" />
-                                                                    <a href="javascript:;" class="search"></a>
-                                                                </div>
-                                                                <ul class="people">
+                                                                <ul class="people" style="list-style-type: none;">
                                                                     <li class="person" data-chat="person1" style="display: none;">
                                                                         <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
                                                                         <span class="name">Thomas Bangalter</span>
@@ -157,11 +153,11 @@
                                                             </div>
                                                             <div class="right">
                                                                 <div class="top"><span>To: <span class="name"> </span></span>
-                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/redirect.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/images/close.png"></a></span>
                                                                     <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:close_chat();"><img width="30" src="/assets/chat/close.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:choose_redirect_type();"><img width="27" src="/assets/chat/images/redirect.png"></a></span>
                                                                     <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/ban_user.png"></a></span>
+                                                                    <span class="close_on_readonly" style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/images/ban_user.png"></a></span>
                                                                     <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
                                                                     <span class="close_on_readonly" style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>
                                                                     <span class="show_on_readonly" style="float:right;"><a href="javascript:takeRoom()">ჩარევა</a></span>
@@ -206,8 +202,6 @@
 
         </div>
         <!-- END wrapper -->
-
-
 
 <!--<div class="clearfix" id="msgbox_container">-->
 <!--    ONLY FOR EXAMPLE-->
@@ -269,6 +263,24 @@
         </div>
     </div>
 </div>-->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="dialog-form-files" class="chat-dialog" title="ფაილი">
 <!--    <input type="text" id="dialog_form_files_search_field"><br>-->
@@ -395,8 +407,10 @@
 
         <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
         <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+        <script src="<?=base_url();?>assets/chat/bootbox.min"></script>
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 
@@ -406,9 +420,9 @@
             var imWorkingDelay = 60000* <?php  echo $params['repeat_auto_answering'];  ?>;
 
         </script>
-        <script src="<?=base_url();?>assets/js/socket/common.js"></script>
+        <script src="<?=base_url();?>assets/chat/js/common.js"></script>
 
-        <script type = "text/javascript" src="<?=base_url();?>assets/js/socket/dashboard.js?<?=rand(); ?>"></script>
+        <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard.js?<?=rand(); ?>"></script>
     
     </body>
 

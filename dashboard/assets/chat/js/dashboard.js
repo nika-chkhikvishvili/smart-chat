@@ -262,7 +262,7 @@ function createChatWindowAndLoadDataSimple(data){
     }
 
     $('.wrapper_chat .container_chat .left .people').append('<li class="person ' + ro + '"  data-type="' + ro + '"  data-chat="' + data.chatUniqId + '">'+
-        '<img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />'+
+        '<img src="https://cdn1.iconfinder.com/data/icons/social-messaging-productivity-1/128/profile2-48.png" alt="" />'+
         '<span class="name">'+ data.firstName + ' '+ data.lastName+'</span>'+
         '<span class="new_message_icon"></span>'+
         '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+

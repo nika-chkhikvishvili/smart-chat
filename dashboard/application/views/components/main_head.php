@@ -14,8 +14,9 @@
 <link href="<?=base_url();?>assets/css/responsive.css" rel="stylesheet" type="text/css">
 <script src="<?=base_url();?>assets/js/modernizr.min.js"></script>
 
-<link href="<?=base_url();?>assets/css/chat/style.css" rel="stylesheet" type="text/css">
-<link href="<?=base_url();?>resources/css/giga.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/chat/css/style.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/chat/css/giga.css" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
 
 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
