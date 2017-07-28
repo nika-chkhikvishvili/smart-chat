@@ -159,7 +159,8 @@
                                                                     <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
                                                                     <span class="close_on_readonly" style="float:right;"><a href="javascript:ban_person();"><img width="30" src="/assets/chat/images/ban_user.png"></a></span>
                                                                     <span class="close_on_readonly" style="float:right;">&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                                                                    <span class="close_on_readonly" style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>
+<!--                                                                    <span class="close_on_readonly" style="float:right;"><input type="checkbox" id="im_working_checkbox">ავტოშეხსენება</span>-->
+                                                                    <img class="close_on_readonly" style="float:right;height: 29px;" id="im_working_checkbox" src="<?=base_url();?>assets/chat/images/autoremind_off.png">
                                                                     <span class="show_on_readonly" style="float:right;"><a href="javascript:takeRoom()">ჩარევა</a></span>
 
                                                                 </div>
@@ -407,7 +408,6 @@
 
         <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
         <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-        <script src="<?=base_url();?>assets/chat/bootbox.min"></script>
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
 

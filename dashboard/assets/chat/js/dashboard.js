@@ -414,13 +414,23 @@ $(document).ready(function () {
             element.removeClass('new_message');
             let chat = $('.chat[data-chat = '+findChat+']');
             chat.addClass('active-chat');
-            $('#im_working_checkbox')[0].checked = chat.data('ImWorking');
+            // $('#im_working_checkbox')[0].checked = chat.data('ImWorking');
+
+            let src = chat.data('ImWorking')?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
+            $('#im_working_checkbox').attr("src", src);
+
             chat.animate({scrollTop: chat[0].scrollHeight}, 'normal');
         }
     });
 
     $('#im_working_checkbox').click(function() {
-        $('.active-chat').data('ImWorking', this.checked);
+        // $('.active-chat').data('ImWorking', this.checked);
+        let chat = $('.active-chat');
+        let newVal = !chat.data('ImWorking');
+        chat.data('ImWorking', newVal);
+        let src = newVal?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
+        console.log(src);
+        $('#im_working_checkbox').attr("src", src);
     });
 
     // checks and authoriser user

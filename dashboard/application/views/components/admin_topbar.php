@@ -2,7 +2,8 @@
     <!-- LOGO -->
     <div class="topbar-left">
         <div class="text-center">
-            <a href="#" class="logo"><i class="md md-terrain"></i> <span>Smart Logic </span></a>
+<!--            <a href="#" class="logo"><i class="md md-terrain"></i> <span>Smart Logic </span></a>-->
+            <img style="height: 66px;" src="<?=base_url();?>assets/chat/images/logo.png">
         </div>
     </div>
     <!-- Button mobile view to collapse sidebar menu -->
