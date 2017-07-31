@@ -347,7 +347,7 @@
 <div id="chat-redirect-type-dialog" class="chat-redirect-type-dialog" title="აირჩიეთ ქმედება">
     <a href="javascript:choose_redirect_group();">გადამისამართება ჯგუფზე</a><br>
     <a href="javascript:choose_redirect_person_dialog(1);">გადამისამართება პიროვნებაზე</a><br>
-    <a href="javascript:choose_redirect_person_dialog(2);">conference call</a>
+    <a href="javascript:choose_redirect_person_dialog(2);">conference chat</a>
 
 </div>
 
