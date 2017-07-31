@@ -27,16 +27,19 @@ $(document).ready(function () {
 
         if (!select_theme || select_theme === '') {
             alert('აირჩიეთ სერვისი');
+            $('#begin_btn').attr({disabled: false});
             return;
         }
 
         if (!firstName || firstName === '') {
             alert('აირჩიეთ სახელი');
+            $('#begin_btn').attr({disabled: false});
             return;
         }
 
         if (!lastName || lastName === '') {
             alert('აირჩიეთ გვარი');
+            $('#begin_btn').attr({disabled: false});
             return;
         }
         chat.setUserInformation(firstName, lastName);
@@ -165,7 +168,7 @@ socket.on('clientInitParamsResponse', function (data) {
     $('#wait_operator').show();
 });
 socket.on('operatorJoined', function (data) {
-    console.log('execute: message');
+    console.log('execute: operatorJoined');
     console.log(data);
     $('#wait_operator').hide();
     $('.panel').show();
@@ -189,7 +192,37 @@ socket.on('message', function (data) {
         if (data.guestUserId) {
             chat.addMyMessage(data.messageUniqId, null, data.message);
         } else {
+            chat.operatorIsWorkingHide();
             chat.addOtherMessage(data);
         }
     }
 });
+
+function changeLanguage(){
+    let lang = $('#language').val();
+    let first_name_label = 'First Name:';
+    let last_name_label = 'Last Name:';
+    let service_label = 'Choose Service:';
+
+    switch (lang){
+        case "ka" :
+            first_name_label = 'სახელი:';
+            last_name_label = 'გვაგრი:';
+            service_label = 'აირჩიეთ სერვისი:';
+            break;
+        case "en" :
+            first_name_label = 'First Name:';
+            last_name_label = 'Last Name:';
+            service_label = 'Choose Service:';
+            break;
+        case "ru" :
+            first_name_label = 'Имя:';
+            last_name_label = 'Фамилия:';
+            service_label = 'Выберите сервис:';
+            break;
+    }
+
+    $('#first_name_label').html(first_name_label);
+    $('#last_name_label').html(last_name_label);
+    $('#service_label').html(service_label);
+}

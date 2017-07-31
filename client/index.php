@@ -230,15 +230,23 @@
 
     <div id="asarchevi" >
         <div class="form-group">
-            <label for="first_name">First Name:</label>
+            <label for="language"></label>
+            <select id="language" name="language" onchange="changeLanguage();">
+                <option value="ka">ქართული</option>
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="first_name" id="first_name_label">First Name:</label>
             <input type="text" class="form-control" id="first_name" placeholder="First Name">
         </div>
         <div class="form-group">
-            <label for="last_name">Last Name:</label>
+            <label for="last_name" id="last_name_label">Last Name:</label>
             <input type="text" class="form-control" id="last_name" placeholder="Last Name">
         </div>
         <div class="form-group">
-            <label for="select_theme">აირჩიეთ სერვისი:</label>
+            <label for="select_theme" id="service_label">Choose Service:</label>
             <select id="select_theme" name="select_theme"></select>
         </div>
 
