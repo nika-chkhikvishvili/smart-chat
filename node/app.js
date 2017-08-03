@@ -47,6 +47,7 @@ redisClient.hkeys("hash key", function (err, replies) {
 });
 
 app.chats = new Map();
+app.lastChatCheckedTime = Date.now();
 app.waitingClients = [];
 app.users = new Map();
 app.onlineGuests = new Map();
@@ -339,6 +340,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
 };
 
 app.io.on('connection', function (socket) {
+
     // check if blocked
     app.connection.query('SELECT count(*) as cou FROM banlist WHERE ip_address = ? ' +
         'AND banlist.status = 1 AND banlist.add_date > now() - INTERVAL 1 month', [socket.handshake.address], function (err, res) {
@@ -453,5 +455,21 @@ app.io.on('connection', function (socket) {
         });
     });
 });
+
+//check for closed chats
+setInterval(function () {
+    let socketId = null;
+    Object.keys(app.io.sockets.sockets).forEach(function(item) { socketId = item; });
+    let socket = app.io.sockets.sockets[socket];
+    if (Date.now() - app.lastChatCheckedTime > 30000){
+        app.lastChatCheckedTime = Date.now();
+        app.chats.forEach(function (chat) {
+            if (chat.chatStatusId !== 3 && !chat.isAvailable()) {
+                chat.closeChat(app);
+                app.sendMessageToRoom(socket, new Message({chatUniqId: chat.chatUniqId, messageType: 'close'}), true);
+            }
+        })
+    }
+}, 30000);
 
 console.log("Started:" + (new Date().toISOString()));

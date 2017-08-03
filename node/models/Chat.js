@@ -82,7 +82,7 @@ Chat.prototype.guestLeave = function (socket) {
     }
 };
 
-Chat.prototype.isAvailable = function (app) {
+Chat.prototype.isAvailable = function () {
     if (this.guestUserLeaveTime === -1 ) return true;
     return  Date.now() - this.guestUserLeaveTime < 30000 ;
 };

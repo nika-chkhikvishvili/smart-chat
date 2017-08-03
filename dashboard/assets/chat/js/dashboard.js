@@ -7,8 +7,8 @@ let services = [];
 let me;
 let choose_redirect_person_locker = false;
 
-
 let filesDialog;
+let chats = new DashboardChat($, socket);
 
 
 function close_chat(){

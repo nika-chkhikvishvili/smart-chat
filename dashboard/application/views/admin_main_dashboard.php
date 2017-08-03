@@ -422,8 +422,9 @@
         </script>
         <script src="<?=base_url();?>assets/chat/js/common.js"></script>
 
+        <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard-chat.js?<?=rand(); ?>"></script>
         <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard.js?<?=rand(); ?>"></script>
-    
+
     </body>
 
 </html>
