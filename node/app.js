@@ -460,7 +460,7 @@ app.io.on('connection', function (socket) {
 setInterval(function () {
     let socketId = null;
     Object.keys(app.io.sockets.sockets).forEach(function(item) { socketId = item; });
-    let socket = app.io.sockets.sockets[socket];
+    let socket = app.io.sockets.sockets[socketId];
     if (Date.now() - app.lastChatCheckedTime > 30000){
         app.lastChatCheckedTime = Date.now();
         app.chats.forEach(function (chat) {
