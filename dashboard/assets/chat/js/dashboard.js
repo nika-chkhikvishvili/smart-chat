@@ -8,7 +8,7 @@ let me;
 let choose_redirect_person_locker = false;
 
 let filesDialog;
-let chats = new DashboardChat($, socket);
+let chatManager = new DashboardChat($, socket);
 
 
 function close_chat(){
@@ -249,32 +249,13 @@ function isChatWindowHidden(id) {
 function createChatWindowAndLoadDataSimple(data){
     console.log('execute: createChatWindowAndLoadData');
     // console.log(data);
-    console.log(data.joinType);
 
     if (!data || !data.chatUniqId) {
         return;
     }
 
-    let ro = '';
-
-    if (data.joinType == 2){
-        ro = 'readonly';
-    }
-
-    $('.wrapper_chat .container_chat .left .people').append('<li class="person ' + ro + '"  data-type="' + ro + '"  data-chat="' + data.chatUniqId + '">'+
-        '<img src="https://cdn1.iconfinder.com/data/icons/social-messaging-productivity-1/128/profile2-48.png" alt="" />'+
-        '<span class="name">'+ data.firstName + ' '+ data.lastName+'</span>'+
-        '<span class="new_message_icon"></span>'+
-        '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+
-        '<span class="time"></span>'+
-        '<span class="only_view close_readonly"><a href=\'javascript:leaveReadOnlyRoom("'+ data.chatUniqId + '");\'>X</a></span>'+
-        '<span class="preview">...</span>'+
-        '</li>');
-
-    $('.wrapper_chat .container_chat .right .chats_container').append('<div> <div class="chat" data-chat="' + data.chatUniqId + '"></div></div>');
-
+    chatManager.createChatWindow(data);
     socket.emit('getChatAllMessages', { chatUniqId: data.chatUniqId});
-
 }
 
 
@@ -494,10 +475,9 @@ $(document).ready(function () {
             message: message,
             id: id
         });
-        elChatbox.append('<div class="bubble me">'+ message + '</div>' );
         $(".write input").val('');
-
-        elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
+        // elChatbox.append('<div class="bubble me">'+ message + '</div>' );
+        // elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });
 
     filesDialog = $( "#dialog-form-files" ).dialog({
@@ -605,7 +585,7 @@ socket.on('operatorIsWorking', function (data) {
 
 socket.on('message', function (data) {
     console.log('execute: message');
-    console.log(data);
+    // console.log(data);
 
     socket.emit('messageReceivedFromClient', {chatUniqId: data.chatUniqId, msgId: data.ran});
 
@@ -628,37 +608,16 @@ socket.on('message', function (data) {
         $(".person[data-chat = " + data.chatUniqId + "]").remove();
         $(".chat[data-chat = " + data.chatUniqId + "]").remove();
     } else {
-
     if (data.guestUserId) {
-        elChatbox.append('<div class="bubble you">' + data.message + '</div>');
-
-        if (!($(".person[data-chat = " + data.chatUniqId + "]").hasClass('active'))) {
-            $(".person[data-chat = " + data.chatUniqId + "]").addClass('new_message');
-        }
+        chatManager.messageGuest(data.chatUniqId, data.message);
     } else {
-        elChatbox.append('<div class="bubble me">' + data.message + '</div>');
+        chatManager.messageMe(data.chatUniqId, data.message);
     }
-
-    $(".person[data-chat = " + data.chatUniqId + "] .preview").html(shorter(data.message));
-    $(".person[data-chat = " + data.chatUniqId + "] .time").html(new Date().toISOString().substr(11, 5));
-    if (elChatbox && elChatbox[0]) elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 });
 
 
 //////////////////DONE//////////////////////////////////////////////////
-
-// სათაურში ამოკლებს ტექსტს
-function shorter(data) {
-    if (!data) {
-        return data;
-    }
-
-    if (data.length > 25) {
-        return  data.substr(0,25) +"...";
-    }
-    return data;
-}
 
 //ეს მოდის როცა ახალი მომხმარებელი შემოვა ჩატში,
 socket.on('checkClientCount', function (){
@@ -689,7 +648,7 @@ socket.on('clientGetServicesResponse', function (data) {
 socket.on('getWaitingListResponse', function (data){
     console.log('execute: getWaitingListResponse');
     console.log(data);
-    var ans="";
+    let ans="";
     if (Array.isArray(data)){
         $.each(data,function(key, value) {
             if (value) {
@@ -708,11 +667,10 @@ socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
     // console.log(data);
 
-    var i = 1;
-    var tableBody = $('#online_chats_list').find('tbody').html('');
+    let tableBody = $('#online_chats_list').find('tbody').html('');
 
     data.forEach(function(item){
-        var operator = 'ჯერ არ შესულა ოპერატორი';
+        let operator = 'ჯერ არ შესულა ოპერატორი';
         if (item.users && Array.isArray(item.users) && item.users.length > 0) {
             console.log(item.users[0]);
             operator = item.users[0].firstName + ' ' + item.users[0].lastName;
@@ -752,10 +710,10 @@ socket.on('getNextWaitingClientResponse', function (data){
 });
 
 function makeRandomString() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < 15; i++ )
+    for( let i=0; i < 15; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
@@ -773,7 +731,7 @@ socket.io.on('reconnect', function () {
 socket.on('messageReceived', function (data) {
     console.log('execute: messageReceived');
     //console.log(data);
-    var el = $('#message_' + data.msgId);
+    let el = $('#message_' + data.msgId);
 
     el.val('submited');
     el.css({'background-color': 'greenyellow'});
@@ -786,7 +744,7 @@ socket.on('clientMessageResponse', function (data) {
 
 
 function redAlert(id) {
-    var el = $('#message_' + id);
+    let el = $('#message_' + id);
     if (el.val() !== 'submited') el.css({'background-color': 'red'});
 }
 

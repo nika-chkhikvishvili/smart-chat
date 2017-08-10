@@ -198,7 +198,8 @@ app.sendMessageToRoomUsers = function (socket, message) {
         let user = app.users.get(userId);
         if (!!user) {
             user.sockets.forEach(function (socketId) {
-                socket.broadcast.to(socketId).emit('message', message);
+                // socket.broadcast.to(socketId).emit('message', message);
+                app.io.sockets.sockets[socketId].emit('message', message);
             });
         }
     });
@@ -210,7 +211,8 @@ app.sendMessageToRoomGuests = function (socket, message) {
         return;
     }
     chat.guestUser.sockets.forEach(function (socketId) {
-        socket.broadcast.to(socketId).emit('message', message);
+        app.io.sockets.sockets[socketId].emit('message', message);
+        // socket.broadcast.to(socketId).emit('message', message);
     });
 };
 

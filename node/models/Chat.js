@@ -20,7 +20,7 @@ function Chat(initParams) {
     this.guestUser    = initParams.hasOwnProperty('guestUser')    ? initParams.guestUser       : null;
     this.serviceId    = initParams.hasOwnProperty('serviceId')    ? parseInt(initParams.serviceId)    : null;
     this.chatStatusId = initParams.hasOwnProperty('chatStatusId') ? parseInt(initParams.chatStatusId) : null;
-    this.guestUserLeaveTime = -1;
+    this.guestUserLeaveTime = Date.now();
     this.users        = new Map();
 }
 

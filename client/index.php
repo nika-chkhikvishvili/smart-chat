@@ -355,7 +355,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-<script src="chat.js?<?=rand(); ?>"></script>
+<script src="chat_client.js?<?=rand(); ?>"></script>
 <script src="main_client.js?<?=rand(); ?>"></script>
 </body>
 </html>

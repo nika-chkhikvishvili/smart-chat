@@ -4,7 +4,7 @@
 
 'use strict';
 
-function Chat($, socket) {
+function ChatClient($, socket) {
     let me = this;
     let chatUniqId = localStorage.getItem("chatUniqId") || '';
     let firstName = '';

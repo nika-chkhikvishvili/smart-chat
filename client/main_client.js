@@ -5,7 +5,7 @@
 'use strict';
 
 let socket = io(window.location.origin + ':3000');
-let chat = new Chat($, socket);
+let chat = new ChatClient($, socket);
 
 $(document).ready(function () {
 
@@ -59,7 +59,6 @@ $(document).ready(function () {
         let ran = Math.floor(Math.random() * 10000000);
         socket.emit('clientMessage', {chatUniqId: chat.getChatUniqId(), message: message, id: ran});
         usermsg.val('');
-        chat.addMyMessage(ran, null, message);
     });
 
 });

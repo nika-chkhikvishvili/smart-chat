@@ -144,7 +144,7 @@
                                                             <div class="left">
                                                                 <ul class="people" style="list-style-type: none;">
                                                                     <li class="person" data-chat="person1" style="display: none;">
-                                                                        <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                                                                        <img src1="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
                                                                         <span class="name">Thomas Bangalter</span>
                                                                         <span class="time">2:09 PM</span>
                                                                         <span class="preview">I was wondering...</span>
@@ -265,19 +265,18 @@
     </div>
 </div>-->
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="info_message_panel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel"></h4>
             </div>
             <div class="modal-body">
-                ...
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
