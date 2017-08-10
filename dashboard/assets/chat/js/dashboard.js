@@ -282,16 +282,18 @@ function createChatWindowAndLoadData(data){
     if (!data || !data.chatUniqId) {
         return;
     }
-    var elChatbox = $(".chat[data-chat = " + data.chatUniqId + "]");
+    let elChatbox = $(".chat[data-chat = " + data.chatUniqId + "]");
     if (elChatbox.length>0) {
         return ;
     }
 
-    var d = {
+    let d = {
         chatUniqId : data.chatUniqId,
         firstName : data.guestUser.firstName || '',
         lastName : data.guestUser.lastName || '',
-        joinType: data.joinType || 1
+        joinType: data.joinType || 1,
+        playAudio : true
+
     };
     createChatWindowAndLoadDataSimple(d);
 }
@@ -336,7 +338,8 @@ socket.on('checkTokenResponse', function (data){
                     chatUniqId : i.chatUniqId,
                     firstName : i.first_name || '',
                     lastName : i.last_name || '',
-                    joinType: i.joinType || 1
+                    joinType : i.joinType || 1,
+                    playAudio : false
                 };
                 createChatWindowAndLoadDataSimple(d)
             })
@@ -754,5 +757,6 @@ socket.on('newChatWindow', function (data) {
     // console.log(data);
 
     socket.emit('sendWelcomeMessage', data.chatUniqId );
+    data.playAudio = true;
     createChatWindowAndLoadData(data);
 });
