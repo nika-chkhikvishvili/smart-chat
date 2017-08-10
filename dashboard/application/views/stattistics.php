@@ -48,7 +48,8 @@ window.setTimeout(function() {
         });     
         });
         });
-</script>  
+</script> 
+
 
 <style type="text/css">
 
@@ -136,11 +137,11 @@ td:last-child {
         <div class="panel-body">
                <div class="panel panel-border panel-primary">
                     <div class="row">
-                         <form action="" method="post" />
+                         <form action="generation_excel" method="post" />
                     <div class="col-sm-4">
 
                    <label for="cname" class="control-label col-lg-5">აირჩიეთ სერვისი</label>
-                   <select class="select2 form-control" name='catID' id='catID'>
+                   <select class="select2 form-control" name='service_id' id='catID'>
                       <option value="0">ყველა სერვისი</option>
                        <?php
                        if(is_array($get_services))
@@ -160,7 +161,7 @@ td:last-child {
                     <div class="col-sm-4">
                     <label for="cname" class="control-label col-lg-5">აირჩიეთ ოპერატორი</label>
 
-                       <select class="select2 form-control" name='by_users' id='by_users'>
+                       <select class="select2 form-control" name='user_id' id='by_users'>
                         <option value="0">ყველა ოპერატორი</option>
 
                        <?php
@@ -190,6 +191,8 @@ td:last-child {
                     <br />
                     <button type="button" id="submit" name="submit" class="btn btn-primary">დამუშავება</button>
                     <a href=""  id="submit" class="btn btn-primary">გასუფთავება</a>
+                     
+                     <input  type="submit" id="" name="export_file" class="btn btn-primary pull-right" value="ექსპორტი">
                      </div>
                     </form>
                 </div>
