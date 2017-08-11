@@ -5,7 +5,7 @@
 'use strict';
 
 let randomStringGenerator = require("randomstring");
-
+let Message = require('./Message');
 
 function Chat(initParams) {
     if (!(this instanceof Chat)) {
@@ -66,12 +66,29 @@ Chat.prototype.isAlreadyInTheRoom = function (userId) {
     return this.users.has(userId);
 };
 
-Chat.prototype.closeChat = function (app) {
-    this.chatStatusId = 3;
-    let chatUniqId = this.chatUniqId;
-    this.users.forEach(function(status, userId){
-        let user = app.users.get(userId);
-        user.chatRooms.delete(chatUniqId);
+Chat.prototype.closeChat = function (app, socket) {
+    let me = this;
+
+    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [me.chatUniqId], function (err) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+
+        app.sendMessageToRoom(Message.getCloseMessage(me.chatUniqId));
+
+        if (socket.hasOwnProperty('user')) {
+            app.checkAvailableServiceForOperator(socket.user);
+        } else {
+            app.checkAvailableOperatorForService(me.serviceId);
+        }
+
+        me.users.forEach(function(status, userId){
+            let user = app.users.get(userId);
+            user.chatRooms.delete(me.chatUniqId);
+        });
+        me.chatStatusId = 3;
+        app.io.emit('checkClientCount');
+        app.io.emit('checkActiveChats');
     });
 };
 

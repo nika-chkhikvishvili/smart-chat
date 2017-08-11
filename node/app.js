@@ -85,7 +85,7 @@ app.addChatToQueue = function(socket, chat){
         app.waitingClients[chat.serviceId] = fifo();
     }
     app.waitingClients[chat.serviceId].push(chat);
-    setTimeout(function () {app.checkAvailableOperatorForService(socket, chat.serviceId);}, 1000);
+    setTimeout(function () {app.checkAvailableOperatorForService(chat.serviceId);}, 1000);
 
 };
 
@@ -188,7 +188,7 @@ app.connection.query('SELECT `c`.`chat_id`,    `c`.`online_user_id`,    `c`.`ser
     });
 });
 
-app.sendMessageToRoomUsers = function (socket, message) {
+app.sendMessageToRoomUsers = function (message) {
     let chat = app.chats.get(message.chatUniqId);
     if (!chat) {
         return;
@@ -198,25 +198,23 @@ app.sendMessageToRoomUsers = function (socket, message) {
         let user = app.users.get(userId);
         if (!!user) {
             user.sockets.forEach(function (socketId) {
-                // socket.broadcast.to(socketId).emit('message', message);
                 app.io.sockets.sockets[socketId].emit('message', message);
             });
         }
     });
 };
 
-app.sendMessageToRoomGuests = function (socket, message) {
+app.sendMessageToRoomGuests = function (message) {
     let chat = app.chats.get(message.chatUniqId);
     if (!chat) {
         return;
     }
     chat.guestUser.sockets.forEach(function (socketId) {
         app.io.sockets.sockets[socketId].emit('message', message);
-        // socket.broadcast.to(socketId).emit('message', message);
     });
 };
 
-app.sendMessageToRoom = function (socket, message, sendToMe) {
+app.sendMessageToRoom = function (message) {
     if (!message) {
         return;
     }
@@ -224,11 +222,10 @@ app.sendMessageToRoom = function (socket, message, sendToMe) {
     if (!chat) {
         return;
     }
-    app.sendMessageToRoomUsers(socket, message);
-    app.sendMessageToRoomGuests(socket, message);
-    if (sendToMe) {
-        socket.emit('message', message);
+    if (message.messageType !=="writing") {
+        app.sendMessageToRoomUsers(message);
     }
+    app.sendMessageToRoomGuests(message);
 };
 
 app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
@@ -241,9 +238,8 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
     // });
 };
 
-app.checkAvailableServiceForOperator = function (socket) {
-    let user = socket.user;
-    if (!user.canTakeMore()) {
+app.checkAvailableServiceForOperator = function (user) {
+    if (!!user || !user.canTakeMore()) {
         return;
     }
     app.connection.query('SELECT service_id FROM person_services WHERE person_id = ?', [user.userId], function (err, res) {
@@ -254,14 +250,14 @@ app.checkAvailableServiceForOperator = function (socket) {
         res.forEach(function (item) {
             let serviceQuee = app.waitingClients[item.service_id];
             if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
-                app.addOperatorToService(socket, user.userId, item.service_id, 1)
+                app.addOperatorToService(user.userId, item.service_id, 1)
             }
         });
-        app.checkAvailableServiceForOperator(socket);
+        app.checkAvailableServiceForOperator(user);
     })
 };
 
-app.addOperatorToService = function (socket, userId, serviceId, joinedModeId) {
+app.addOperatorToService = function (userId, serviceId, joinedModeId) {
     if (app.waitingClients[serviceId].length === 0) {
         return ;
     }
@@ -272,12 +268,12 @@ app.addOperatorToService = function (socket, userId, serviceId, joinedModeId) {
     app.connection.query('UPDATE chats SET chat_status_id = 1 WHERE chat_id = ?', [waiting.chatId], function (err) {
         if (err) {
             app.waitingClients[serviceId].unshift(waiting);
-            return app.databaseError(socket, err);
+            return app.databaseError(null, err);
         }
 
         app.connection.query('INSERT INTO chat_rooms SET ? ', chat.getInsertUserObject(userId, 1, joinedModeId), function (err) {
             if (err) {
-                return app.databaseError(socket, err);
+                return app.databaseError(null, err);
             }
 
             let user = app.users.get(userId);
@@ -285,19 +281,12 @@ app.addOperatorToService = function (socket, userId, serviceId, joinedModeId) {
             if (!!user) {
                 chat.addUser(user, 1);
                 user.sockets.forEach(function (socketId) {
-                    socket.broadcast.to(socketId).emit('newChatWindow', chat);
+                    app.io.sockets.sockets[socketId].emit('newChatWindow', chat);
                 });
-                if (socket.hasOwnProperty('user')) {
-                    socket.emit('newChatWindow', chat);
-                }
             }
 
             chat.guestUser.sockets.forEach(function (socketId) {
-                if (socket.id === socketId) {
-                    socket.emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
-                } else {
-                    socket.broadcast.to(socketId).emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
-                }
+                app.io.sockets.sockets[socketId].emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
             });
             app.io.emit('checkActiveChats');
         });
@@ -305,7 +294,7 @@ app.addOperatorToService = function (socket, userId, serviceId, joinedModeId) {
 };
 
 //სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
-app.checkAvailableOperatorForService = function (socket, serviceId) {
+app.checkAvailableOperatorForService = function (serviceId) {
     let serviceIdParsed = parseInt(serviceId);
     if (isNaN(serviceIdParsed)
         || !app.waitingClients
@@ -328,7 +317,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
         ' FROM smartchat.persons p WHERE person_id in ( select person_id from person_services  where service_id = ? and person_id in (' + wh + ') ) ' +
         ' order by open_windows asc', [serviceId], function (err, res) {
         if (err) {
-            return app.databaseError(socket, err);
+            return app.databaseError(null, err);
         }
 
         if (!res || !Array.isArray(res) || res.length === 0) {
@@ -336,7 +325,7 @@ app.checkAvailableOperatorForService = function (socket, serviceId) {
         }
 
         if (res[0].open_windows < 5) {
-            app.addOperatorToService(socket, res[0].person_id, serviceIdParsed, 1);
+            app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
         }
     });
 };
@@ -467,8 +456,7 @@ setInterval(function () {
         app.lastChatCheckedTime = Date.now();
         app.chats.forEach(function (chat) {
             if (chat.chatStatusId !== 3 && !chat.isAvailable()) {
-                chat.closeChat(app);
-                app.sendMessageToRoom(socket, new Message({chatUniqId: chat.chatUniqId, messageType: 'close'}), true);
+                chat.closeChat(app, 'system');
             }
         })
     }

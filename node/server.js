@@ -83,7 +83,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
             }
             socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
 
-            app.checkAvailableServiceForOperator(socket);
+            app.checkAvailableServiceForOperator(user);
         });
     });
 };
@@ -192,7 +192,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
         message.messageUniqId = data.id;
         message.sender = user.userName;
 
-        app.sendMessageToRoom(socket, message);
+        app.sendMessageToRoom(message);
         socket.emit("sendMessageResponse", {isValid: true});
     });
 };
@@ -220,7 +220,7 @@ ChatServer.prototype.operatorIsWriting = function (socket, data) {
     }
 
     let message = new Message({chatUniqId: data.chatUniqId, messageType: 'writing'});
-    app.sendMessageToRoom(socket, message);
+    app.sendMessageToRoom(message);
 };
 
 ChatServer.prototype.joinToRoom = function (socket, data) {
@@ -368,20 +368,8 @@ ChatServer.prototype.operatorCloseChat = function (socket,data) {
         return socket.emit("operatorCloseChat", {isValid: false});
     }
 
-    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [data.chatUniqId], function (err) {
-        if (err) {
-            return app.databaseError(data, err);
-        }
-        let chat = app.getChat(data.chatUniqId);
-        chat.closeChat(app);
-
-        let message = new Message({chatUniqId: data.chatUniqId, messageType: 'close'});
-
-        app.sendMessageToRoom(socket, message, true);
-        app.checkAvailableServiceForOperator(socket);
-        app.io.emit('checkClientCount');
-        app.io.emit('checkActiveChats');
-    });
+    let chat = app.getChat(data.chatUniqId);
+    chat.closeChat(app, socket);
 };
 
 ChatServer.prototype.redirectToService = function (socket, data) {
@@ -519,12 +507,12 @@ ChatServer.prototype.approveBan = function (socket, data) {
         let messageClose = new Message({messageType: 'close'});
         messageClose.message = app.autoAnswering.getBanMessage(1);
         messageClose.chatUniqId = res[0].chat_uniq_id;
-        app.sendMessageToRoom(socket, messageClose);
+        app.sendMessageToRoom(messageClose);
 
         let message = new Message({messageType: 'ban'});
         message.message = app.autoAnswering.getBanMessage(1);
         message.chatUniqId = res[0].chat_uniq_id;
-        app.sendMessageToRoom(socket, message);
+        app.sendMessageToRoom(message);
     });
 };
 
@@ -547,7 +535,7 @@ ChatServer.prototype.operatorIsWorking = function (socket, data) {
     }
 
     let message = new Message({messageType: 'operatorIsWorking', chatUniqId : data.chatUniqId});
-    app.sendMessageToRoom(socket, message);
+    app.sendMessageToRoom(message);
 
 };
 

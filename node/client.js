@@ -198,7 +198,7 @@ ChatClient.prototype.clientMessage = function (socket, data) {
         message.messageId = res.insertId;
         message.chatUniqId = socket.chatUniqId;
         message.messageUniqId = data.id;
-        app.sendMessageToRoom(socket, message);
+        app.sendMessageToRoom(message);
         socket.emit("clientMessageResponse", res);
 
     });
@@ -217,21 +217,7 @@ ChatClient.prototype.clientCloseChat = function (socket) {
     }
 
     let chat = app.getChat(socket.chatUniqId);
-
-    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [socket.chatUniqId], function (err) {
-        if (err) {
-            return app.databaseError(socket, err);
-        }
-        let message = new Message({chatUniqId: socket.chatUniqId, messageType: 'close'});
-        chat.closeChat(app);
-
-        app.sendMessageToRoom(socket, message, true);
-
-        app.checkAvailableOperatorForService(socket, chat.serviceId);
-        app.io.emit('checkClientCount');
-        app.io.emit('checkActiveChats');
-
-    });
+    chat.closeChat(app, socket);
 };
 
 ChatClient.prototype.userIsWriting = function (socket) {
@@ -247,7 +233,7 @@ ChatClient.prototype.userIsWriting = function (socket) {
     message.chatUniqId = socket.chatUniqId;
     message.messageType = 'writing';
 
-    app.sendMessageToRoom(socket, message);
+    app.sendMessageToRoom(message);
 };
 
 module.exports = ChatClient;
