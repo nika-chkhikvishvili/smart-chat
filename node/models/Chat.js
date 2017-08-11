@@ -74,19 +74,27 @@ Chat.prototype.closeChat = function (app, socket) {
             return app.databaseError(socket, err);
         }
 
-        app.sendMessageToRoom(Message.getCloseMessage(me.chatUniqId));
-
-        if (socket.hasOwnProperty('user')) {
-            app.checkAvailableServiceForOperator(socket.user);
-        } else {
-            app.checkAvailableOperatorForService(me.serviceId);
-        }
+        let message = new Message({chatUniqId: me.chatUniqId, messageType: 'close'});
 
         me.users.forEach(function(status, userId){
             let user = app.users.get(userId);
             user.chatRooms.delete(me.chatUniqId);
         });
         me.chatStatusId = 3;
+
+        if (!socket) {
+            message.sender = 'system';
+        } else {
+            if (socket.hasOwnProperty('user')) {
+                app.checkAvailableServiceForOperator(socket.user);
+                message.sender = socket.user.userName;
+            } else {
+                message.sender = 'guest';
+                app.checkAvailableOperatorForService(me.serviceId);
+            }
+        }
+
+        app.sendMessageToRoom(message);
         app.io.emit('checkClientCount');
         app.io.emit('checkActiveChats');
     });

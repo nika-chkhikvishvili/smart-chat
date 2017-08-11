@@ -1,10 +1,9 @@
-'use strict';
-
 /**
  * Created by jedi on 2017-08-02
  */
 
 function DashboardChat($, socket) {
+    'use strict';
 
     let me = this;
     let closeChatWindow = new Audio('/assets/chat/audio/button-2.mp3');
@@ -43,7 +42,7 @@ function DashboardChat($, socket) {
             ro = 'readonly';
         }
 
-        if (data.hasOwnProperty('playAudio') && !!data.playAudio) {
+        if (data.hasOwnProperty('playAudio') && data.playAudio) {
             newChatWindowAudio.play();
         }
 
@@ -62,12 +61,12 @@ function DashboardChat($, socket) {
         chats.set(data.chatUniqId, new ChatWindow($, socket, data.chatUniqId));
     }
 
-    function closeChatFn(chatId, closedBy) {
+    function closeDashboardChatFn(chatId, closedBy) {
         let chat = chats.get(chatId);
         if (!chat) {
             return false;
         }
-        chat.close(closedBy);
+        chat.closeChatFun(closedBy);
         chats.delete(chatId);
     }
 
@@ -76,7 +75,7 @@ function DashboardChat($, socket) {
         createChatWindow: createChatWindowFn,
         messageGuest: messageGuestFn,
         messageMe: messageMeFn,
-        closeChat: closeChatFn,
+        closeDashboardChat: closeDashboardChatFn,
     };
 
 
@@ -116,7 +115,10 @@ function DashboardChat($, socket) {
 
         this.closeChatFun = function (closedBy){
             let infoStr = '';
-            if (closedBy === 'me') {
+
+            if (closedBy === 'system') {
+                infoStr = 'ჩატი დაიხურა კლიენტის სისტემიდან გასვლის გამო';
+            } else if (closedBy === user.userName) {
                 infoStr = 'თქვენ დახურეთ ჩატი';
             } else if (closedBy === 'guest') {
                 infoStr = 'ჩატი დაიხურა კლიენტის მიერ';
@@ -124,8 +126,9 @@ function DashboardChat($, socket) {
                 infoStr = 'ჩატი დასრულდა';
             }
             showInfoMessageFn(infoStr);
-            this.personBox.remove();
-            this.chatBox.remove();
+            personBox.remove();
+            chatBox.remove();
+
         };
     }
 

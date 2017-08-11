@@ -282,57 +282,87 @@
     </div>
 </div>
 
-<div id="dialog-form-files" class="chat-dialog" title="ფაილი">
-<!--    <input type="text" id="dialog_form_files_search_field"><br>-->
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ფაილის სახელი</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        foreach ($files as $key => $val) {
-            echo "<tr><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$val['file_name']}</a></td></tr>";
-        }
-        ?>
-        </tbody>
-    </table>
+
+<div class="modal fade chat-dialog1" id="dialog-form-files" tabindex="-1" role="dialog" aria-labelledby="dialog-form-files-title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="dialog-form-files-title">ფაილი</h4>
+            </div>
+            <div class="modal-body">
+                    <input type="text" id="dialog_form_files_search_field"><br>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ფაილის სახელი</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($files as $key => $val) {
+                        echo "<tr><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$val['file_name']}</a></td></tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="template-dialog-form" class="chat-dialog" title="აირჩიეთ შაბლონი">
-    <select name="template_lang" id="template_lang">
-        <option value="ka">Georgian</option>
-        <option value="en">English</option>
-        <option value="ru">Russian</option>
-    </select>
 
-    <select name="template_service" id="template_service" onchange="">
-        <option value="0">All</option>
-        <?php
-        $services = [];
+<div class="modal fade chat-dialog1" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel1">აირჩიეთ შაბლონი</h4>
+            </div>
+            <div class="modal-body">
+                <select name="template_lang" id="template_lang">
+                    <option value="ka">Georgian</option>
+                    <option value="en">English</option>
+                    <option value="ru">Russian</option>
+                </select>
 
-        foreach ($get_sql_templates as $key => $val) {
-            $services[$val['service_id']] = $val['service_name_geo'];
-        }
+                <select name="template_service" id="template_service" onchange="">
+                    <option value="0">All</option>
+                    <?php
+                    $services = [];
 
-        foreach ($services as $key => $val) {
-           echo "<option value='{$key}'>{$val}</option>";
-        }
+                    foreach ($get_sql_templates as $key => $val) {
+                        $services[$val['service_id']] = $val['service_name_geo'];
+                    }
 
-        ?>
-    </select>
-    <input type="text" id="template_dialog_form_search_field"><br>
+                    foreach ($services as $key => $val) {
+                        echo "<option value='{$key}'>{$val}</option>";
+                    }
 
-    <ul id="template_dialog_form_ul" class="list-group">
-        <?php
+                    ?>
+                </select>
+                <input type="text" id="template_dialog_form_search_field"><br>
 
-        foreach ($get_sql_templates as $key => $val) {
-            echo "<li  class=\"list-group-item\" data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
-        }
-        ?>
-    </ul>
+                <ul id="template_dialog_form_ul" class="list-group">
+                    <?php
+
+                    foreach ($get_sql_templates as $key => $val) {
+                        echo "<li  class=\"list-group-item\" data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
+                    }
+                    ?>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 <script>
     var resizefunc =[];

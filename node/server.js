@@ -59,6 +59,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         let user = app.users.get(ans.person_id);
         user.addSocket(socket);
         socket.user = user;
+        socket.emit("userInfo", user.getLimited());
 
         app.connection.query('SELECT r.person_mode, c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
             ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +

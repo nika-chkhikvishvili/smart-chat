@@ -49,7 +49,8 @@ User.prototype.getLimited = function () {
     return {
         personId: this.personId,
         firstName: this.firstName,
-        lastName: this.lastName
+        lastName: this.lastName,
+        userName: this.userName
     }
 };
 

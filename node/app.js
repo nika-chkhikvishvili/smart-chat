@@ -456,7 +456,7 @@ setInterval(function () {
         app.lastChatCheckedTime = Date.now();
         app.chats.forEach(function (chat) {
             if (chat.chatStatusId !== 3 && !chat.isAvailable()) {
-                chat.closeChat(app, 'system');
+                chat.closeChat(app, null);
             }
         })
     }

@@ -30,8 +30,4 @@ Message.prototype.getInsertObject = function () {
     }
 };
 
-Message.getCloseMessage = function (chatUniqId) {
-    return new Message({chatUniqId: chatUniqId, messageType: 'close'});
-};
-
 module.exports = Message;

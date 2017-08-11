@@ -7,7 +7,8 @@ let services = [];
 let me;
 let choose_redirect_person_locker = false;
 
-let filesDialog;
+let filesDialog = $("#dialog-form-files" );
+let dialogFormTemplate = $("#dialog-form-template" );
 let chatManager = new DashboardChat($, socket);
 
 
@@ -39,7 +40,7 @@ function send_file(fileId, fileName){
         id: fileId
     });
 
-    filesDialog.dialog( "close" );
+    filesDialog.modal( "toggle" );
     elChatbox.append('<div class="bubble me">'+ fileName + '</div>' );
     elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
@@ -470,6 +471,9 @@ $(document).ready(function () {
         }
 
         var message = $("div.write input").val();
+        if (message.length < 3 ) {
+            return;
+        }
         var id = makeRandomString();
         var chatUniqId = elChatbox.data('chat');
 
@@ -483,48 +487,18 @@ $(document).ready(function () {
         // elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });
 
-    filesDialog = $( "#dialog-form-files" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 550,
-        modal: true,
-        buttons: {
-            Cancel: function() {
-                filesDialog.dialog( "close" );
-            }
-        },
-        close: function() {
-
-        }
-    });
-
-    var dialog = $( "#template-dialog-form" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 550,
-        modal: true,
-        buttons: {
-            Cancel: function() {
-                dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-
-        }
-    });
-
     $(".wrapper_chat").on('click', '.attach', function (e) {
-        filesDialog.dialog( "open" );
+        filesDialog.modal();
     });
 
     $(".wrapper_chat").on('click', '.draft', function (e) {
-        dialog.dialog( "open" );
+        dialogFormTemplate.modal();
     });
 
 
-    $("#template-dialog-form").on('click', 'li', function (e) {
+    $("#dialog-form-template").on('click', 'li', function (e) {
         $("div.write input").val($(this).html());
-        dialog.dialog( "close" );
+        dialogFormTemplate.modal('toggle');
     });
 
 
@@ -588,7 +562,7 @@ socket.on('operatorIsWorking', function (data) {
 
 socket.on('message', function (data) {
     console.log('execute: message');
-    // console.log(data);
+    console.log(data);
 
     socket.emit('messageReceivedFromClient', {chatUniqId: data.chatUniqId, msgId: data.ran});
 
@@ -607,9 +581,7 @@ socket.on('message', function (data) {
         $(".person[data-chat = " + data.chatUniqId + "]").remove();
         $(".chat[data-chat = " + data.chatUniqId + "]").remove();
     } else if(data.messageType === 'close') {
-        alert('მომხმარებელმა ჩატი დახურა');
-        $(".person[data-chat = " + data.chatUniqId + "]").remove();
-        $(".chat[data-chat = " + data.chatUniqId + "]").remove();
+        chatManager.closeDashboardChat(data.chatUniqId, data.sender);
     } else {
     if (data.guestUserId) {
         chatManager.messageGuest(data.chatUniqId, data.message);
@@ -759,4 +731,11 @@ socket.on('newChatWindow', function (data) {
     socket.emit('sendWelcomeMessage', data.chatUniqId );
     data.playAudio = true;
     createChatWindowAndLoadData(data);
+});
+
+socket.on('userInfo', function (data) {
+    console.log('execute: userInfo');
+    // console.log(data);
+    user = data;
+
 });
