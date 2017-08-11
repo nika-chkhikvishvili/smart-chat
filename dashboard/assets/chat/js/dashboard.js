@@ -586,6 +586,7 @@ socket.on('message', function (data) {
     if (data.guestUserId) {
         chatManager.messageGuest(data.chatUniqId, data.message);
     } else {
+        if (data.messageUniqId !== -158)
         chatManager.messageMe(data.chatUniqId, data.message);
     }
 }
@@ -647,7 +648,7 @@ socket.on('getActiveChatsResponse', function (data){
     data.forEach(function(item){
         let operator = 'ჯერ არ შესულა ოპერატორი';
         if (item.users && Array.isArray(item.users) && item.users.length > 0) {
-            console.log(item.users[0]);
+            // console.log(item.users[0]);
             operator = item.users[0].firstName + ' ' + item.users[0].lastName;
         }
 
@@ -727,8 +728,6 @@ function redAlert(id) {
 socket.on('newChatWindow', function (data) {
     console.log('execute: newChatWindow');
     // console.log(data);
-
-    socket.emit('sendWelcomeMessage', data.chatUniqId );
     data.playAudio = true;
     createChatWindowAndLoadData(data);
 });

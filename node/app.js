@@ -280,13 +280,18 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
 
             if (!!user) {
                 chat.addUser(user, 1);
+                let socketIdTemp = null;
                 user.sockets.forEach(function (socketId) {
                     app.io.sockets.sockets[socketId].emit('newChatWindow', chat);
+                    socketIdTemp = socketId;
                 });
+                if (!!socketIdTemp) {
+                    server.sendWelcomeMessage(app.io.sockets.sockets[socketIdTemp], chat.chatUniqId);
+                }
             }
 
             chat.guestUser.sockets.forEach(function (socketId) {
-                app.io.sockets.sockets[socketId].emit('operatorJoined', app.autoAnswering.getWelcomeMessage(1));
+                app.io.sockets.sockets[socketId].emit('operatorJoined');
             });
             app.io.emit('checkActiveChats');
         });

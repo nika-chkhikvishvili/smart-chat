@@ -166,9 +166,10 @@ socket.on('clientInitParamsResponse', function (data) {
     $('#asarchevi').hide();
     $('#wait_operator').show();
 });
-socket.on('operatorJoined', function (data) {
+
+socket.on('operatorJoined', function () {
     console.log('execute: operatorJoined');
-    console.log(data);
+    // console.log(data);
     $('#wait_operator').hide();
     $('.panel').show();
 });
