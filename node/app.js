@@ -239,7 +239,7 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
 };
 
 app.checkAvailableServiceForOperator = function (user) {
-    if (!user || user.isOnline || !user.canTakeMore()) {
+    if (!user || !user.isOnline || !user.canTakeMore()) {
         return;
     }
     app.connection.query('SELECT service_id FROM person_services WHERE person_id = ?', [user.userId], function (err, res) {
