@@ -159,9 +159,10 @@ function ChatClient($, socket) {
         // }
 
         if (conversationStarted) {
+            let chatCloseTime = localStorage.getItem('chatCloseTime') || 80000;
 
-            if (Date.now() - lastMeWritingTime > 5000) {
-                infoMessagePanel.find('.modal-body').html(Math.round((20000 +lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
+            if (Date.now() - lastMeWritingTime > 60000) {
+                infoMessagePanel.find('.modal-body').html(Math.round((chatCloseTime +lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
                 if (!chatCloseInfoShowed) {
                     chatCloseInfoShowed = true;
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
@@ -169,7 +170,7 @@ function ChatClient($, socket) {
                 }
             }
 
-            if (!chatCloseWarningShowed && Date.now() - lastMeWritingTime > 20000) {
+            if (!chatCloseWarningShowed && Date.now() - lastMeWritingTime > chatCloseTime) {
                 chatCloseWarningShowed = true;
                 infoMessagePanel.find('.modal-title').html('უმოქმედობა');
                 infoMessagePanel.find('.modal-body').html('ჩატი დაიხურა უმოქმედობის გამო');

@@ -380,7 +380,6 @@ $(document).ready(function () {
         if (element.hasClass('.active')) {
             return false;
         } else {
-            let findChat = element.data('chat');
 
             if (element.data('type') === 'readonly') {
                 $('.right').addClass('readonly');
@@ -388,31 +387,14 @@ $(document).ready(function () {
                 $('.right').removeClass('readonly');
             }
 
-            let personName = element.find('.name').text();
-            $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
-            $('.chat').removeClass('active-chat');
-            $('.left .person').removeClass('active');
-            element.addClass('active');
-            element.removeClass('new_message');
-            let chat = $('.chat[data-chat = '+findChat+']');
-            chat.addClass('active-chat');
-            // $('#im_working_checkbox')[0].checked = chat.data('ImWorking');
-
-            let src = chat.data('ImWorking')?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
-            $('#im_working_checkbox').attr("src", src);
-
-            chat.animate({scrollTop: chat[0].scrollHeight}, 'normal');
+            chatManager.makeActiveChat(element.data('chat'));
         }
     });
 
     $('#im_working_checkbox').click(function() {
-        // $('.active-chat').data('ImWorking', this.checked);
         let chat = $('.active-chat');
-        let newVal = !chat.data('ImWorking');
-        chat.data('ImWorking', newVal);
-        let src = newVal?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
-        console.log(src);
-        $('#im_working_checkbox').attr("src", src);
+        let chatId = chat.data('chat');
+        chatManager.toggleIAmWorking(chatId);
     });
 
     // checks and authoriser user

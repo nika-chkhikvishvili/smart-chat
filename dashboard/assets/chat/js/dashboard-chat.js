@@ -58,7 +58,9 @@ function DashboardChat($, socket) {
 
         $('.wrapper_chat .container_chat .right .chats_container').append('<div> <div class="chat" data-chat="' + data.chatUniqId + '"></div></div>');
 
-        chats.set(data.chatUniqId, new ChatWindow($, socket, data.chatUniqId));
+        let chat = new ChatWindow($, socket, data.chatUniqId);
+        chat.setName(data.firstName + ' '+ data.lastName);
+        chats.set(data.chatUniqId, chat);
     }
 
     function closeDashboardChatFn(chatId, closedBy) {
@@ -70,16 +72,40 @@ function DashboardChat($, socket) {
         chats.delete(chatId);
     }
 
+    function makeActiveChatFn(chatId){
+        let chat = chats.get(chatId);
+        if (!chat) {
+            return false;
+        }
+
+        $('.chat').removeClass('active-chat');
+        $('.left .person').removeClass('active');
+        chat.makeActiveChatFun();
+    }
+
+    function toggleIAmWorkingFn(chatId) {
+        let chat = chats.get(chatId);
+        if (!chat) {
+            return false;
+        }
+        chat.toggleIAmWorkingFun()
+    }
+
     return {
         showInfoMessage:showInfoMessageFn,
         createChatWindow: createChatWindowFn,
         messageGuest: messageGuestFn,
         messageMe: messageMeFn,
         closeDashboardChat: closeDashboardChatFn,
+        makeActiveChat: makeActiveChatFn,
+        toggleIAmWorking: toggleIAmWorkingFn,
     };
 
 
     function ChatWindow($, socket, chatId){
+        let isReadonly = false;
+        let iAmWorking = false;
+        let personName = '';
         let chatBox = $(".chat[data-chat=" + chatId + "]");
         let personBox = $(".person[data-chat=" + chatId + "]");
 
@@ -94,12 +120,14 @@ function DashboardChat($, socket) {
             return data;
         }
 
+        this.setName = function (name) {
+            personName = name;
+        };
+
         this.messageMeFun=function (message){
             chatBox.append('<div class="bubble me">' + message + '</div>');
             chatBox.animate({scrollTop: chatBox[0].scrollHeight}, 'normal');
         };
-
-
 
         this.messageGuestFun=function (message){
             chatBox.append('<div class="bubble you">' + message + '</div>');
@@ -129,6 +157,31 @@ function DashboardChat($, socket) {
             personBox.remove();
             chatBox.remove();
 
+        };
+
+        this.makeActiveChatFun = function () {
+            $('.right .top .name').html(personName.length > 14? personName.substring(0,12)+'...':personName);
+            chatBox.addClass('active-chat');
+
+            let src = iAmWorking?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
+            $('#im_working_checkbox').attr("src", src);
+            personBox.addClass('active');
+            personBox.removeClass('new_message');
+
+/*
+            if (isReadonly) {
+                $('.right').addClass('readonly');
+            } else {
+                $('.right').removeClass('readonly');
+            }*/
+
+            chatBox.animate({scrollTop: chatBox[0].scrollHeight}, 'normal');
+        };
+
+        this.toggleIAmWorkingFun = function () { //ImWorking
+            iAmWorking = !iAmWorking;
+            let src = iAmWorking?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
+            $('#im_working_checkbox').attr("src", src);
         };
     }
 
