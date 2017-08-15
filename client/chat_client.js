@@ -17,6 +17,7 @@ function ChatClient($, socket) {
     let chatCloseInfoShowed = false;
     let chatCloseWarningShowed = false;
     let conversationStarted = false;
+    let warningBeep = new Audio('/assets/audio/warning_beep.mp3');
 
     let elChatbox = $("#chat-body-ul");
     let scroolDiv = $("#scrooldiv");
@@ -167,6 +168,7 @@ function ChatClient($, socket) {
                     chatCloseInfoShowed = true;
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
                     infoMessagePanel.modal();
+                    warningBeep.play();
                 }
             }
 
