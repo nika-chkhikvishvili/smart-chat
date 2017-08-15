@@ -80,43 +80,48 @@
                             <div class="panel-heading"><h3 class="panel-title">სისტემური პარამეტრები</h3></div>
                             <div class="panel-body">
                             
-                                <form action="#">
+                                <form action="" method="POST">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="p-20">
-                                                <form>
+                                               
                                                     
                                                     <div class="form-group">
                                                         <label class="control-label">ოპერატორის მაქსიმალური დატვირვა</label>
-                                                        <input id="demo0" type="text" value="5" name="demo0" data-bts-min="0" data-bts-max="100" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
+                                                        <input id="demo0" type="text" value="<?=$get_sys_control['operator_max_load'];?>" name="operator_max_load" data-bts-min="0" data-bts-max="900" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">რამდენი კალენდრული დღის გასვლის შემდეგ წაშალოს სისტემამ ჩეთის ისტორია</label>
-                                                        <input id="demo0" type="text" value="90" name="demo0" data-bts-min="0" data-bts-max="100" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
+                                                        <input id="demo0" type="text" value="<?=$get_sys_control['history_life_time'];?>" name="history_life_time" data-bts-min="0" data-bts-max="900" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
                                                     </div>
                                                     
-                                                </form>
+                                                
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="p-20">
-                                                <form>
+                                               
 
                                                   <div class="form-group">
                                                         <label class="control-label">რამდენი დღით განისაზღვროს სისტემაში ჩართული მომხმარებლების პაროლის სიცოცხლის ციკლი</label>
-                                                        <input id="demo0" type="text" value="30" name="demo0" data-bts-min="0" data-bts-max="100" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
+                                                        <input id="demo0" type="text" value="<?=$get_sys_control['pass_life_time'];?>" name="pass_life_time" data-bts-min="0" data-bts-max="900" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
                                                     </div>  
                                                     <div class="form-group">
-                                                        <label class="control-label">რამდენი კალენდრული დღის გასვლის შემდეგ წაშალოს სისტემამ Offline შეტყობინებები</label>
-                                                        <input id="demo0" type="text" value="90" name="demo0" data-bts-min="0" data-bts-max="100" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
+                                                        <label class="control-label">პასიურ მომხმარებელთან საუბრის ავტომატურად დახურვის დრო (წამებში)</label>
+                                                        <input id="demo0" type="text" value="<?=$get_sys_control['passive_client_time'];?>" name="passive_client_time" data-bts-min="0" data-bts-max="900" data-bts-init-val="" data-bts-step="1" data-bts-decimal="0" data-bts-step-interval="100" data-bts-force-step-divisibility="round" data-bts-step-interval-delay="500" data-bts-prefix="" data-bts-postfix="" data-bts-prefix-extra-class="" data-bts-postfix-extra-class="" data-bts-booster="true" data-bts-boostat="10" data-bts-max-boosted-step="false" data-bts-mousewheel="true" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary"/>
                                                     </div>  
-                                                   
-                                                </form>
+                                                  
+                                               
                                             </div>
                                         </div>
                                     </div>
-
+									 <div class="form-group">
+													
+								   <input type="submit" class="btn btn-primary" type="submit" name="save_sys" value="პარამეტრების შენახვა" />
+								   
+								
+								</div>
                                 </form>
 
                             </div> <!-- panel-body -->
@@ -324,8 +329,10 @@
                 $("input[name='demo3_22']").TouchSpin({
                     initval: 40
                 });
-
-                $("input[name='demo0']").TouchSpin({});
+				$("input[name='operator_max_load']").TouchSpin({});
+				$("input[name='history_life_time']").TouchSpin({});
+				$("input[name='pass_life_time']").TouchSpin({});
+                $("input[name='passive_client_time']").TouchSpin({});
             });
         </script>
 
