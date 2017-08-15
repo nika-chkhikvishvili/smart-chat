@@ -243,12 +243,26 @@ class dashboard_model extends CI_Model{
     
     // update answering
     
-    function get_answering()
+ function get_answering()
     {
         $this->db->select('*');
         $this->db->from('auto_answering');           
         $query = $this->db->get();
         return $query->row_array();
+    }
+	
+	function get_sys_control()
+    {
+        $this->db->select('*');
+        $this->db->from('sys_control');           
+        $query = $this->db->get();
+        return $query->row_array();
+    }
+	
+	function update_sys_control($id,$data)
+    {
+        $this->db->where('sys_control_id', $id);
+        $this->db->update('sys_control', $data);
     }
     
     
