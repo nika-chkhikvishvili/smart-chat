@@ -316,7 +316,7 @@
 </div>
 
 
-<div class="modal fade chat-dialog1" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="dialog-form-template-label">
+<div class="modal fade" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="dialog-form-template-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -369,9 +369,9 @@
                         foreach ($get_sql_templates as $key => $val) {
                             $keywords = $val['template_text_en'] . ' ' . $val['template_text_ge'] . ' ' . $val['template_text_ru'] . ' ';
 
-                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='en'><td style='text-align: justify'>{$val['template_text_en']}</td></tr>";
-                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ka'><td style='text-align: justify'>{$val['template_text_ge']}</td></tr>";
-                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ru'><td style='text-align: justify'>{$val['template_text_ru']}</td></tr>";
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='en'><td style='text-align: justify;'>{$val['template_text_en']}</td></tr>";
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ka'><td style='text-align: justify;'>{$val['template_text_ge']}</td></tr>";
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ru'><td style='text-align: justify;'>{$val['template_text_ru']}</td></tr>";
 
                         }
                         ?>

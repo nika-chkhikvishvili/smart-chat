@@ -67,3 +67,7 @@
 .msgbox_chat_content{
     margin-top: -273px;
 }
+
+#template_dialog_form_table tr {
+    text-align: justify;
+}

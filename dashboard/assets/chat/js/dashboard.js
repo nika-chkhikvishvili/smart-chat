@@ -498,6 +498,11 @@ $(document).ready(function () {
         dialogFormTemplate.modal('toggle');
     });
 
+    $("#template_dialog_form_table").on('click', 'td', function (e) {
+        $("div.write input").val($(this).html());
+        dialogFormTemplate.modal('toggle');
+    });
+
     function searchFiles() {
         let needle =$("#dialog_form_files_search_field").val().toLowerCase();
         $('#dialog_form_files_table > tbody > tr').each(function (id, item) {
