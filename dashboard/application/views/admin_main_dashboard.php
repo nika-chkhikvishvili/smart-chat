@@ -283,7 +283,7 @@
 </div>
 
 
-<div class="modal fade chat-dialog1" id="dialog-form-files" tabindex="-1" role="dialog" aria-labelledby="dialog-form-files-title">
+<div class="modal fade" id="dialog-form-files" tabindex="-1" role="dialog" aria-labelledby="dialog-form-files-title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -346,33 +346,19 @@
                     ?>
                 </select>
                 <input type="text" id="template_dialog_form_search_field"><br>
-
-                <ul id="template_dialog_form_ul" class="list-group">
-                    <?php
-
-                    foreach ($get_sql_templates as $key => $val) {
-                        echo "<li  class=\"list-group-item\" data-serviceId='{$val['service_id']}' data-lang='{$val['service_id']}'>{$val['template_text_ge']}</li>";
-                    }
-                    ?>
-                </ul>
-<div>ცხრილის სახით</div>
-
-
                     <table class="table table-striped" id="template_dialog_form_table">
-                        <thead>
-                        <tr>
-                            <th>ტექსტი</th>
-                        </tr>
-                        </thead>
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>ტექსტი</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
                         <tbody>
                         <?php
                         foreach ($get_sql_templates as $key => $val) {
                             $keywords = $val['template_text_en'] . ' ' . $val['template_text_ge'] . ' ' . $val['template_text_ru'] . ' ';
-
                             echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='en'><td style='text-align: justify;'>{$val['template_text_en']}</td></tr>";
                             echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ka'><td style='text-align: justify;'>{$val['template_text_ge']}</td></tr>";
                             echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ru'><td style='text-align: justify;'>{$val['template_text_ru']}</td></tr>";
-
                         }
                         ?>
                         </tbody>
@@ -393,7 +379,7 @@
 
 </script>
 
-<div id="block-dialog" class="chat-dialog" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
+<div id="block-dialog" style="display: none" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
     <textarea rows="12" cols="50"></textarea>
 </div>
 
@@ -404,7 +390,7 @@
 
 </div>
 
-<div id="chat-redirect-group-dialog" class="chat-dialog" title="აირჩიეთ ჯგუფი">
+<div id="chat-redirect-group-dialog" style="display: none" title="აირჩიეთ ჯგუფი">
     <table width="500">
         <tr>
             <th width="10%">id</th>
@@ -430,7 +416,7 @@
 
 </div>
 
-<div id="chat-redirect-person-dialog" class="chat-dialog" title="აირჩიეთ პიროვნება">
+<div id="chat-redirect-person-dialog" style="display: none" title="აირჩიეთ პიროვნება">
     <table width="500">
         <thead>
         <tr>

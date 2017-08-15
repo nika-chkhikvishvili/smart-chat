@@ -11,6 +11,12 @@ function ChatClient($, socket) {
     let lastName = '';
     let lastWriteTime = 0;
     let lastWorkingTime = 0;
+    let lastMeWritingTime = Date.now();
+
+    let infoMessagePanel = $("#info_message_panel");
+    let chatCloseInfoShowed = false;
+    let chatCloseWarningShowed = false;
+    let conversationStarted = false;
 
     let elChatbox = $("#chat-body-ul");
     let scroolDiv = $("#scrooldiv");
@@ -43,10 +49,17 @@ function ChatClient($, socket) {
             '</div>' +
             '</li>');
 
+    function resetWarnings(){
+        lastMeWritingTime = Date.now();
+        chatCloseInfoShowed = false;
+        chatCloseWarningShowed = false;
+    }
+
     function addMyMessageFn(id, time, message, dontScrool) {
         // console.log(data);
         time = time || (new Date()).toISOString();
 
+        resetWarnings();
         elChatbox.append(meTemplate(id, time.substr(11, 8), firstName + ' ' + lastName, message));
         //setTimeout(function () {
         //    redAlert(id);
@@ -58,6 +71,7 @@ function ChatClient($, socket) {
 
     function addOtherMessageFn(data, dontScrool) {
         // console.log(data);
+        conversationStarted = true;
         let time = data.messageDate || (new Date()).toISOString();
         elChatbox.append(othTemplate(time.substr(11, 8), data.sender, data.message));
         if (dontScrool !== true) {
@@ -105,6 +119,7 @@ function ChatClient($, socket) {
         $('#asarchevi').show();
         $('.panel').hide();
         $('#begin_btn').attr({disabled: false});
+        conversationStarted = false;
         socket.emit('clientGetServices');
     }
 
@@ -125,6 +140,7 @@ function ChatClient($, socket) {
     function setChatUniqIdFn(chatUniqIdParam) {
         localStorage.chatUniqId = chatUniqIdParam;
         chatUniqId = chatUniqIdParam;
+        resetWarnings();
     }
 
     function getChatUniqObjectFn() {
@@ -133,7 +149,40 @@ function ChatClient($, socket) {
         };
     }
 
+    function executeLoopFunctionFn() {
+        // if (!socket.connected) {
+        //     infoMessagePanel.find('.modal-title').html('კავშირის პრობლემა');
+        //     infoMessagePanel.find('.modal-body').html('სერვერთან კავშირი გაწყდა, გთხოვთ დაელოდოთ');
+        //     infoMessagePanel.modal();
+        // } else {
+        //
+        // }
+
+        if (conversationStarted) {
+
+            if (Date.now() - lastMeWritingTime > 5000) {
+                infoMessagePanel.find('.modal-body').html(Math.round((20000 +lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
+                if (!chatCloseInfoShowed) {
+                    chatCloseInfoShowed = true;
+                    infoMessagePanel.find('.modal-title').html('უმოქმედობა');
+                    infoMessagePanel.modal();
+                }
+            }
+
+            if (!chatCloseWarningShowed && Date.now() - lastMeWritingTime > 20000) {
+                chatCloseWarningShowed = true;
+                infoMessagePanel.find('.modal-title').html('უმოქმედობა');
+                infoMessagePanel.find('.modal-body').html('ჩატი დაიხურა უმოქმედობის გამო');
+                infoMessagePanel.modal();
+                socket.emit('clientCloseChat');
+                closeChatFn();
+            }
+        }
+
+    }
+
     return {
+        executeLoopFunction: executeLoopFunctionFn,
         closeChat: closeChatFn,
         getChatUniqId: getChatUniqIdFn,
         getChatUniqObject: getChatUniqObjectFn,

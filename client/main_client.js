@@ -5,6 +5,7 @@
 'use strict';
 
 let socket = io(window.location.origin + ':3000');
+let infoMessagePanel = $("#info_message_panel");
 let chat = new ChatClient($, socket);
 
 $(document).ready(function () {
@@ -61,6 +62,8 @@ $(document).ready(function () {
         usermsg.val('');
     });
 
+    setInterval(chat.executeLoopFunction, 1000);
+
 });
 
 
@@ -92,6 +95,12 @@ function redAlert(id) {
 socket.on('testResponse', function (data){
     console.log('execute: testResponse');
     console.log(data);
+});
+
+socket.on('disconnect', function (){
+    // infoMessagePanel.find('.modal-title').html('კავშირის პრობლემა');
+    // infoMessagePanel.find('.modal-body').html('სერვერთან კავშირი გაწყდა, გთხოვთ დაელოდოთ');
+    // infoMessagePanel.modal();
 });
 
 socket.on('serverError', function (data){

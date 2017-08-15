@@ -521,38 +521,15 @@ $(document).ready(function () {
 
         let template_service = $("#template_service");
         let template_lang    = $("#template_lang");
-        let ul = $("#template_dialog_form_ul");
-
         let service = parseInt(template_service.val());
         let lang    = template_lang.val() || 'ka';
-        let field_name = 'template_text_ge';
-        if (lang === 'en' ) {
-            field_name = 'template_text_en';
-        }
-        if (lang === 'ru' ) {
-            field_name = 'template_text_ru';
-        }
-
-        ul.html('');
-
-        messageTemplates.forEach(function(tmpl){
-            if (service === 0 || service === tmpl.service_id) {
-                if (needle.length===0 ||
-                    tmpl.template_text_ge.indexOf(needle) !==-1 ||
-                    tmpl.template_text_en.indexOf(needle) !==-1 ||
-                    tmpl.template_text_ru.indexOf(needle) !==-1 ||
-                    tmpl.template_title_en.indexOf(needle) !==-1 ||
-                    tmpl.template_title_ge.indexOf(needle) !==-1 ||
-                    tmpl.template_title_ru.indexOf(needle) !==-1
-                ) ul.append('<li  class="list-group-item" data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
-            }
-        });
 
         $('#template_dialog_form_table > tbody > tr').each(function (id, item) {
             let tritem = $(item);
             let keywords = tritem.data('keywords');
+            let itemService = tritem.data('service');
             let itemLang = tritem.data('lang');
-            if (keywords.toLowerCase().indexOf(needle) === -1 || itemLang !== lang){
+            if ( (itemService === 0 || itemService === service) && keywords.toLowerCase().indexOf(needle) === -1 || itemLang !== lang){
                 tritem.hide();
             } else {
                 tritem.show();
