@@ -296,7 +296,7 @@
 .container_chat .right .write input {
   font-size: 16px;
   float: left;
-  width: 468px;
+  width:  calc(100% - 90px);
   height: 40px;
   padding: 0 10px;
   color: #1a1a1a;

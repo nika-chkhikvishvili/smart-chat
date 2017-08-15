@@ -39,10 +39,7 @@ function send_file(fileId, fileName){
         message: fileName,
         id: fileId
     });
-
     filesDialog.modal( "toggle" );
-    elChatbox.append('<div class="bubble me">'+ fileName + '</div>' );
-    elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
 }
 
 function redirect_to_service(serviceId){
@@ -501,9 +498,21 @@ $(document).ready(function () {
         dialogFormTemplate.modal('toggle');
     });
 
+    function searchFiles() {
+        let needle =$("#dialog_form_files_search_field").val().toLowerCase();
+        $('#dialog_form_files_table > tbody > tr').each(function (id, item) {
+            let tritem = $(item);
+            let keywords = tritem.data('keywords');
+            if (keywords.toLowerCase().indexOf(needle) === -1){
+                tritem.hide();
+            } else {
+                tritem.show();
+            }
+        });
+    }
 
     function searchTemplates() {
-        let needle =$("#template_dialog_form_search_field").val();
+        let needle =$("#template_dialog_form_search_field").val().toLowerCase();
 
         let template_service = $("#template_service");
         let template_lang    = $("#template_lang");
@@ -533,10 +542,23 @@ $(document).ready(function () {
                 ) ul.append('<li  class="list-group-item" data-serviceId='+tmpl['service_id']+' data-lang='+lang+'>'+tmpl[field_name]+'</li>');
             }
         });
+
+        $('#template_dialog_form_table > tbody > tr').each(function (id, item) {
+            let tritem = $(item);
+            let keywords = tritem.data('keywords');
+            let itemLang = tritem.data('lang');
+            if (keywords.toLowerCase().indexOf(needle) === -1 || itemLang !== lang){
+                tritem.hide();
+            } else {
+                tritem.show();
+            }
+        });
+
     }
 
-
+    searchTemplates();
     $("#template_dialog_form_search_field").keyup(searchTemplates);
+    $("#dialog_form_files_search_field")   .keyup(searchFiles);
     $("#template_service, #template_lang").change(searchTemplates);
 
     setInterval(function(){

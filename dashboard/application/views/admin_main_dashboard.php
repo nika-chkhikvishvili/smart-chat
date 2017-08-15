@@ -292,7 +292,7 @@
             </div>
             <div class="modal-body">
                     <input type="text" id="dialog_form_files_search_field"><br>
-                <table class="table table-striped">
+                <table class="table table-striped" id="dialog_form_files_table">
                     <thead>
                     <tr>
                         <th>ფაილის სახელი</th>
@@ -301,7 +301,8 @@
                     <tbody>
                     <?php
                     foreach ($files as $key => $val) {
-                        echo "<tr><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$val['file_name']}</a></td></tr>";
+                        $fileName = mb_strlen($val['file_name'])>70? mb_substr($val['file_name'], 0, 67). ' ... ':$val['file_name'];
+                        echo "<tr data-keywords='{$val['file_name']}'><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$fileName}</a></td></tr>";
                     }
                     ?>
                     </tbody>
@@ -315,12 +316,12 @@
 </div>
 
 
-<div class="modal fade chat-dialog1" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+<div class="modal fade chat-dialog1" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="dialog-form-template-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel1">აირჩიეთ შაბლონი</h4>
+                <h4 class="modal-title" id="dialog-form-template-label">აირჩიეთ შაბლონი</h4>
             </div>
             <div class="modal-body">
                 <select name="template_lang" id="template_lang">
@@ -354,6 +355,28 @@
                     }
                     ?>
                 </ul>
+<div>ცხრილის სახით</div>
+
+
+                    <table class="table table-striped" id="template_dialog_form_table">
+                        <thead>
+                        <tr>
+                            <th>ტექსტი</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($get_sql_templates as $key => $val) {
+                            $keywords = $val['template_text_en'] . ' ' . $val['template_text_ge'] . ' ' . $val['template_text_ru'] . ' ';
+
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='en'><td style='text-align: justify'>{$val['template_text_en']}</td></tr>";
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ka'><td style='text-align: justify'>{$val['template_text_ge']}</td></tr>";
+                            echo "<tr data-keywords='{$keywords}'  data-service='{$val['service_id']}'  data-lang='ru'><td style='text-align: justify'>{$val['template_text_ru']}</td></tr>";
+
+                        }
+                        ?>
+                        </tbody>
+                    </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -367,6 +390,7 @@
 <script>
     var resizefunc =[];
     var messageTemplates =<?php echo json_encode($get_sql_templates, JSON_UNESCAPED_UNICODE); ?>
+
 </script>
 
 <div id="block-dialog" class="chat-dialog" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
