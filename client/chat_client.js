@@ -17,7 +17,7 @@ function ChatClient($, socket) {
     let chatCloseInfoShowed = false;
     let chatCloseWarningShowed = false;
     let conversationStarted = false;
-    let warningBeep = new Audio('/assets/audio/warning_beep.mp3');
+    let warningBeep = new Audio('/assets/audio/warning_beep.ogg');
 
     let elChatbox = $("#chat-body-ul");
     let scroolDiv = $("#scrooldiv");
@@ -72,7 +72,6 @@ function ChatClient($, socket) {
 
     function addOtherMessageFn(data, dontScrool) {
         // console.log(data);
-        warningBeep.play();
         conversationStarted = true;
         let time = data.messageDate || (new Date()).toISOString();
         elChatbox.append(othTemplate(time.substr(11, 8), data.sender, data.message));
@@ -169,7 +168,13 @@ function ChatClient($, socket) {
                     chatCloseInfoShowed = true;
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
                     infoMessagePanel.modal();
-                    warningBeep.play();
+                    let playPromise = warningBeep.play();
+                    // playPromise.then(function() {
+                    //     // Automatic playback started!
+                    // }).catch(function(error) {
+                    //     // Automatic playback failed.
+                    //     // Show a UI element to let the user manually start playback.
+                    // });
                 }
             }
 

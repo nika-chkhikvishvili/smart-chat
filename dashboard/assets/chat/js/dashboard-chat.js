@@ -7,7 +7,7 @@ function DashboardChat($, socket) {
 
     let me = this;
     let closeChatWindow = new Audio('/assets/chat/audio/button-2.mp3');
-    let newChatWindowAudio = new Audio('/assets/chat/audio/new_chat.ogg');
+    let newChatWindowAudio = new Audio('/assets/chat/audio/button-09.mp3');
     let newMessage = new Audio('/assets/chat/audio/button-09.mp3');
     let infoMessagePanel = $("#info_message_panel");
     let chats= new Map();
