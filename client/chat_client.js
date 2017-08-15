@@ -149,7 +149,7 @@ function ChatClient($, socket) {
         };
     }
 
-    function executeLoopFunctionFn() {
+    function executeClientLoopFunctionFn() {
         // if (!socket.connected) {
         //     infoMessagePanel.find('.modal-title').html('კავშირის პრობლემა');
         //     infoMessagePanel.find('.modal-body').html('სერვერთან კავშირი გაწყდა, გთხოვთ დაელოდოთ');
@@ -183,7 +183,7 @@ function ChatClient($, socket) {
     }
 
     return {
-        executeLoopFunction: executeLoopFunctionFn,
+        executeClientLoopFunction: executeClientLoopFunctionFn,
         closeChat: closeChatFn,
         getChatUniqId: getChatUniqIdFn,
         getChatUniqObject: getChatUniqObjectFn,

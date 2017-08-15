@@ -91,7 +91,15 @@ function DashboardChat($, socket) {
         chat.toggleIAmWorkingFun()
     }
 
+    function executeLoopFunctionFn() {
+        chats.forEach(function(chat, chatId){
+            chat.checkIAmWorkingAndSend();
+        });
+
+    }
+
     return {
+        executeLoopFunction: executeLoopFunctionFn,
         showInfoMessage:showInfoMessageFn,
         createChatWindow: createChatWindowFn,
         messageGuest: messageGuestFn,
@@ -101,10 +109,12 @@ function DashboardChat($, socket) {
         toggleIAmWorking: toggleIAmWorkingFn,
     };
 
-
-    function ChatWindow($, socket, chatId){
+    function ChatWindow($, socket, chatIdInit){
+        let chatId = chatIdInit;
         let isReadonly = false;
         let iAmWorking = false;
+        let lastIAmWorkingSendTime = 0;
+
         let personName = '';
         let chatBox = $(".chat[data-chat=" + chatId + "]");
         let personBox = $(".person[data-chat=" + chatId + "]");
@@ -167,14 +177,12 @@ function DashboardChat($, socket) {
             $('#im_working_checkbox').attr("src", src);
             personBox.addClass('active');
             personBox.removeClass('new_message');
-
 /*
             if (isReadonly) {
                 $('.right').addClass('readonly');
             } else {
                 $('.right').removeClass('readonly');
             }*/
-
             chatBox.animate({scrollTop: chatBox[0].scrollHeight}, 'normal');
         };
 
@@ -183,6 +191,12 @@ function DashboardChat($, socket) {
             let src = iAmWorking?"assets/chat/images/autoremind_on.png" : "assets/chat/images/autoremind_off.png";
             $('#im_working_checkbox').attr("src", src);
         };
-    }
 
+        this.checkIAmWorkingAndSend = function() {
+            if (Date.now() - lastIAmWorkingSendTime > imWorkingDelay ) {
+                socket.emit('operatorIsWorking', {chatUniqId: chatId});
+                lastIAmWorkingSendTime = Date.now();
+            }
+        }
+    }
 }

@@ -62,7 +62,7 @@ $(document).ready(function () {
         usermsg.val('');
     });
 
-    setInterval(chat.executeLoopFunction, 1000);
+    setInterval(chat.executeClientLoopFunction, 1000);
 
 });
 

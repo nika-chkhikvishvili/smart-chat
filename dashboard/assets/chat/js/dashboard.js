@@ -525,19 +525,7 @@ $(document).ready(function () {
     $("#dialog_form_files_search_field")   .keyup(searchFiles);
     $("#template_service, #template_lang").change(searchTemplates);
 
-    setInterval(function(){
-        $('.chat').each(function(key,val){
-            let element = $(val);
-            if(!element.data('lastSendTime')) element.data('lastSendTime', Date.now() - imWorkingDelay - 100);
-
-            if (element.data('ImWorking')) {
-                if (Date.now() - element.data('lastSendTime') > imWorkingDelay ) {
-                    socket.emit('operatorIsWorking',{chatUniqId: element.data('chat') });
-                    element.data('lastSendTime', Date.now());
-                }
-            }
-        });
-    }, 1000);
+    setInterval(chatManager.executeLoopFunction, 1000);
 });
 
 socket.on('operatorIsWorking', function (data) {
@@ -568,6 +556,8 @@ socket.on('message', function (data) {
         $(".chat[data-chat = " + data.chatUniqId + "]").remove();
     } else if(data.messageType === 'close') {
         chatManager.closeDashboardChat(data.chatUniqId, data.sender);
+    } else if(data.messageType === 'operatorIsWorking') {
+
     } else {
     if (data.guestUserId) {
         chatManager.messageGuest(data.chatUniqId, data.message);
