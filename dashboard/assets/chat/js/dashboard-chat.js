@@ -193,7 +193,7 @@ function DashboardChat($, socket) {
         };
 
         this.checkIAmWorkingAndSend = function() {
-            if (Date.now() - lastIAmWorkingSendTime > imWorkingDelay ) {
+            if (iAmWorking && Date.now() - lastIAmWorkingSendTime > imWorkingDelay ) {
                 socket.emit('operatorIsWorking', {chatUniqId: chatId});
                 lastIAmWorkingSendTime = Date.now();
             }

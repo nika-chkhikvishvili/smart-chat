@@ -222,6 +222,7 @@
         float: none;
         margin: 0 auto;
     }
+
 </style>
 </head>
 <body>
