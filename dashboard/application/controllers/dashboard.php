@@ -29,7 +29,16 @@ class Dashboard extends CI_Controller{
     
     function system()
     {      
-      $this->load->view('system');  
+      $this->load->model('dashboard_model');
+      $data['get_sys_control'] = $this->dashboard_model->get_sys_control();
+	  if($this->input->post('save_sys'))
+        {
+           unset($_POST['save_sys']);
+           	
+           $this->dashboard_model->update_sys_control(1,$_POST);
+          echo '<meta http-equiv="refresh" content="0">';
+        }
+      $this->load->view('system',$data);  
     }
     
     public function answering()
