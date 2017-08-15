@@ -4,43 +4,7 @@
         <?php require_once ('components/styles.php');?>
 	<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="<?=base_url();?>resources/clockpicker/bootstrap-clockpicker.min.css">      
-<script type="text/javascript">
-        $(document).ready(function(){        
-            
-                $('.delete').click(function() {
-                data = {};			
-                data['id'] = $(this).parent('tr').attr('data-row-id');
-                        var parent = $(this).closest('tr');
-                         if(confirm('დარწმუნებული ხართ რომ გინდათ უწყების წაშლა?'))
-                         {
-                         $.ajax({
-                                type: "POST",  
-                                  url: "http://localhost/chat/services/delete_service",  
-                                  cache:false,  
-                                  data: data,
-                                  dataType: "json",   
-                                beforeSend: function() {
-                                        parent.animate({'backgroundColor':'#fb6c6c'},300);
-                                },
-                                success: function(response) {
 
-                                //$("#loading").hide();
-                                        if(response.status) {
-                                          $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                          setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        } else {
-                                           $.Notification.notify('success','top center', 'ყურადღება', response.msg);
-                                           setTimeout(function(){window.location.reload(1); }, 3000);		
-                                        }
-                                }
-                        });	 
-                         }
-
-                });
-
-        });
-
-        </script>
 <style type="text/css">
  img {
     opacity: 0.5;
@@ -215,7 +179,28 @@ img:hover {
 <div class="col-lg-9">
 <input class="form-control" id="cname" name="time_off_eng" value="<?=$get_answering['time_off_eng'];?>" type="text">
 </div>
-</div>      
+</div>
+
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">პასიური მომხმარებლის  გაფრთხილება ჩეთის დახურვამდე <img src="<?=base_url();?>assets/flags/geo.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="passive_client_geo" value="<?=$get_answering['passive_client_geo'];?>" type="text">
+</div>
+</div>
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">პასიური მომხმარებლის  გაფრთხილება ჩეთის დახურვამდე <img src="<?=base_url();?>assets/flags/rus.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="passive_client_rus" value="<?=$get_answering['passive_client_rus'];?>" type="text">
+</div>
+</div>
+    
+<div class="form-group">
+    <label for="cname" class="control-label col-lg-3">პასიური მომხმარებლის  გაფრთხილება ჩეთის დახურვამდე <img src="<?=base_url();?>assets/flags/usa.png" data-toggle="tooltip"  data-placement="bottom" title="ქართული"></label>
+<div class="col-lg-9">
+<input class="form-control" id="cname" name="passive_client_eng" value="<?=$get_answering['passive_client_eng'];?>" type="text">
+</div>
+</div>         
 		
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
@@ -223,6 +208,7 @@ img:hover {
    
 </div>
 </div>
+
 </form>
 </div> <!-- .form -->
 <div class="col-lg-offset-2 col-lg-9"><div id="msg" class="alert">                                         
