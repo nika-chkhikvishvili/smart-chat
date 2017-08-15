@@ -72,6 +72,7 @@ function ChatClient($, socket) {
 
     function addOtherMessageFn(data, dontScrool) {
         // console.log(data);
+        warningBeep.play();
         conversationStarted = true;
         let time = data.messageDate || (new Date()).toISOString();
         elChatbox.append(othTemplate(time.substr(11, 8), data.sender, data.message));
