@@ -86,8 +86,11 @@ function ChatClient($, socket) {
 
     function operatorIsWorkingShowFn() {
         $('#operator_is_working').show();
+        // $('#operator_is_working_new').show();
+        resetWarnings();
+        elChatbox.append('<div class="operator_is_working_new">გთხოვთ დაელოდოთ</div>')
         lastWorkingTime = Date.now();
-        setTimeout(chat.operatorIsWorkingHide, 60000);
+        setTimeout(chat.operatorIsWorkingHide, 6000);
     }
 
     function operatorIsWritingShowFn() {
@@ -105,6 +108,7 @@ function ChatClient($, socket) {
     function operatorIsWorkingHideFn() {
         if (Date.now() - lastWorkingTime > 4900) {
             $('#operator_is_working').hide();
+            $('.operator_is_working_new').hide();
         }
     }
 
@@ -161,9 +165,10 @@ function ChatClient($, socket) {
 
         if (conversationStarted) {
             let chatCloseTime = localStorage.getItem('chatCloseTime') || 80000;
+            chatCloseTime = parseInt(chatCloseTime);
 
             if (Date.now() - lastMeWritingTime > 60000) {
-                infoMessagePanel.find('.modal-body').html(Math.round((chatCloseTime +lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
+                infoMessagePanel.find('.modal-body').html(Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
                 if (!chatCloseInfoShowed) {
                     chatCloseInfoShowed = true;
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');

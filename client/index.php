@@ -15,7 +15,6 @@
     <link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 <style>
-
     html, body {
         height:97%
     }
@@ -223,6 +222,25 @@
         margin: 0 auto;
     }
 
+    @-webkit-keyframes typing { from { width: 0; } }
+    @-webkit-keyframes blink-caret { 50% { border-color: transparent; } }
+
+    .operator_is_working_new {
+        /*display:none;*/
+        bottom: 83px;
+        position: fixed;
+        z-index: 0;
+        font: bold Consolas, Monaco, monospace;
+        border-right: .1em solid black;
+        width: 19.5em;
+        width: 20ch;
+        margin: 2em 1em;
+        white-space: nowrap;
+        overflow: hidden;
+        -webkit-animation: typing 2s steps(21, end),
+        blink-caret .5s step-end infinite alternate;
+    }
+
 </style>
 </head>
 <body>
@@ -282,7 +300,6 @@
     			</div>
 <!--    			<h3 class="panel-title">Chat</h3>-->
     		</div>
-
     		<!--Widget body-->
     		<div id="chat-body" class="collapse in" style="height:100%">
     			<div class="nano has-scrollbar" style="height:90%">
@@ -357,7 +374,7 @@
                 <h4 class="modal-title" id="info_message_panel-label">გჰდფგჰ</h4>
             </div>
             <div class="modal-body">
-გსდფგსდფგსდფგ
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
