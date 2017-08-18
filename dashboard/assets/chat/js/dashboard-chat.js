@@ -91,6 +91,14 @@ function DashboardChat($, socket) {
         chat.toggleIAmWorkingFun()
     }
 
+    function turnOffIAmWorkingFn(chatId) {
+        let chat = chats.get(chatId);
+        if (!chat) {
+            return false;
+        }
+        chat.turnOffIAmWorkingFun()
+    }
+
     function executeLoopFunctionFn() {
         chats.forEach(function(chat, chatId){
             chat.checkIAmWorkingAndSend();
@@ -107,6 +115,7 @@ function DashboardChat($, socket) {
         closeDashboardChat: closeDashboardChatFn,
         makeActiveChat: makeActiveChatFn,
         toggleIAmWorking: toggleIAmWorkingFn,
+        turnOffIAmWorking: turnOffIAmWorkingFn,
     };
 
     function ChatWindow($, socket, chatIdInit){
@@ -196,6 +205,12 @@ function DashboardChat($, socket) {
             if (iAmWorking && Date.now() - lastIAmWorkingSendTime > imWorkingDelay ) {
                 socket.emit('operatorIsWorking', {chatUniqId: chatId});
                 lastIAmWorkingSendTime = Date.now();
+            }
+        }
+
+        this.turnOffIAmWorkingFun = function() {
+            if (iAmWorking) {
+                this.toggleIAmWorkingFun();
             }
         }
     }

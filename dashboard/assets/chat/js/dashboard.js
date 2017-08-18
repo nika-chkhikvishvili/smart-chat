@@ -462,6 +462,7 @@ $(document).ready(function () {
             id: id
         });
         $(".write input").val('');
+        chatManager.turnOffIAmWorking(chatUniqId);
         // elChatbox.append('<div class="bubble me">'+ message + '</div>' );
         // elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
     });

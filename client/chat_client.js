@@ -165,7 +165,8 @@ function ChatClient($, socket) {
         // }
 
         if (conversationStarted) {
-            let chatCloseTime = localStorage.getItem('chatCloseTime') || sys_control_params.passive_client_time || 120000;
+            let chatCloseTime = localStorage.getItem('chatCloseTime') ;
+
             if (!chatCloseTime && sys_control_params.hasOwnProperty('passive_client_time') && !!sys_control_paramspassive_client_time) {
                 chatCloseTime = parseInt(sys_control_params.passive_client_time) * 1000;
             }
