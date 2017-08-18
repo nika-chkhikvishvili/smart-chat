@@ -85,13 +85,11 @@ function ChatClient($, socket) {
     }
 
     function operatorIsWorkingShowFn() {
-        $('#operator_is_working').show();
-        // $('#operator_is_working_new').show();
         resetWarnings();
-        elChatbox.append('<div class="operator_is_working_new">გთხოვთ დაელოდოთ</div>');
+        elChatbox.append('<div class="operator_is_working">გთხოვთ დაელოდოთ</div>');
         this.scrollDown();
         lastWorkingTime = Date.now();
-        setTimeout(chat.operatorIsWorkingHide, 6000);
+        setTimeout(chat.operatorIsWorkingHide, parseInt(auto_answering.repeat_auto_answering) * 1000 - 5000);
     }
 
     function operatorIsWritingShowFn() {
@@ -108,8 +106,7 @@ function ChatClient($, socket) {
 
     function operatorIsWorkingHideFn() {
         if (Date.now() - lastWorkingTime > 4900) {
-            $('#operator_is_working').hide();
-            $('.operator_is_working_new').hide();
+            $('.operator_is_working').hide();
         }
     }
 

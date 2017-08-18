@@ -399,7 +399,7 @@ ChatServer.prototype.redirectToService = function (socket, data) {
 
 ChatServer.prototype.getPersonsForRedirect = function (socket, data) {
     app.connection.query('SELECT person_id, first_name, last_name FROM persons where status_id = 0 AND repo_id IN ' +
-            '(SELECT repo_id FROM persons WHERE person_id = 1)', [socket.user.userId], function(err, res){
+            '(SELECT repo_id FROM persons WHERE person_id = ?)', [socket.user.userId], function(err, res){
         if (err) {
             return app.databaseError(socket, err);
         }

@@ -499,6 +499,15 @@
   width: 6px;
 }
 
+.badge {
+  display: none;
+  margin-left: 5px;
+}
+
+.new_message .badge {
+  display: inline-block;
+}
+
 .only_view{
   display: none;
   margin-left: 20px;
@@ -518,4 +527,42 @@
 
 .readonly .show_on_readonly{
   display: inline;
+}
+
+#loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  /*display: none;*/
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 2;
+  cursor: pointer;
 }

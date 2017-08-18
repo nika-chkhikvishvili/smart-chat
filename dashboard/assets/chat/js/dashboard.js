@@ -10,7 +10,8 @@ let choose_redirect_person_locker = false;
 let filesDialog = $("#dialog-form-files" );
 let dialogFormTemplate = $("#dialog-form-template" );
 let dialogUserBlock = $("#dialog-user-block" );
-let dialogChatRedirect = $("#chat-redirect-type-dialog" );
+let dialogChatTypeRedirect = $("#chat-redirect-type-dialog" );
+let dialogChatGroupRedirect = $("#chat-redirect-group-dialog" );
 let chatManager = new DashboardChat($, socket);
 
 /** BAN USER */
@@ -52,48 +53,80 @@ socket.on('banPersonResponse', function (data) {
 /** REDIRECT */
 
 function choose_redirect_type(){
-    let chatUniqId = $('.active-chat').attr('data-chat');
-    if (!chatUniqId  || chatUniqId === '') return;
-    dialogChatRedirect.data( 'chatUniqId', chatUniqId );
-    dialogChatRedirect.modal();
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
+    dialogChatTypeRedirect.modal();
 }
 
-
-function redirect_to_service(serviceId){
-    var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    dialogChatRedirect.modal("toggle" );
-    var exit = confirm("ნამდვილად გსურთ ამ ჯგუფის არჩევა?");
-    if (exit === true) {
-        socket.emit('redirectToService', {chatUniqId: chatUniqId, serviceId: serviceId});
-    }
-
+/* Redirect to service */
+function choose_redirect_group() {
+    dialogChatTypeRedirect.modal("toggle");
+    dialogChatGroupRedirect.modal();
 }
 
-function redirect_to_person(personId){
-    var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    var redirectType = $("#chat-redirect-person-dialog").data( 'redirectType' );
+function redirect_to_service(serviceId, serviceName){
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
 
-    dialogChatRedirect.modal("toggle" );
-    var exit = confirm("ნამდვილად გსურთ ამ პიროვნების არჩევა?");
-    if (exit === true) {
-        socket.emit('redirectToPerson', {chatUniqId: chatUniqId, personId: personId, redirectType: redirectType});
+    bootbox.confirm({
+        title: "გადამისამართება ჯგუფზე",
+        message: "ნამდვილად გსურთ ჯგუფი " + serviceName +"-ს არჩევა?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                dialogChatGroupRedirect.modal("toggle" );
+                socket.emit('redirectToService', {chatUniqId: chatUniqueId, serviceId: serviceId});
+            }
+        }
+    });
+}
+
+socket.on('redirectToServiceResponse', function (data) {
+    console.log('execute: redirectToServiceResponse');
+    console.log(data);
+    if (!data.success){
+        chatManager.showInfoMessage('ვერ მოხერხდა გადამისამართება', 'ჯგუფზე გადამისამართება');
+        return ;
     }
+    chatManager.closeDashboardChat(data.chatUniqId, 'redirect');
+
+});
+
+/* Redirect to person */
+
+function choose_redirect_person_dialog(redirectType) {
+    if (choose_redirect_person_locker) return ;
+    choose_redirect_person_locker = true;
+    $("#chat-redirect-person-dialog").data( 'redirectType', redirectType );
+    socket.emit('getPersonsForRedirect', {});
+    chatManager.showLoader();
 }
 
 socket.on('getPersonsForRedirectResponse', function (data) {
     console.log('execute: getPersonsForRedirectResponse');
     // console.log(data);
+    chatManager.hideLoader();
+    dialogChatTypeRedirect.modal("toggle" );
     if (!data || !Array.isArray(data)){
-        alert('ver moxerxda gadamisamarteba');
+        chatManager.showInfoMessage('ვერ მოხერხდა თანამშრომლების სიის წამოღება', 'გადამისამართება პიროვნებაზე');
         choose_redirect_person_locker = false;
         return ;
     }
 
-    var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    dialogChatRedirect.modal("toggle" );
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
 
-    var personDialog = $("#chat-redirect-person-dialog");
-    var tbl = personDialog.find("tbody");
+    let personDialog = $("#chat-redirect-person-dialog");
+    let tbl = personDialog.find("tbody");
 
     tbl.html('');
 
@@ -104,73 +137,83 @@ socket.on('getPersonsForRedirectResponse', function (data) {
             '<td><a href="javascript:redirect_to_person(' + item.person_id + ');">' + item.first_name + ' ' + item.last_name + '</a></td>' +
             '</tr>');
     });
-
-    var dialogGroup = personDialog.dialog({
-        autoOpen: false,
-        height: 400,
-        width: 750,
-        modal: true,
-        buttons: {
-            Ok: function() {
-            },
-            Cancel: function() {
-                dialogGroup.dialog( "close" );
-            }
-        },
-        close: function() {
-        }
-    });
-
-    dialogGroup.dialog( "open" );
+    personDialog.modal();
     choose_redirect_person_locker = false;
 });
 
-function choose_redirect_group() {
-    var chatUniqId = dialogChatRedirect.data( 'chatUniqId' );
-    dialogChatRedirect.modal("toggle" );
+function redirect_to_person(personId){
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
+    let personDialog = $("#chat-redirect-person-dialog");
+    let redirectType = personDialog.data( 'redirectType' );
+    personDialog.modal("toggle" );
 
-    var dialogGroup = $( "#chat-redirect-group-dialog" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 750,
-        modal: true,
+    bootbox.confirm({
+        title: "გადამისამართება პიროვნებაზე",
+        message: "ნამდვილად გსურთ ამ პიროვნების არჩევა?",
         buttons: {
-            Ok: function() {
-
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
             },
-            Cancel: function() {
-                dialogGroup.dialog( "close" );
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
             }
         },
-        close: function() {
-
+        callback: function (result) {
+            if (result) {
+                socket.emit('redirectToPerson', {chatUniqId: chatUniqueId, personId: personId, redirectType: redirectType});
+            }
         }
     });
-
-    dialogGroup.dialog( "open" );
 }
+
+socket.on('redirectToPersonResponse', function (data) {
+    console.log('execute: redirectToPersonResponse');
+    // console.log(data);
+
+    if (!data.isValid){
+        chatManager.showInfoMessage('ვერ მოხერხდა პიროვნების დამატება');
+    }
+
+});
 
 /** END REDIRECT */
 
-
-
-
-
-
-
+/** CLOSE CHAT */
 
 function close_chat(){
     let chatUniqueId = $('.active-chat').attr('data-chat');
     if (!chatUniqueId  || chatUniqueId === '') return;
 
+    bootbox.confirm({
+        title: "ჩატის დასრულება",
+        message: "ნამდვილად გსურთ საუბრის დასრულება?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                socket.emit('operatorCloseChat', {chatUniqId : chatUniqueId});
+            }
+        }
+    });
 
-    let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
-    if (exit === true) {
-        socket.emit('operatorCloseChat', {chatUniqId : chatUniqueId});
-        $(".person[data-chat = " + chatUniqueId + "]").remove();
-        $(".chat[data-chat = " + chatUniqueId + "]").remove();
-    }
 }
+
+/** END CLOSE CHAT */
+
+
+
+
 
 function send_file(fileId, fileName){
 
@@ -189,59 +232,8 @@ function send_file(fileId, fileName){
     filesDialog.modal( "toggle" );
 }
 
-socket.on('redirectToServiceResponse', function (data) {
-    console.log('execute: redirectToServiceResponse');
-    console.log(data);
-    if (!data.success){
-        alert('ვერ მოხერხდა გადამისამართება');
-        return ;
-    }
-
-    $(".person[data-chat = " + data.chatUniqId + "]").remove();
-    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-
-});
-
-socket.on('redirectToServiceResponse', function (data) {
-    console.log('execute: redirectToServiceResponse');
-    console.log(data);
-    if (!data.isValid){
-        alert('ვერ მოხერხდა გადამისამართება');
-        return ;
-    }
-
-    $(".person[data-chat = " + data.chatUniqId + "]").remove();
-    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-
-});
-
-socket.on('redirectToPersonResponse', function (data) {
-    console.log('execute: redirectToPersonResponse');
-    // console.log(data);
-
-    if (!data.isValid){
-        alert('ვერ მოხერხდა პიროვნების დამატება');
-        return ;
-    }
-
-});
 
 
-
-function choose_redirect_person_dialog(redirectType) {
-    if (choose_redirect_person_locker) return ;
-    choose_redirect_person_locker = true;
-    $("#chat-redirect-person-dialog").data( 'redirectType', redirectType );
-    socket.emit('getPersonsForRedirect', {});
-}
-
-
-
-
-
-function isChatWindowHidden(id) {
-    return localStorage.getItem("hidde_chat_"+id) || false;
-}
 
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
 function createChatWindowAndLoadDataSimple(data){
@@ -299,7 +291,7 @@ function createChatWindowAndLoadData(data){
 socket.on('getAllChatMessagesResponse', function (data) {
     console.log('execute: getAllChatMessagesResponse');
     console.log(data);
-    var elChatbox = $(".chat[data-chat = "+data.chatUniqId+"]");
+    let elChatbox = $(".chat[data-chat = "+data.chatUniqId+"]");
 
 /*    elChatbox.append('<div class="conversation-start">'+
         '<span>'+ new Date(item.messageDate).toISOString() +'</span>'+
@@ -404,21 +396,21 @@ $(document).ready(function () {
 
     //სასაუბრო ფანჯრის ჩაკეცვა
     $("#msgbox_container").on('click', '.msgbox_left', function () {
-        var chatWindow = $(this).parents('.msgbox_chat_window');
+        let chatWindow = $(this).parents('.msgbox_chat_window');
         chatWindow.children( ".msgbox_chat_content" ).hide();
         chatWindow.children( ".msgbox_chat_minimized" ).show();
     });
 
     //ჩაკეცილი სასაუბრო ფანჯრის გადიდება
     $("#msgbox_container").on('click', '.msgbox_chat_minimized', function () {
-        var chatWindow = $(this).parents('.msgbox_chat_window');
+        let chatWindow = $(this).parents('.msgbox_chat_window');
         chatWindow.children( ".msgbox_chat_content" ).show();
         chatWindow.children( ".msgbox_chat_minimized" ).hide();
     });
 
     //სასაუბრო ფანჯრის დამალვა
     $("#msgbox_container").on('click', '.msgbox_close', function (e) {
-        var a = $(this).parents('.msgbox_chat_window');
+        let a = $(this).parents('.msgbox_chat_window');
         localStorage.setItem("hidde_chat_"+ a.attr('id'), true);
         a.hide();
         e.preventDefault();
@@ -426,7 +418,7 @@ $(document).ready(function () {
 
     // ჩატის ტექსტის აკრეფინს ფანჯარაზე ენტერ ღილაკზე დაჭერა
     $(".write input").on('keyup', function (event) {
-        var elChatbox = $('.active-chat');
+        let elChatbox = $('.active-chat');
         socket.emit('operatorIsWriting', {chatUniqId: elChatbox.data("chat")});
         if (event.keyCode === 13 ) {
             $(".wrapper_chat .send").click();
@@ -442,19 +434,19 @@ $(document).ready(function () {
     //სასაუბრო ფანჯრის დამალვა1
     $(".wrapper_chat").on('click', '.send', function (e) {
 
-        var elChatbox = $('.active-chat');
+        let elChatbox = $('.active-chat');
 
         if (elChatbox.size() === 0) {
             alert('არ არის არჩეული პიროვნება');
             return ;
         }
 
-        var message = $("div.write input").val();
+        let message = $("div.write input").val();
         if (message.length < 3 ) {
             return;
         }
-        var id = makeRandomString();
-        var chatUniqId = elChatbox.data('chat');
+        let id = makeRandomString();
+        let chatUniqId = elChatbox.data('chat');
 
         socket.emit('sendMessage', {
             chatUniqId:  chatUniqId ,

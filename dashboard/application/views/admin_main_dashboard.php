@@ -204,27 +204,27 @@
         </div>
         <!-- END wrapper -->
 
-<!--<div class="clearfix" id="msgbox_container">-->
-<!--    ONLY FOR EXAMPLE-->
-<!--    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">-->
-<!--        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>-->
-<!--        <div class="msgbox_chat_content">-->
-<!--            <div class="titlebar">-->
-<!--                <div class="msgbox_left">giga kokaia</div>-->
-<!--                <div class="msgbox_right">-->
-<!--                    <input type="checkbox">-->
-<!--                    <a class="msgbox_close" href="#">x</a>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="msgbox_chat_area scrollable">-->
-<!---->
-<!--            </div>-->
-<!--            <div class="msgbox_chat_">-->
-<!--                <textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+<!--<div class="clearfix" id="msgbox_container">
+    ONLY FOR EXAMPLE
+    <div class="msgbox_chat_window msgbox_readonly" id="DRJadCx7WYIRB0IGlSsaCqz5QBhAi5Jh">
+        <div class="msgbox_chat_minimized titlebar">giga kokaia</div>
+        <div class="msgbox_chat_content">
+            <div class="titlebar">
+                <div class="msgbox_left">giga kokaia</div>
+                <div class="msgbox_right">
+                    <input type="checkbox">
+                    <a class="msgbox_close" href="#">x</a>
+                </div>
+            </div>
+            <div class="msgbox_chat_area scrollable">
+
+            </div>
+            <div class="msgbox_chat_">
+                <textarea name="usermsg" type="text" class="msgbox_usermsg"></textarea>
+            </div>
+        </div>
+    </div>
+</div>-->
 <!--
 <div class="wrapper_chat">
     <div class="chat_open_button" style="display: none; cursor: pointer; ">X</div>
@@ -282,7 +282,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="dialog-form-files" tabindex="-1" role="dialog" aria-labelledby="dialog-form-files-title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -314,7 +313,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="dialog-form-template" tabindex="-1" role="dialog" aria-labelledby="dialog-form-template-label">
     <div class="modal-dialog" role="document">
@@ -371,15 +369,11 @@
     </div>
 </div>
 
-
-
 <script>
     var resizefunc =[];
     var messageTemplates =<?php echo json_encode($get_sql_templates, JSON_UNESCAPED_UNICODE); ?>
 
 </script>
-
-
 
 <div class="modal fade" id="dialog-user-block" tabindex="-1" role="dialog" aria-labelledby="dialog-user-block-title">
     <div class="modal-dialog" role="document">
@@ -399,7 +393,6 @@
     </div>
 </div>
 
-
 <div class="modal fade" id="chat-redirect-type-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-type-dialog-Label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -410,7 +403,7 @@
             <div class="modal-body">
                 <a href="javascript:choose_redirect_group();">გადამისამართება ჯგუფზე</a><br>
                 <a href="javascript:choose_redirect_person_dialog(1);">გადამისამართება პიროვნებაზე</a><br>
-                <a href="javascript:choose_redirect_person_dialog(2);">conference chat</a>
+                <a href="javascript:choose_redirect_person_dialog(2);">კონფერენცია</a>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -419,85 +412,105 @@
     </div>
 </div>
 
-
-<div id="chat-redirect-type-dialog1" class="chat-redirect-type-dialog" title="">
-
-</div>
-
-<div id="chat-redirect-group-dialog" style="display: none" title="აირჩიეთ ჯგუფი">
-    <table width="500">
-        <tr>
-            <th width="10%">id</th>
-            <th width="30%">repository_name</th>
-            <th width="30%">category_name</th>
-            <th width="30%">სერვისი</th>
-        </tr>
-        <tbody>
-        <?php
-        foreach ($all_services as $key => $val) {
-            echo "<tr>
-        <td>{$val['category_service_id']}</td>
+<div class="modal fade" id="chat-redirect-group-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-group-dialog-Label">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="chat-redirect-group-dialog-Label">აირჩიეთ ჯგუფი</h4>
+        </div>
+        <div class="modal-body">
+            <table class="table table-hover table-striped">
+                <thead><tr>
+                    <th width="30%">repository_name</th>
+                    <th width="30%">category_name</th>
+                    <th width="30%">სერვისი</th>
+                </tr></thead>
+                <tbody>
+                <?php
+                foreach ($all_services as $key => $val) {
+                    echo "<tr>
         <td>{$val['repository_name']}</td>
         <td>{$val['category_name']}</td>
-        <td><a href='javascript:redirect_to_service({$val['category_service_id']});'>{$val['service_name_geo']}</a></td>
+        <td><a href='javascript:redirect_to_service({$val['category_service_id']}, \"{$val['service_name_geo']}\");'>{$val['service_name_geo']}</a></td>
     </tr>";
-        }
+                }
 
-        ?>
+                ?>
 
-        </tbody>
-    </table>
-
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
 </div>
 
-<div id="chat-redirect-person-dialog" style="display: none" title="აირჩიეთ პიროვნება">
-    <table width="500">
-        <thead>
-        <tr>
-            <th width="20%">id</th>
-            <th width="80%">სახელი, გვარი</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+<div class="modal fade" id="chat-redirect-person-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-person-dialog-Label">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="chat-redirect-person-dialog-Label">აირჩიეთ პიროვნება</h4>
+        </div>
+        <div class="modal-body">
+            <table width="500" class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th width="20">id</th>
+                    <th>სახელი, გვარი</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
 </div>
 
-        <!-- jQuery  -->
+    <!-- jQuery  -->
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
-        <!--        <script src="--><?//=base_url();?><!--assets/js/jquery.min.js"></script>-->
-        <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
-        <script src="<?=base_url();?>assets/js/detect.js"></script>
-        <script src="<?=base_url();?>assets/js/fastclick.js"></script>
-        <script src="<?=base_url();?>assets/js/jquery.slimscroll.js"></script>
-        <script src="<?=base_url();?>assets/js/jquery.blockUI.js"></script>
-        <script src="<?=base_url();?>assets/js/waves.js"></script>
-        <script src="<?=base_url();?>assets/js/wow.min.js"></script>
-        <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
-        <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
+    <!--        <script src="--><?//=base_url();?><!--assets/js/jquery.min.js"></script>-->
+    <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+    <script src="<?=base_url();?>assets/js/detect.js"></script>
+    <script src="<?=base_url();?>assets/js/fastclick.js"></script>
+    <script src="<?=base_url();?>assets/js/jquery.slimscroll.js"></script>
+    <script src="<?=base_url();?>assets/js/jquery.blockUI.js"></script>
+    <script src="<?=base_url();?>assets/js/waves.js"></script>
+    <script src="<?=base_url();?>assets/js/wow.min.js"></script>
+    <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
+    <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
 
-        <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
-        <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 
-        <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
+    <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
 
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
-        <script type="application/javascript">
-            var token = "<?=$this->session->userdata['token'] ; ?>";
-            var socketAddr = '<?=substr(base_url(),0,-1);?>';
-            var imWorkingDelay = 1000* <?php  echo $params['repeat_auto_answering'];  ?>;
 
-        </script>
-        <script src="<?=base_url();?>assets/chat/js/common.js"></script>
+    <script type="application/javascript">
+        var token = "<?=$this->session->userdata['token'] ; ?>";
+        var socketAddr = '<?=substr(base_url(),0,-1);?>';
+        var imWorkingDelay = 1000* <?php  echo $params['repeat_auto_answering'];  ?>;
 
-        <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard-chat.js?<?=rand(); ?>"></script>
-        <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard.js?<?=rand(); ?>"></script>
+    </script>
+    <script src="<?=base_url();?>assets/chat/js/common.js"></script>
 
-    </body>
+    <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard-chat.js?<?=rand(); ?>"></script>
+    <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard.js?<?=rand(); ?>"></script>
+    <div id="overlay"><div id="loader"></div></div>
+</body>
 
 </html>

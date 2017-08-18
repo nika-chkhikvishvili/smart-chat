@@ -17,6 +17,13 @@ function DashboardChat($, socket) {
         infoMessagePanel.find('.modal-body').html(str);
         infoMessagePanel.modal();
     }
+    function hideLoaderFn() {
+        $("#overlay").hide();
+    }
+
+    function showLoaderFn() {
+        $("#overlay").show();
+    }
 
     function messageGuestFn(chatId, message){
         let chat = chats.get(chatId);
@@ -49,9 +56,10 @@ function DashboardChat($, socket) {
         $('.wrapper_chat .container_chat .left .people').append('<li class="person ' + ro + '"  data-type="' + ro + '"  data-chat="' + data.chatUniqId + '">'+
             '<img src="https://cdn1.iconfinder.com/data/icons/social-messaging-productivity-1/128/profile2-48.png" alt="" />'+
             '<span class="name">'+ data.firstName + ' '+ data.lastName+'</span>'+
-            '<span class="new_message_icon"></span>'+
+            // '<span class="new_message_icon"></span>'+
+            '<span class="badge">0</span>'+
             '<span class="only_view" style="color: darkred;">დათვალიერების რეჟიმი</span>'+
-            '<span class="time"></span>'+
+            '<span class="time"></span><br>'+
             '<span class="only_view close_readonly"><a href=\'javascript:leaveReadOnlyRoom("'+ data.chatUniqId + '");\'>X</a></span>'+
             '<span class="preview">...</span>'+
             '</li>');
@@ -109,6 +117,8 @@ function DashboardChat($, socket) {
     return {
         executeLoopFunction: executeLoopFunctionFn,
         showInfoMessage:showInfoMessageFn,
+        showLoader: showLoaderFn,
+        hideLoader: hideLoaderFn,
         createChatWindow: createChatWindowFn,
         messageGuest: messageGuestFn,
         messageMe: messageMeFn,
@@ -151,11 +161,14 @@ function DashboardChat($, socket) {
         this.messageGuestFun=function (message){
             chatBox.append('<div class="bubble you">' + message + '</div>');
             personBox.find(".preview").html(shorter(message));
+            let badge = personBox.find(".badge");
+            badge.html(parseInt(badge.html() || 0) + 1);
             personBox.find(".time").html(new Date().toISOString().substr(11, 5));
             chatBox.animate({scrollTop: chatBox[0].scrollHeight}, 'normal');
 
             if (!(personBox.hasClass('active'))) {
                 personBox.addClass('new_message');
+
                 newMessage.play();
             }
         };
@@ -169,6 +182,8 @@ function DashboardChat($, socket) {
                 infoStr = 'თქვენ დახურეთ ჩატი';
             } else if (closedBy === 'guest') {
                 infoStr = 'ჩატი დაიხურა კლიენტის მიერ';
+            } else if (closedBy === 'redirect') {
+                infoStr = 'ჩატი გადამისამართდა';
             } else {
                 infoStr = 'ჩატი დასრულდა';
             }
@@ -186,6 +201,7 @@ function DashboardChat($, socket) {
             $('#im_working_checkbox').attr("src", src);
             personBox.addClass('active');
             personBox.removeClass('new_message');
+            personBox.find(".badge").html('0');
 /*
             if (isReadonly) {
                 $('.right').addClass('readonly');
@@ -206,7 +222,7 @@ function DashboardChat($, socket) {
                 socket.emit('operatorIsWorking', {chatUniqId: chatId});
                 lastIAmWorkingSendTime = Date.now();
             }
-        }
+        };
 
         this.turnOffIAmWorkingFun = function() {
             if (iAmWorking) {
