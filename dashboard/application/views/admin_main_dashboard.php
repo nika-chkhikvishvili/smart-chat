@@ -265,12 +265,12 @@
     </div>
 </div>-->
 
-<div class="modal fade" id="info_message_panel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="info_message_panel" tabindex="-1" role="dialog" aria-labelledby="info_message_panel-Label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"></h4>
+                <h4 class="modal-title" id="info_message_panel-Label"></h4>
             </div>
             <div class="modal-body">
 
@@ -379,14 +379,48 @@
 
 </script>
 
-<div id="block-dialog" style="display: none" title="გთხოვთ შეიყვანოთ ბლოკირების მიზეზი">
-    <textarea rows="12" cols="50"></textarea>
+
+
+<div class="modal fade" id="dialog-user-block" tabindex="-1" role="dialog" aria-labelledby="dialog-user-block-title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="dialog-user-block-title">გთხოვთ შეიყვანოთ ბლოკირების მიზეზი</h4>
+            </div>
+            <div class="modal-body">
+                    <textarea rows="12" style="margin-left: 0px; margin-right: 0px; width: 537px;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-dismiss="modal" onclick="approve_ban_person();">Ok</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="chat-redirect-type-dialog" class="chat-redirect-type-dialog" title="აირჩიეთ ქმედება">
-    <a href="javascript:choose_redirect_group();">გადამისამართება ჯგუფზე</a><br>
-    <a href="javascript:choose_redirect_person_dialog(1);">გადამისამართება პიროვნებაზე</a><br>
-    <a href="javascript:choose_redirect_person_dialog(2);">conference chat</a>
+
+<div class="modal fade" id="chat-redirect-type-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-type-dialog-Label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="chat-redirect-type-dialog-Label">აირჩიეთ ქმედება</h4>
+            </div>
+            <div class="modal-body">
+                <a href="javascript:choose_redirect_group();">გადამისამართება ჯგუფზე</a><br>
+                <a href="javascript:choose_redirect_person_dialog(1);">გადამისამართება პიროვნებაზე</a><br>
+                <a href="javascript:choose_redirect_person_dialog(2);">conference chat</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="chat-redirect-type-dialog1" class="chat-redirect-type-dialog" title="">
 
 </div>
 

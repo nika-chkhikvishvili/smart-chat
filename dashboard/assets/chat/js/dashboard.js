@@ -9,42 +9,59 @@ let choose_redirect_person_locker = false;
 
 let filesDialog = $("#dialog-form-files" );
 let dialogFormTemplate = $("#dialog-form-template" );
+let dialogUserBlock = $("#dialog-user-block" );
+let dialogChatRedirect = $("#chat-redirect-type-dialog" );
 let chatManager = new DashboardChat($, socket);
 
+/** BAN USER */
 
-function close_chat(){
+function approve_ban_person(){
+    "use strict";
     let chatUniqueId = $('.active-chat').attr('data-chat');
     if (!chatUniqueId  || chatUniqueId === '') return;
 
-
-    let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
-    if (exit === true) {
-        socket.emit('operatorCloseChat', {chatUniqId : chatUniqueId});
-        $(".person[data-chat = " + chatUniqueId + "]").remove();
-        $(".chat[data-chat = " + chatUniqueId + "]").remove();
-    }
-}
-
-function send_file(fileId, fileName){
-
-    let elChatbox = $('.active-chat');
-
-    if (elChatbox.size() === 0) {
-        alert('არ არის არჩეული პიროვნება');
-        return ;
-    }
-
-    socket.emit('sendFile', {
-        chatUniqId:  elChatbox.data('chat'),
-        message: fileName,
-        id: fileId
+    let msg = dialogUserBlock.find('textarea').val();
+    socket.emit('banPerson', {
+        chatUniqId:  chatUniqueId ,
+        message: msg
     });
-    filesDialog.modal( "toggle" );
 }
+
+function ban_person(){
+    let chatUniqueId = $('.active-chat').attr('data-chat');
+    if (!chatUniqueId  || chatUniqueId === '') return;
+    dialogUserBlock.find('textarea').val('');
+    dialogUserBlock.modal();
+}
+
+socket.on('banPersonResponse', function (data) {
+    console.log('execute: banPersonResponse');
+    // console.log(data);
+    if (!data || !data.hasOwnProperty('isValid')) {
+        return;
+    }
+    if (data.isValid) {
+        chatManager.showInfoMessage('წარმატებით გადაეგზავნა შესამოწმებლად');
+    } else {
+        chatManager.showInfoMessage('ბლოკირების შეცდომა');
+    }
+});
+
+/** END BAN USER */
+
+/** REDIRECT */
+
+function choose_redirect_type(){
+    let chatUniqId = $('.active-chat').attr('data-chat');
+    if (!chatUniqId  || chatUniqId === '') return;
+    dialogChatRedirect.data( 'chatUniqId', chatUniqId );
+    dialogChatRedirect.modal();
+}
+
 
 function redirect_to_service(serviceId){
     var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    $( "#chat-redirect-group-dialog" ).dialog("close" );
+    dialogChatRedirect.modal("toggle" );
     var exit = confirm("ნამდვილად გსურთ ამ ჯგუფის არჩევა?");
     if (exit === true) {
         socket.emit('redirectToService', {chatUniqId: chatUniqId, serviceId: serviceId});
@@ -52,53 +69,16 @@ function redirect_to_service(serviceId){
 
 }
 
-socket.on('redirectToServiceResponse', function (data) {
-    console.log('execute: redirectToServiceResponse');
-    console.log(data);
-    if (!data.success){
-        alert('ვერ მოხერხდა გადამისამართება');
-        return ;
-    }
-
-    $(".person[data-chat = " + data.chatUniqId + "]").remove();
-    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-
-});
-
-
-socket.on('redirectToServiceResponse', function (data) {
-    console.log('execute: redirectToServiceResponse');
-    console.log(data);
-    if (!data.isValid){
-        alert('ვერ მოხერხდა გადამისამართება');
-        return ;
-    }
-
-    $(".person[data-chat = " + data.chatUniqId + "]").remove();
-    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
-
-});
-
 function redirect_to_person(personId){
     var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
     var redirectType = $("#chat-redirect-person-dialog").data( 'redirectType' );
 
-    $( "#chat-redirect-person-dialog" ).dialog("close" );
+    dialogChatRedirect.modal("toggle" );
     var exit = confirm("ნამდვილად გსურთ ამ პიროვნების არჩევა?");
     if (exit === true) {
         socket.emit('redirectToPerson', {chatUniqId: chatUniqId, personId: personId, redirectType: redirectType});
     }
 }
-socket.on('redirectToPersonResponse', function (data) {
-    console.log('execute: redirectToPersonResponse');
-    // console.log(data);
-
-    if (!data.isValid){
-        alert('ვერ მოხერხდა პიროვნების დამატება');
-        return ;
-    }
-
-});
 
 socket.on('getPersonsForRedirectResponse', function (data) {
     console.log('execute: getPersonsForRedirectResponse');
@@ -110,7 +90,7 @@ socket.on('getPersonsForRedirectResponse', function (data) {
     }
 
     var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    $( "#chat-redirect-type-dialog" ).dialog("close" );
+    dialogChatRedirect.modal("toggle" );
 
     var personDialog = $("#chat-redirect-person-dialog");
     var tbl = personDialog.find("tbody");
@@ -145,17 +125,9 @@ socket.on('getPersonsForRedirectResponse', function (data) {
     choose_redirect_person_locker = false;
 });
 
-
-function choose_redirect_person_dialog(redirectType) {
-    if (choose_redirect_person_locker) return ;
-    choose_redirect_person_locker = true;
-    $("#chat-redirect-person-dialog").data( 'redirectType', redirectType );
-    socket.emit('getPersonsForRedirect', {});
-}
-
 function choose_redirect_group() {
-    var chatUniqId = $( "#chat-redirect-type-dialog" ).data( 'chatUniqId' );
-    $( "#chat-redirect-type-dialog" ).dialog("close" );
+    var chatUniqId = dialogChatRedirect.data( 'chatUniqId' );
+    dialogChatRedirect.modal("toggle" );
 
     var dialogGroup = $( "#chat-redirect-group-dialog" ).dialog({
         autoOpen: false,
@@ -178,66 +150,94 @@ function choose_redirect_group() {
     dialogGroup.dialog( "open" );
 }
 
-function choose_redirect_type(){
-    var chatUniqId = $('.active-chat').attr('data-chat');
-    if (!chatUniqId  || chatUniqId === '') return;
+/** END REDIRECT */
 
 
-    $( "#chat-redirect-type-dialog" ).data( 'chatUniqId', chatUniqId );
-
-    var dialog = $( "#chat-redirect-type-dialog" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 550,
-        modal: true,
-        buttons: {
-            Ok: function() {
-
-            },
-            Cancel: function() {
-                dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-
-        }
-    });
-    dialog.dialog( "open" );
-}
 
 
-function ban_person(){
+
+
+
+
+function close_chat(){
     let chatUniqueId = $('.active-chat').attr('data-chat');
     if (!chatUniqueId  || chatUniqueId === '') return;
 
-    let dialog = $( "#block-dialog" ).dialog({
-        autoOpen: false,
-        height: 400,
-        width: 550,
-        modal: true,
-        buttons: {
-            Ok: function() {
 
-                var msg= $('#block-dialog textarea').val();
-                socket.emit('banPerson', {
-                    chatUniqId:  chatUniqueId ,
-                    message: msg
-                });
-
-                dialog.dialog( "close" );
-                $('#block-dialog textarea').val('');
-            },
-            Cancel: function() {
-                dialog.dialog( "close" );
-            }
-        },
-        close: function() {
-
-        }
-    });
-
-    dialog.dialog( "open" );
+    let exit = confirm("ნამდვილად გსურთ საუბრის დასრულება?");
+    if (exit === true) {
+        socket.emit('operatorCloseChat', {chatUniqId : chatUniqueId});
+        $(".person[data-chat = " + chatUniqueId + "]").remove();
+        $(".chat[data-chat = " + chatUniqueId + "]").remove();
+    }
 }
+
+function send_file(fileId, fileName){
+
+    let elChatbox = $('.active-chat');
+
+    if (elChatbox.size() === 0) {
+        alert('არ არის არჩეული პიროვნება');
+        return ;
+    }
+
+    socket.emit('sendFile', {
+        chatUniqId:  elChatbox.data('chat'),
+        message: fileName,
+        id: fileId
+    });
+    filesDialog.modal( "toggle" );
+}
+
+socket.on('redirectToServiceResponse', function (data) {
+    console.log('execute: redirectToServiceResponse');
+    console.log(data);
+    if (!data.success){
+        alert('ვერ მოხერხდა გადამისამართება');
+        return ;
+    }
+
+    $(".person[data-chat = " + data.chatUniqId + "]").remove();
+    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
+
+});
+
+socket.on('redirectToServiceResponse', function (data) {
+    console.log('execute: redirectToServiceResponse');
+    console.log(data);
+    if (!data.isValid){
+        alert('ვერ მოხერხდა გადამისამართება');
+        return ;
+    }
+
+    $(".person[data-chat = " + data.chatUniqId + "]").remove();
+    $(".chat[data-chat = " + data.chatUniqId + "]").remove();
+
+});
+
+socket.on('redirectToPersonResponse', function (data) {
+    console.log('execute: redirectToPersonResponse');
+    // console.log(data);
+
+    if (!data.isValid){
+        alert('ვერ მოხერხდა პიროვნების დამატება');
+        return ;
+    }
+
+});
+
+
+
+function choose_redirect_person_dialog(redirectType) {
+    if (choose_redirect_person_locker) return ;
+    choose_redirect_person_locker = true;
+    $("#chat-redirect-person-dialog").data( 'redirectType', redirectType );
+    socket.emit('getPersonsForRedirect', {});
+}
+
+
+
+
 
 function isChatWindowHidden(id) {
     return localStorage.getItem("hidde_chat_"+id) || false;

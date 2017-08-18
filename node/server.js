@@ -462,32 +462,26 @@ ChatServer.prototype.banPerson = function (socket, data) {
 
     let chat = app.getChat(data.chatUniqId);
 
-    app.connection.query('SELECT * FROM chats WHERE chat_id = ?', [chat.chatId], function (err, res) {
+    let banlist = {
+        ban_id: null,
+        ip: 1,
+        ip_address: socket.handshake.address,
+        chat_id: chat.chatId,
+        online_user_id: chat.guestUserId,
+        person_id: socket.user.userId,
+        //reason_id: '',
+        status: 0,
+        ban_comment: data.message
+    };
+
+    app.connection.query('INSERT INTO `banlist` SET ? ', banlist, function (err) {
         if (err) {
+            socket.emit("banPersonResponse", {isValid: false});
             return app.databaseError(socket, err);
         }
-        if (res && Array.isArray(res) && res.length === 1) {
-            let ans = res[0];
-            let banlist = {
-                ban_id: null,
-                ip: 1,
-                ip_address: socket.handshake.address,
-                chat_id: chat.chatId,
-                online_user_id: ans.online_user_id,
-                person_id: socket.user.userId,
-                //reason_id: '',
-                status: 0,
-                ban_comment: data.message
-            };
-
-            app.connection.query('INSERT INTO `banlist` SET ? ', banlist, function (err) {
-                if (err) {
-                    return app.databaseError(socket, err);
-                }
-                socket.emit("banPersonResponse", {isValid: true});
-            });
-        }
+        socket.emit("banPersonResponse", {isValid: true});
     });
+
 };
 
 ChatServer.prototype.approveBan = function (socket, data) {
