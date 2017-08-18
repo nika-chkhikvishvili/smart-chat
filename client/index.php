@@ -227,8 +227,8 @@
 
     .operator_is_working_new {
         /*display:none;*/
-        bottom: 83px;
-        position: fixed;
+        /*bottom: 83px;*/
+        /*position: fixed;*/
         z-index: 0;
         font: bold Consolas, Monaco, monospace;
         border-right: .1em solid black;
@@ -382,6 +382,41 @@
         </div>
     </div>
 </div>
+<script>
+    <?php
+    $conn = new mysqli('localhost','smartchat','smartchat','smartchat');
+    $conn->set_charset("utf8");
+
+    if ($conn->connect_error) {
+        die('Error : ('. $conn->connect_errno .') '. $conn->connect_error);
+    }
+
+    $results = $conn->query("SELECT operator_max_load, pass_life_time, history_life_time, passive_client_time FROM sys_control limit 1");
+    echo 'var sys_control_params = ';
+if ($results) {
+    $row = $results->fetch_assoc();
+    echo  json_encode($row,JSON_UNESCAPED_UNICODE),";\n";
+} else {
+    echo "{};\n";
+}
+
+    $results1 = $conn->query("SELECT
+ start_chating_geo, start_chating_rus, start_chating_eng, waiting_message_geo, 
+ waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, user_block_geo, 
+ user_block_rus, user_block_eng, auto_answering_geo, auto_answering_rus, auto_answering_eng, repeat_auto_answering, time_off_geo,
+  time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, passive_client_eng
+
+FROM auto_answering limit 1");
+    echo 'var auto_answering = ';
+    if ($results1) {
+        $row = $results1->fetch_assoc();
+        echo  json_encode($row, JSON_UNESCAPED_UNICODE),";\n";
+    } else {
+        echo "{};\n";
+    }
+
+    ?>
+</script>
 <script
     src="https://code.jquery.com/jquery-3.2.1.js"
     integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="

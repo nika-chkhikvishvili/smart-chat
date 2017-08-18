@@ -88,7 +88,8 @@ function ChatClient($, socket) {
         $('#operator_is_working').show();
         // $('#operator_is_working_new').show();
         resetWarnings();
-        elChatbox.append('<div class="operator_is_working_new">გთხოვთ დაელოდოთ</div>')
+        elChatbox.append('<div class="operator_is_working_new">გთხოვთ დაელოდოთ</div>');
+        this.scrollDown();
         lastWorkingTime = Date.now();
         setTimeout(chat.operatorIsWorkingHide, 6000);
     }
@@ -164,11 +165,19 @@ function ChatClient($, socket) {
         // }
 
         if (conversationStarted) {
-            let chatCloseTime = localStorage.getItem('chatCloseTime') || 80000;
+            let chatCloseTime = localStorage.getItem('chatCloseTime') || sys_control_params.passive_client_time || 120000;
+            if (!chatCloseTime && sys_control_params.hasOwnProperty('passive_client_time') && !!sys_control_paramspassive_client_time) {
+                chatCloseTime = parseInt(sys_control_params.passive_client_time) * 1000;
+            }
+            if (!chatCloseTime) {
+                chatCloseTime = 120000;
+            }
             chatCloseTime = parseInt(chatCloseTime);
 
-            if (Date.now() - lastMeWritingTime > 60000) {
-                infoMessagePanel.find('.modal-body').html(Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000)  +  ' წამში ჩატი დაიხურება პასიურობის გამო');
+            if (Date.now() - lastMeWritingTime > chatCloseTime - 60000) {
+                let str = auto_answering.passive_client_geo || '{time} წამში ჩატი დაიხურება პასიურობის გამო';
+                let repl = Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000);
+                infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
                 if (!chatCloseInfoShowed) {
                     chatCloseInfoShowed = true;
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
