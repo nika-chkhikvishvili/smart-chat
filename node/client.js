@@ -9,6 +9,7 @@ let fifo = require('fifo');
 let Message = require('./models/Message');
 let GuestUser = require('./models/GuestUser');
 let Chat = require('./models/Chat');
+let Escape = require("html-escape");
 let app;
 
 
@@ -188,7 +189,9 @@ ChatClient.prototype.clientMessage = function (socket, data) {
     }
 
     let chat = app.chats.get(socket.chatUniqId);
-    let message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: data.message});
+    let messageText = Escape(data.message);
+
+    let message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: messageText});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
         if (err) {
