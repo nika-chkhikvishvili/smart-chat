@@ -299,7 +299,6 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         <div class="form-group">
             <label for="select_theme" id="service_label">Choose Service:</label>
             <select id="select_theme" name="select_theme" class="selectpicker">
-                <option disabled></option>
                 <?php
                 if ($services_list_results) {
                     while($row = mysqli_fetch_assoc($services_list_results)) {
