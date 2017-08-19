@@ -62,6 +62,33 @@ $(document).ready(function () {
         usermsg.val('');
     });
 
+    $(".bfh-languages").on('change.bfhselectbox', function (event) {
+        let first_name_label = 'First Name:';
+        let last_name_label = 'Last Name:';
+        let service_label = 'Choose Service:';
+
+        switch (event.target.value){
+            case "ka_GE" :
+                first_name_label = 'სახელი:';
+                last_name_label = 'გვაგრი:';
+                service_label = 'აირჩიეთ სერვისი:';
+                break;
+            case "en_US" :
+                first_name_label = 'First Name:';
+                last_name_label = 'Last Name:';
+                service_label = 'Choose Service:';
+                break;
+            case "ru_RU" :
+                first_name_label = 'Имя:';
+                last_name_label = 'Фамилия:';
+                service_label = 'Выберите сервис:';
+                break;
+        }
+
+        $('#first_name_label').html(first_name_label);
+        $('#last_name_label').html(last_name_label);
+        $('#service_label').html(service_label);
+    });
     setInterval(chat.executeClientLoopFunction, 1000);
 
 });

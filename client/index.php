@@ -5,15 +5,43 @@
  * Date: 2017-05-20
  * Time: 8:32 PM
  */
+
+
+$conn = new mysqli('localhost','smartchat','smartchat','smartchat');
+$conn->set_charset("utf8");
+
+if ($conn->connect_error) {
+    die('Error : ('. $conn->connect_errno .') '. $conn->connect_error);
+}
+
+$sys_control_params_results = $conn->query("SELECT operator_max_load, pass_life_time, history_life_time, passive_client_time FROM sys_control limit 1");
+
+
+$auto_answering_results = $conn->query("SELECT
+start_chating_geo, start_chating_rus, start_chating_eng, waiting_message_geo, 
+waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, user_block_geo, 
+user_block_rus, user_block_eng, auto_answering_geo, auto_answering_rus, auto_answering_eng, repeat_auto_answering, time_off_geo,
+time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, passive_client_eng
+FROM auto_answering limit 1");
+
+$services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repository_id`, `rc`.`category_name`, `cs`.`service_name_geo`, `cs`.`start_time`, `cs`.`end_time` 
+     FROM `category_services` cs, `repo_categories` rc 
+     WHERE cs.`repo_category_id` = rc.`repo_category_id`');
+
+
 ?><!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Online support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-    <link href="css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/flag-icon.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css"/>
+
+    <link rel="stylesheet" href="libs/bootstrap-formhelpers/bootstrap-formhelpers.min.css" type="text/css" />
 <style>
     html, body {
         height:97%
@@ -250,11 +278,13 @@
     <div id="asarchevi" >
         <div class="form-group">
             <label for="language"></label>
-            <select id="language" name="language" onchange="changeLanguage();">
-                <option value="ka">ქართული</option>
-                <option value="en">English</option>
-                <option value="ru">Русский</option>
+            <select id="language" name="language" onchange="changeLanguage();" class="selectpicker">
+                <option value="ka"> ქართული</option>
+                <option value="en"> English</option>
+                <option value="ru"> Русский</option>
             </select>
+            <div class="bfh-selectbox bfh-languages" data-language="ka_GE" data-available="ka_GE,en_US,ru_RU" data-flags="true">
+            </div>
         </div>
         <div class="form-group">
             <label for="first_name" id="first_name_label">First Name:</label>
@@ -266,7 +296,16 @@
         </div>
         <div class="form-group">
             <label for="select_theme" id="service_label">Choose Service:</label>
-            <select id="select_theme" name="select_theme"></select>
+            <select id="select_theme" name="select_theme" class="selectpicker">
+                <option disabled></option>
+                <?php
+                if ($services_list_results) {
+                    while($row = mysqli_fetch_assoc($services_list_results)) {
+                        echo "<option value='{$row['category_service_id']}'>{$row['service_name_geo']}</option>";
+                     }      
+                }
+                ?>
+            </select>
         </div>
 
         <button class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
@@ -383,32 +422,17 @@
 </div>
 <script>
     <?php
-    $conn = new mysqli('localhost','smartchat','smartchat','smartchat');
-    $conn->set_charset("utf8");
-
-    if ($conn->connect_error) {
-        die('Error : ('. $conn->connect_errno .') '. $conn->connect_error);
+    echo 'var sys_control_params = ';
+    if ($sys_control_params_results) {
+        $row = $sys_control_params_results->fetch_assoc();
+        echo  json_encode($row,JSON_UNESCAPED_UNICODE),";\n";
+    } else {
+        echo "{};\n";
     }
 
-    $results = $conn->query("SELECT operator_max_load, pass_life_time, history_life_time, passive_client_time FROM sys_control limit 1");
-    echo 'var sys_control_params = ';
-if ($results) {
-    $row = $results->fetch_assoc();
-    echo  json_encode($row,JSON_UNESCAPED_UNICODE),";\n";
-} else {
-    echo "{};\n";
-}
-
-    $results1 = $conn->query("SELECT
- start_chating_geo, start_chating_rus, start_chating_eng, waiting_message_geo, 
- waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, user_block_geo, 
- user_block_rus, user_block_eng, auto_answering_geo, auto_answering_rus, auto_answering_eng, repeat_auto_answering, time_off_geo,
-  time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, passive_client_eng
-
-FROM auto_answering limit 1");
     echo 'var auto_answering = ';
-    if ($results1) {
-        $row = $results1->fetch_assoc();
+    if ($auto_answering_results) {
+        $row = $auto_answering_results->fetch_assoc();
         echo  json_encode($row, JSON_UNESCAPED_UNICODE),";\n";
     } else {
         echo "{};\n";
@@ -422,12 +446,15 @@ FROM auto_answering limit 1");
     crossorigin="anonymous"></script>
 
 <script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+<script src="libs/bootstrap-formhelpers/bootstrap-formhelpers.min.js"></script>
+<script src="libs/bootstrap-formhelpers/bootstrap-formhelpers-languages.js"></script>
 <script src="chat_client.js?<?=rand(); ?>"></script>
 <script src="main_client.js?<?=rand(); ?>"></script>
 </body>
