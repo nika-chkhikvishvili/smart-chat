@@ -89,6 +89,24 @@ $(document).ready(function () {
         $('#last_name_label').html(last_name_label);
         $('#service_label').html(service_label);
     });
+
+    let chatBody = $('#chat-body');
+    let popoverBigImage = $('#popover_big_image');
+
+    chatBody.on('mousemove','.popover_image', function(e){
+        popoverBigImage.css({
+            top: e.pageY - 510,
+            left: e.pageX + 10
+        });
+    });
+    chatBody.on('mouseenter','.popover_image', function(){
+        popoverBigImage.attr('src', this.src);
+        popoverBigImage.show();
+    });
+    chatBody.on('mouseleave','.popover_image', function(){
+        popoverBigImage.hide();
+    });
+
     setInterval(chat.executeClientLoopFunction, 1000);
 
 });

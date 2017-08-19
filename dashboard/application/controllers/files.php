@@ -28,18 +28,30 @@ class Files extends CI_Controller{
 
         if ( ! $this->upload->do_upload('userfile'))
         {
-                
-                $error = array('error' => $this->upload->display_errors());
-              
+            $error = array('error' => $this->upload->display_errors());
         }
         else
         {
-          $data = array('upload_data' => $this->upload->data()); 
-        
-          $insert_data = array(
-              'files_repo_id' => $session_data->repo_id,
-              'file_name' => $this->upload->data()['orig_name']
-          );
+            $data = array('upload_data' => $this->upload->data());
+            $known_fields = array('file_name', 'file_type', 'file_path', 'full_path', 'raw_name', 'orig_name',
+                'client_name', 'file_ext', 'file_size', 'is_image', 'image_width', 'image_height', 'image_type',
+                'image_size_str' );
+            $insert_unused_data = array();
+            $insert_data = array(
+                'files_repo_id' => $session_data->repo_id,
+                'file_name' => $this->upload->data()['orig_name']
+            );
+
+            foreach ($data['upload_data'] as $key => $value) {
+                if (in_array($key, $known_fields)) {
+                    $insert_data[$key] = $value;
+                } else {
+                    $insert_unused_data[$key] = $value;
+                }
+            }
+            if (count($insert_unused_data) > 0)
+            $insert_data['full'] = json_encode($insert_unused_data, JSON_UNESCAPED_UNICODE);
+
           $this->dashboard_model->add_files($insert_data);
           echo '<meta http-equiv="refresh" content="3">';
          

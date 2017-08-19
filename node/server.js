@@ -201,13 +201,24 @@ ChatServer.prototype.sendMessage = function (socket, data) {
 //ფაილის გაგზავნა
 ChatServer.prototype.sendFile = function (socket, data) {
     let me = this;
-    app.connection.query('SELECT files_id, file_name FROM files WHERE files_id = ?', [data.id], function (err, res) {
+    app.connection.query('SELECT files_id, files_repo_id, file_name, file_type, ' +
+        'file_path, full_path, raw_name, orig_name, client_name, file_ext, file_size, ' +
+        'is_image, image_width, image_height, image_type, image_size_str, full ' +
+        'FROM files WHERE files_id = ?', [data.id], function (err, res) {
         if (err) { return app.databaseError(socket, err); }
         if (!res || res.length === 0) { return; }
         let file = res[0];
+        let imageText = '';
+
+        if ( file.is_image ) {
+            imageText = '<img class="popover_image" src="/uploads/' + file.file_name +'" height="100" />';
+        } else {
+            imageText = file.file_name;
+        }
+
         let message = {
             chatUniqId: data.chatUniqId,
-            message: '<a target="_blank" href="http://dashboard-smartchat.cloud.gov.ge/uploads/' + file.file_name +'">' + file.file_name +'</a>',
+            message: '<a target="_blank" href="/uploads/' + file.file_name +'">' + imageText +'</a>',
             id: -157
         };
         me.sendMessage(socket, message)

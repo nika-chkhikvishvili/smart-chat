@@ -269,6 +269,8 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         blink-caret .5s step-end infinite alternate;
     }
 
+    #popover_big_image {height: 500px; position: absolute;}
+
 </style>
 </head>
 <body>
@@ -404,6 +406,8 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
     	</div>
     </div>
 </div>
+<img id="popover_big_image" src="" style="display: none">
+
 <div class="modal fade" id="info_message_panel" tabindex="-1" role="dialog" aria-labelledby="info_message_panel-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
