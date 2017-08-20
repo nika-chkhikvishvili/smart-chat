@@ -165,7 +165,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
         if (parseInt(data.chatStatusId) === 0) {
             $('#wait_operator').show();
         } else {
-            $('.panel').show();
+            $('#chat_window').show();
         }
 
         if (data.messages && Array.isArray(data.messages)) {
@@ -225,7 +225,7 @@ socket.on('operatorJoined', function () {
     console.log('execute: operatorJoined');
     // console.log(data);
     $('#wait_operator').hide();
-    $('.panel').show();
+    $('#chat_window').show();
 });
 
 socket.on('message', function (data) {

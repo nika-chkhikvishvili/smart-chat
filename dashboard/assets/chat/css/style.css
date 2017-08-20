@@ -571,6 +571,10 @@
   content:url("http://iconbug.com/data/9f/64/7539a8d9ee940f052a34a4eaae4775a1.png");
 }
 
+.image\/jpeg > a img{
+  content:url("https://marketplace.canva.com/MAB7k0jyw90/1/thumbnail/canva-jpg-file-icon-MAB7k0jyw90.png");
+}
+
 .text\/plain > a img{
   content:url("http://files.softicons.com/download/system-icons/hycons-icon-theme-by-gomez-hyuuga/png/48x48/mimetypes/text-plain.png");
 }
