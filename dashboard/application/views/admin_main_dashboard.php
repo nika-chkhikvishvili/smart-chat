@@ -294,14 +294,20 @@
                 <table class="table table-striped" id="dialog_form_files_table">
                     <thead>
                     <tr>
-                        <th>ფაილის სახელი</th>
+<!--                        <th>ფაილის ტიპი</th>-->
+                        <th>ფაილის გაგზავნა</th>
+                        <th>ფაილის დათვალიერება</th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php
                     foreach ($files as $key => $val) {
                         $fileName = mb_strlen($val['file_name'])>70? mb_substr($val['file_name'], 0, 67). ' ... ':$val['file_name'];
-                        echo "<tr data-keywords='{$val['file_name']}'><td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$fileName}</a></td></tr>";
+                        echo "<tr data-keywords='{$val['file_name']}'>";
+//                        echo "<td class='{$val['file_type']}'></td>";
+                        echo "<td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$fileName}</a></td>";
+                        echo "<td><a target='_blank' href='/uploads/{$val['file_name']}''>{$fileName}</a></td>";
+                        echo "</tr>";
                     }
                     ?>
                     </tbody>

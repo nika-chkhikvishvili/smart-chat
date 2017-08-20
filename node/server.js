@@ -210,7 +210,7 @@ ChatServer.prototype.sendFile = function (socket, data) {
         let file = res[0];
         let imageText = '';
 
-        if ( file.is_image ) {
+        if ( file.is_image === '1' || file.is_image === 1 ) {
             imageText = '<img class="popover_image" src="/uploads/' + file.file_name +'" height="100" />';
         } else {
             imageText = file.file_name;
