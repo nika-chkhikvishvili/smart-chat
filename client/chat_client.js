@@ -112,7 +112,7 @@ function ChatClient($, socket) {
 
     function banUserFn(text) {
         $('#asarchevi').hide();
-        $('.panel').hide();
+        $('#chat_window').hide();
         $('.user_ban').html(text);
     }
 
@@ -120,7 +120,7 @@ function ChatClient($, socket) {
         delete localStorage.chatUniqId;
         elChatbox.html('');
         $('#asarchevi').show();
-        $('.panel').hide();
+        $('#chat_window').hide();
         $('#begin_btn').attr({disabled: false});
         conversationStarted = false;
         socket.emit('clientGetServices');
