@@ -283,7 +283,7 @@
 </div>
 
 <div class="modal fade" id="dialog-form-files" tabindex="-1" role="dialog" aria-labelledby="dialog-form-files-title">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg " role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -294,9 +294,8 @@
                 <table class="table table-striped" id="dialog_form_files_table">
                     <thead>
                     <tr>
-<!--                        <th>ფაილის ტიპი</th>-->
+                        <th width="50">ფაილის ტიპი / დათვალიერება</th>
                         <th>ფაილის გაგზავნა</th>
-                        <th>ფაილის დათვალიერება</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -304,13 +303,26 @@
                     foreach ($files as $key => $val) {
                         $fileName = mb_strlen($val['file_name'])>70? mb_substr($val['file_name'], 0, 67). ' ... ':$val['file_name'];
                         echo "<tr data-keywords='{$val['file_name']}'>";
-//                        echo "<td class='{$val['file_type']}'></td>";
+                        echo "<td class='{$val['file_type']}'><a target='_blank' href='/uploads/{$val['file_name']}''><img width='32'/></a></td>";
+//                        echo "<td class='{$val['file_type']}'><span class=\"fa fa-file-image-o\"></span></td>";
                         echo "<td><a href='javascript:send_file({$val['files_id']},\"{$val['file_name']}\");'>{$fileName}</a></td>";
-                        echo "<td><a target='_blank' href='/uploads/{$val['file_name']}''>{$fileName}</a></td>";
+//                        echo "<td>{$fileName}</td>";
                         echo "</tr>";
                     }
                     ?>
                     </tbody>
+<!--                    <tfoot>
+                    <ul class="pagination">
+                        <li><a href="#">&laquo;</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+
+                    </tfoot>-->
                 </table>
             </div>
             <div class="modal-footer">

@@ -566,3 +566,19 @@
   z-index: 2;
   cursor: pointer;
 }
+
+.image\/png > a img{
+  content:url("http://iconbug.com/data/9f/64/7539a8d9ee940f052a34a4eaae4775a1.png");
+}
+
+.text\/plain > a img{
+  content:url("http://files.softicons.com/download/system-icons/hycons-icon-theme-by-gomez-hyuuga/png/48x48/mimetypes/text-plain.png");
+}
+
+.application\/pdf > a img{
+  content:url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0GOm_Sm6JCJ_Ag7CglBdvxsT_XLTpW2ibS9BNiwNzFKRdgqrr");
+}
+
+.application\/vnd\.openxmlformats-officedocument\.wordprocessingml\.document > a img{
+  content:url("http://www.iconarchive.com/download/i50256/ncrow/mega-pack-1/Word-2.ico");
+}
