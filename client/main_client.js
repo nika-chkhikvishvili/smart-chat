@@ -251,32 +251,3 @@ socket.on('message', function (data) {
         }
     }
 });
-
-function changeLanguage(){
-    let lang = $('#language').val();
-    let first_name_label = 'First Name:';
-    let last_name_label = 'Last Name:';
-    let service_label = 'Choose Service:';
-
-    switch (lang){
-        case "ka" :
-            first_name_label = 'სახელი:';
-            last_name_label = 'გვაგრი:';
-            service_label = 'აირჩიეთ სერვისი:';
-            break;
-        case "en" :
-            first_name_label = 'First Name:';
-            last_name_label = 'Last Name:';
-            service_label = 'Choose Service:';
-            break;
-        case "ru" :
-            first_name_label = 'Имя:';
-            last_name_label = 'Фамилия:';
-            service_label = 'Выберите сервис:';
-            break;
-    }
-
-    $('#first_name_label').html(first_name_label);
-    $('#last_name_label').html(last_name_label);
-    $('#service_label').html(service_label);
-}

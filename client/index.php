@@ -242,8 +242,8 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         display: none;
     }
     #asarchevi{
-        width: 300px;
-        margin: auto;
+        /*width: 300px;*/
+        /*margin: auto;*/
     }
     .center-block{
         float: none;
@@ -271,21 +271,22 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
 
     #popover_big_image {height: 500px; position: absolute;}
 
+    .nopadding {
+        padding-top: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+        padding-left: 0;
+    }
+
 </style>
 </head>
 <body>
 <div class="container" style="height:100%">
     <div class="user_ban"></div>
 
-    <div id="asarchevi" >
+    <div id="asarchevi" class="col-md-6 col-md-offset-3">
         <div class="form-group">
-            <label for="language"></label>
-            <select id="language" name="language" onchange="changeLanguage();" class="selectpicker">
-                <option value="ka"> ქართული</option>
-                <option value="en"> English</option>
-                <option value="ru"> Русский</option>
-            </select>
-            <div class="bfh-selectbox bfh-languages" data-language="ka_GE" data-available="ka_GE,en_US,ru_RU" data-flags="true">
+            <div class="bfh-selectbox bfh-languages" data-language="ka_GE" data-available="ka_GE,en_US,ru_RU" data-flags="true" data-blank="false">
             </div>
         </div>
         <div class="form-group">
@@ -298,7 +299,7 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         </div>
         <div class="form-group">
             <label for="select_theme" id="service_label">Choose Service:</label>
-            <select id="select_theme" name="select_theme" class="selectpicker">
+            <select id="select_theme" name="select_theme" class="selectpicker col-md-12 col-xs-12 nopadding">
                 <?php
                 if ($services_list_results) {
                     while($row = mysqli_fetch_assoc($services_list_results)) {
