@@ -63,14 +63,14 @@ $(document).ready(function () {
     });
 
     $(".bfh-languages").on('change.bfhselectbox', function (event) {
-        let first_name_label = 'First Name:';
-        let last_name_label = 'Last Name:';
-        let service_label = 'Choose Service:';
+        let first_name_label = 'სახელი:';
+        let last_name_label = 'გვარი:';
+        let service_label = 'აირჩიეთ სერვისი:';
 
         switch (event.target.value){
             case "ka_GE" :
                 first_name_label = 'სახელი:';
-                last_name_label = 'გვაგრი:';
+                last_name_label = 'გვარი:';
                 service_label = 'აირჩიეთ სერვისი:';
                 break;
             case "en_US" :

@@ -294,7 +294,7 @@
                 <table class="table table-striped" id="dialog_form_files_table">
                     <thead>
                     <tr>
-                        <th width="50">ფაილის ტიპი / დათვალიერება</th>
+                        <th width="50">დათვალიერება</th>
                         <th>ფაილის გაგზავნა</th>
                     </tr>
                     </thead>
