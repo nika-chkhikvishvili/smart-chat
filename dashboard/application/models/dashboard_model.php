@@ -437,6 +437,15 @@ class dashboard_model extends CI_Model{
       $query = $this->db->get();
       return $query->num_rows();
    }
+
+    function get_all_persons_by_repo_id($repo_id)
+    {
+        $this->db->select('*');
+        $this->db->from('persons');
+        $this->db->where('repo_id', $repo_id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
    
    function get_all_persons()
    {

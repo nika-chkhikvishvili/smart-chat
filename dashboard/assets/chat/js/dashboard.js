@@ -112,7 +112,13 @@ function choose_redirect_person_dialog(redirectType) {
 }
 
 socket.on('getPersonsForRedirectResponse', function (data) {
-    console.log('execute: getPersonsForRedirectResponse');
+    chatManager.hideLoader();
+    dialogChatTypeRedirect.modal("toggle" );
+    let personDialog = $("#chat-redirect-person-dialog");
+    personDialog.modal();
+    choose_redirect_person_locker = false;
+    return ;
+  /*  console.log('execute: getPersonsForRedirectResponse');
     // console.log(data);
     chatManager.hideLoader();
     dialogChatTypeRedirect.modal("toggle" );
@@ -138,7 +144,7 @@ socket.on('getPersonsForRedirectResponse', function (data) {
             '</tr>');
     });
     personDialog.modal();
-    choose_redirect_person_locker = false;
+    choose_redirect_person_locker = false;*/
 });
 
 function redirect_to_person(personId){

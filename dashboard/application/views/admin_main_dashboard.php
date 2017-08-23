@@ -482,6 +482,15 @@
                 </tr>
                 </thead>
                 <tbody>
+                <?php
+                foreach ($all_users as $key => $val) {
+//                    var_dump($val);
+                    echo '<tr>';
+                    echo '<td>' . $val['person_id'] . '</td>';
+                    echo '<td><a href="javascript:redirect_to_person(' . $val['person_id'] . ');">' . $val['first_name'] . ' ' . $val['last_name'] . '</a></td>';
+                    echo '</tr>';
+                }
+                ?>
                 </tbody>
             </table>
         </div>
