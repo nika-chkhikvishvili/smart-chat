@@ -270,7 +270,7 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         blink-caret .5s step-end infinite alternate;
     }
 
-    #popover_big_image {height: 500px; position: absolute;}
+    #popover_big_image {height: 300px; position: absolute;}
 
     .nopadding {
         padding-top: 0;

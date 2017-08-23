@@ -95,7 +95,7 @@ $(document).ready(function () {
 
     chatBody.on('mousemove','.popover_image', function(e){
         popoverBigImage.css({
-            top: e.pageY - 510,
+            top: e.pageY - 310,
             left: e.pageX + 10
         });
     });
