@@ -110,26 +110,34 @@
                     </select>
                     </div>
                 </div>
-                <div class="col-md-1">
-                    <div class="input-group">
-                        <label for="lastname" class="control-label">ოპერატორი</label>
-                        <input type="text" class="form-control" id="lastname" placeholder="">
-                    </div>
-                </div>
                 <div class="col-md-2">
                     <div class="input-group">
-                        <label for="lastname" class="control-label">საუბრის დასაწყისი</label>
+                        <label for="lastname" class="control-label">ოპერატორი</label>
+                         <select class="form-control" id="sel1">
+                            
+                          
+                        <?php
+                        foreach ($persons as $get_persons){
+                            echo '<option>'.$get_persons['first_name']."&nbsp;".$get_persons['last_name'].'</option>';
+                        }
+                        ?>
+                             </select>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="input-group">
+                        <label for="lastname" class="control-label">Start </label>
                         <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="start_date"  id="lastname">
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="input-group">
-                        <label for="lastname" class="control-label">საუბრის დასასრული</label>
+                        <label for="lastname" class="control-label">End </label>
                         <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="end_date"  id="lastname">
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" id="submit" name="submit" class="btn btn-primary" style="margin-top: 23px;">დამუშავება</button>
+                <div class="col-md-3">
+                    <button type="button" id="submit" name="submit" class="btn btn-primary" style="margin-top: 23px; margin-left: 50px; ">დამუშავება</button>
                     &nbsp;
                     <a href=""  id="submit" class="btn btn-primary" style="margin-top: 23px;">გასუფთავება</a>
                    
