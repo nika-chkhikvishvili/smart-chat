@@ -59,6 +59,34 @@
                         });
                         }
                 });
+                
+                $('.remove_ban').click(function() {
+                data = {};
+                data['val'] = $(this).attr('id');  
+
+                if(confirm('წავშალოთ მომხმარებელი შავი სიიდან ?'))
+                         {
+                          $.ajax({
+                          type: "POST",  
+                          url: "<?=base_url()."blacklist/confutation_banlist";?>",  
+                          cache:false,  
+                          data: data,
+                          dataType: "json",       
+                          success: function(response)  
+                          {   
+                                //$("#loading").hide();
+                                if(response.status) {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.reload(1); }, 3000);		
+                                } else {
+                                  $.Notification.notify('success','top center', 'ყურადღება', response.msg);
+                                  setTimeout(function(){window.location.assign("<?=base_url();?>blacklist"); }, 3000);		
+                                }
+                          }   
+                        });
+                        }
+                });
+            
         });
 
         </script>
@@ -116,6 +144,7 @@
            
             <ul class="conversation-list nicescroll">
                 <?php
+               
                 foreach ($get_chat as $his):
                  
                 if($his['online_user_id']>=1) 
@@ -170,6 +199,7 @@
         <div class="panel-heading"> 
             <h3 class="panel-title">
                 <button type="button" class="btn btn-danger btn-custom waves-effect waves-light m-b-5" id="update_ban">ბანის დადასტურება</button>
+                <button type="button" class="btn btn-danger btn-custom waves-effect waves-light m-b-5 remove_ban" id="<?=$get_uri_chat_id;?>">უარყოფა</button>
             </h3> 
         </div> 
         <div class="panel-body"> 
