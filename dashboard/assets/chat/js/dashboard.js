@@ -497,6 +497,7 @@ $(document).ready(function () {
         });
     }
 
+
     function searchTemplates() {
         let needle =$("#template_dialog_form_search_field").val().toLowerCase();
 
@@ -510,10 +511,10 @@ $(document).ready(function () {
             let keywords = tritem.data('keywords');
             let itemService = tritem.data('service');
             let itemLang = tritem.data('lang');
-            if ( (itemService === 0 || itemService === service) && keywords.toLowerCase().indexOf(needle) === -1 || itemLang !== lang){
-                tritem.hide();
-            } else {
+            if ( (service === 0 || itemService === 0 || itemService === service) && keywords.toLowerCase().indexOf(needle) !== -1 && itemLang === lang){
                 tritem.show();
+            } else {
+                tritem.hide();
             }
         });
 
@@ -526,6 +527,7 @@ $(document).ready(function () {
 
     setInterval(chatManager.executeLoopFunction, 1000);
 });
+
 
 socket.on('operatorIsWorking', function (data) {
     console.log('execute: operatorIsWorking');

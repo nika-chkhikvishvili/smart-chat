@@ -466,7 +466,7 @@
 </div>
 </div>
 
-<div class="modal fade" id="chat-redirect-person-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-person-dialog-Label">
+<div class="modal fade" id="chat-redirect-person-dialog" tabindex="-1" role="dialog" aria-labelledby="chat-redirect-person-dialog-Label" style="overflow-y: scroll;">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header">
