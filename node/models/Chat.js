@@ -19,7 +19,8 @@ function Chat(initParams) {
     this.guestUserId  = initParams.hasOwnProperty('guestUserId')  ? initParams.guestUserId     : null;
     this.guestUser    = initParams.hasOwnProperty('guestUser')    ? initParams.guestUser       : null;
     this.serviceId    = initParams.hasOwnProperty('serviceId')    ? parseInt(initParams.serviceId)    : null;
-    this.chatStatusId = initParams.hasOwnProperty('chatStatusId') ? parseInt(initParams.chatStatusId) : null;
+    this.chatStatusId = initParams.hasOwnProperty('chatStatusId') ? parseInt(initParams.chatStatusId) : 0;
+    this.language     = initParams.hasOwnProperty('language')     ? initParams.language : 'ka_GE';
     this.guestUserLeaveTime = Date.now();
     this.users        = new Map();
 }
@@ -28,7 +29,8 @@ Chat.prototype.getInsertObject = function () {
     return {
         online_user_id: this.guestUserId,
         service_id: this.serviceId,
-        chat_uniq_id: this.chatUniqId
+        chat_uniq_id: this.chatUniqId,
+        language: this.language
     };
 };
 
@@ -116,6 +118,5 @@ Chat.prototype.addGuestSocket = function (socket) {
     this.guestUser.addSocket(socket.id);
     this.guestUserLeaveTime = -1;
 };
-
 
 module.exports = Chat;

@@ -19,15 +19,27 @@ $sys_control_params_results = $conn->query("SELECT operator_max_load, pass_life_
 
 $auto_answering_results = $conn->query("SELECT
 start_chating_geo, start_chating_rus, start_chating_eng, waiting_message_geo, 
-waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, user_block_geo, 
-user_block_rus, user_block_eng, auto_answering_geo, auto_answering_rus, auto_answering_eng, repeat_auto_answering, time_off_geo,
-time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, passive_client_eng
-FROM auto_answering limit 1");
+waiting_message_rus, waiting_message_eng, connect_failed_geo, connect_failed_rus, connect_failed_eng, 
+user_block_geo, user_block_rus, user_block_eng, auto_answering_geo, auto_answering_rus, auto_answering_eng, 
+repeat_auto_answering, time_off_geo, time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, 
+passive_client_eng FROM auto_answering limit 1");
 
-$services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repository_id`, `rc`.`category_name`, `cs`.`service_name_geo`, `cs`.`start_time`, `cs`.`end_time` 
-     FROM `category_services` cs, `repo_categories` rc 
-     WHERE cs.`repo_category_id` = rc.`repo_category_id`');
+$services_list_results = $conn->query(
+        'SELECT cs.category_service_id, rc.repository_id, rc.category_name, 
+               cs.service_name_geo, cs.service_name_rus, cs.service_name_eng, cs.start_time, cs.end_time
+           FROM category_services cs, repo_categories rc 
+     WHERE cs.repo_category_id = rc.repo_category_id');
 
+$lang = 'ka_GE';
+$service_name = 'service_name_geo';
+$begin_btn_text = 'საუბრის დაწყება';
+if (array_key_exists('lang', $_GET)) {
+    switch ($_GET['lang']){
+        case 'ka_GE': $lang = 'ka_GE'; $service_name = 'service_name_geo'; $begin_btn_text = 'საუბრის დაწყება'; break;
+        case 'en_US': $lang = 'en_US'; $service_name = 'service_name_eng'; $begin_btn_text = 'Start conversation';  break;
+        case 'ru_RU': $lang = 'ru_RU'; $service_name = 'service_name_rus'; $begin_btn_text = 'Начать';  break;
+    }
+}
 
 ?><!doctype html>
 <html lang="en">
@@ -287,7 +299,8 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
 
     <div id="asarchevi" class="col-md-6 col-md-offset-3">
         <div class="form-group">
-            <div class="bfh-selectbox bfh-languages" data-language="ka_GE" data-available="ka_GE,en_US,ru_RU" data-flags="true" data-blank="false">
+            <div class="bfh-selectbox bfh-languages" data-language="<?php
+            echo $lang; ?>" data-available="ka_GE,en_US,ru_RU" data-flags="true" data-blank="false">
             </div>
         </div>
         <div class="form-group">
@@ -302,16 +315,17 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
             <label for="select_theme" id="service_label">Choose Service:</label>
             <select id="select_theme" name="select_theme" class="selectpicker col-md-12 col-xs-12 nopadding">
                 <?php
+
                 if ($services_list_results) {
                     while($row = mysqli_fetch_assoc($services_list_results)) {
-                        echo "<option value='{$row['category_service_id']}'>{$row['service_name_geo']}</option>";
+                        echo "<option value='{$row['category_service_id']}'>{$row[$service_name]}</option>";
                      }      
                 }
                 ?>
             </select>
         </div>
 
-        <button class="btn btn-default" id="begin_btn" >საუბრის დაწყება</button>
+        <button class="btn btn-default" id="begin_btn" ><?php echo $begin_btn_text; ?></button>
     </div>
 
     <div id="wait_operator" class="col-md-12 col-lg-8 center-block" style="height:90%">
@@ -414,7 +428,7 @@ $services_list_results = $conn->query('SELECT cs.category_service_id, `rc`.`repo
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="info_message_panel-label">გჰდფგჰ</h4>
+                <h4 class="modal-title" id="info_message_panel-label">  </h4>
             </div>
             <div class="modal-body">
 

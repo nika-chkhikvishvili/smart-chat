@@ -43,8 +43,9 @@ $(document).ready(function () {
             $('#begin_btn').attr({disabled: false});
             return;
         }
-        chat.setUserInformation(firstName, lastName);
-        socket.emit('clientInitParams', {serviceId: select_theme, firstName: firstName, lastName: lastName});
+        let language = $(".bfh-languages")[0].value;
+        chat.setUserInformation(firstName, lastName, language);
+        socket.emit('clientInitParams', {serviceId: select_theme, firstName: firstName, lastName: lastName, language: language});
     });
 
     $("#usermsg").keyup(function (event) {
@@ -57,6 +58,9 @@ $(document).ready(function () {
     $("#submitmsg").click(function () {
         let usermsg = $('#usermsg');
         let message = usermsg.val();
+        if (message.length < 2 ) {
+            return;
+        }
         let ran = Math.floor(Math.random() * 10000000);
         socket.emit('clientMessage', {chatUniqId: chat.getChatUniqId(), message: message, id: ran});
         usermsg.val('');
@@ -108,48 +112,17 @@ $(document).ready(function () {
     });
 
     setInterval(chat.executeClientLoopFunction, 1000);
-
+    $(".bfh-languages").change();
 });
 
-
-/*
-socket.on('messageReceived', function (data) {
-    console.log('execute: messageReceived');
-    console.log(data);
-    var el = $('#message_' + data.msgId);
-
-    el.val('submited');
-    el.css({'background-color': 'greenyellow'});
-});
-
-socket.on('clientMessageResponse', function (data) {
-    console.log('execute: clientMessageResponse');
-    console.log(data);
-});
-
-
-function redAlert(id) {
-    var el = $('#message_' + id);
-    if (el.val() !== 'submited') {
-        el.css({'background-color': 'red'});
-    }
-}
-
-*/
 
 socket.on('testResponse', function (data){
     console.log('execute: testResponse');
     console.log(data);
 });
 
-socket.on('disconnect', function (){
-    // infoMessagePanel.find('.modal-title').html('კავშირის პრობლემა');
-    // infoMessagePanel.find('.modal-body').html('სერვერთან კავშირი გაწყდა, გთხოვთ დაელოდოთ');
-    // infoMessagePanel.modal();
-});
-
 socket.on('serverError', function (data){
-    alert('Server Error');
+    // alert('Server Error');
 });
 
 socket.io.on('reconnect', function () {
@@ -160,7 +133,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
     console.log('execute: clientCheckChatIfAvailableResponse');
     console.log(data);
     if (data && data.hasOwnProperty('isValid') && data.isValid) {
-        chat.setUserInformation(data.firstName, data.lastName);
+        chat.setUserInformation(data.firstName, data.lastName, data.language);
         $('#asarchevi').hide();
         if (parseInt(data.chatStatusId) === 0) {
             $('#wait_operator').show();
@@ -186,6 +159,7 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
 
 socket.on('clientGetServicesResponse', function (data) {
     console.log('execute: clientGetServicesResponse');
+    return;
     // console.log(data);
     if ($.isArray(data)){
         $('#select_theme').html('');

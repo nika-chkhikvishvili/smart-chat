@@ -83,7 +83,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             guestUser.guestUserId = parseInt(res.insertId);
             socket.guestUserId = guestUser.guestUserId;
 
-            let chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser});
+            let chat = new Chat({serviceId: data.serviceId, guestUserId: guestUser.guestUserId, guestUser: guestUser, language: data.language});
 
             app.connection.query('INSERT INTO `chats` SET ? ', chat.getInsertObject(), function (err, res) {
                 if (err) {

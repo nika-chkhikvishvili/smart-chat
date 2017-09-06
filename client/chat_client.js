@@ -7,6 +7,7 @@
 function ChatClient($, socket) {
     let me = this;
     let chatUniqId = localStorage.getItem("chatUniqId") || '';
+    let language = 'ka_GE';
     let firstName = '';
     let lastName = '';
     let lastWriteTime = 0;
@@ -118,21 +119,33 @@ function ChatClient($, socket) {
 
     function closeChatFn() {
         delete localStorage.chatUniqId;
-        elChatbox.html('');
-        $('#asarchevi').show();
-        $('#chat_window').hide();
-        $('#begin_btn').attr({disabled: false});
-        conversationStarted = false;
-        socket.emit('clientGetServices');
+        let closeText = auto_answering.connect_failed_geo || 'ჩატი დაიხურა';
+        switch (language) {
+            case 'en_US': closeText = auto_answering.connect_failed_eng || 'Chat is closed'; break;
+            case 'ru_RU': closeText = auto_answering.connect_failed_rus || 'Chat is closed'; break;
+        }
+
+        infoMessagePanel.find('.modal-title').html('Close');
+        infoMessagePanel.find('.modal-body').html(closeText);
+        infoMessagePanel.on('hidden.bs.modal', function () {
+            elChatbox.html('');
+            $('#asarchevi').show();
+            $('#chat_window').hide();
+            $('#begin_btn').attr({disabled: false});
+            conversationStarted = false;
+            window.location.reload();
+        });
+        infoMessagePanel.modal();
     }
 
     function cleanChatWindowFn() {
         elChatbox.html('');
     }
 
-    function setUserInformationFn(fN, lN) {
+    function setUserInformationFn(fN, lN, lng) {
         firstName = fN || '';
         lastName = lN || '';
+        language = lng || 'ka_GE';
         $('.panel-title').text(firstName + ' ' + lastName);
     }
 

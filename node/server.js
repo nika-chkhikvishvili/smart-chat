@@ -161,9 +161,13 @@ ChatServer.prototype.getChatAllMessages = function (socket, data) {
 };
 
 ChatServer.prototype.sendWelcomeMessage = function (socket, data) {
+    let chat = app.getChat(data);
+    if (!chat) {
+        return;
+    }
     let message = {
         chatUniqId: data,
-        message: app.autoAnswering.getWelcomeMessage(1),
+        message: app.autoAnswering.getWelcomeMessage(1, chat.language),
         id: -158
     };
     this.sendMessage(socket, message)

@@ -525,7 +525,7 @@ $(document).ready(function () {
     $("#dialog_form_files_search_field")   .keyup(searchFiles);
     $("#template_service, #template_lang").change(searchTemplates);
 
-    setInterval(chatManager.executeLoopFunction, 1000);
+    setInterval(chatManager.executeLoopFunction, 10000);
 });
 
 

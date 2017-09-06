@@ -264,6 +264,9 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
 
     let waiting = app.waitingClients[serviceId].shift();
     let chat = app.getChat(waiting.chatUniqId);
+    if (!chat || chat.chatStatusId === 3) {
+        return ;
+    }
 
     app.connection.query('UPDATE chats SET chat_status_id = 1 WHERE chat_id = ?', [waiting.chatId], function (err) {
         if (err) {
@@ -454,10 +457,7 @@ app.io.on('connection', function (socket) {
 
 //check for closed chats
 setInterval(function () {
-    let socketId = null;
-    Object.keys(app.io.sockets.sockets).forEach(function(item) { socketId = item; });
-    let socket = app.io.sockets.sockets[socketId];
-    if (Date.now() - app.lastChatCheckedTime > 30000){
+    if (Date.now() - app.lastChatCheckedTime > 29000){
         app.lastChatCheckedTime = Date.now();
         app.chats.forEach(function (chat) {
             if (chat.chatStatusId !== 3 && !chat.isAvailable()) {
