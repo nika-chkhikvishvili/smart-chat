@@ -18,6 +18,10 @@ class Welcome extends CI_Controller
 
     public function index()
     {
+        if ($this->session->userdata('user')) {
+            redirect('/dashboard');
+            return;
+        }
 
         $this->load->library('form_validation');
         // ვამოწმებთ მომხმარებლის ელ-ფოსტას
