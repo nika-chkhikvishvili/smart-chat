@@ -495,56 +495,32 @@ class stattistics extends CI_Controller{
             }
             
         }
+        # არცერთი ფილტრი არ არის არჩეული
         else {
+        $i=0;
+       
         
-        echo $start_date;
-        echo "<br />";
-        echo $end_date;
-      
-        $all_chats = $this->dashboard_model->get_statistic_allchats($service_id,$start_date,$end_date);
-      
-        echo '  <table class="table table-condensed">
-                <thead>
-                <tr>
-                </tr>
-                </thead>
-                <tbody>
+        
+        $all_chats = $this->dashboard_model->get_statistic_allchats($service_id,$start_date,$end_date);        
+        $ex_all_chats = array('საერტო ვიზიტორთა რაოდენობა',$all_chats);
                 
-                <tr class="success">
-                <td>საერთო ვიზიტორების რაოდენობა</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"><span class="badge"> 
-                                   '.$all_chats.'</span></td>
-                </tr>
-                ';
-                
-                //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :
+                //საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით 
                 $sql_get_services = $this->dashboard_model->get_all_services(); 
                 foreach($sql_get_services as $keys => $values){                 
 		  $sql_get_services[$keys]['all_chats'] = $this->dashboard_model->get_by_service_id($values['category_service_id'],$start_date,$end_date); 
                 }
                
-                echo '<tr class="warning"><td>საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით :</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"></td>
-                </tr>';
+                
+                $ex_stat[0] = array('საერთო ვიზიტორების რაოდენობა კატეგორიის მიხედვით:');
+                
                 foreach($sql_get_services as $services){
-
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
-                        <td class='thick-line text-right'>".$services['all_chats']."</td>
-                        </tr>";          
+                  $i++;
+                  $ex_stat[$i] = array($services['service_name_geo'],$services['all_chats']);                  
                 }
-                // საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით 
-                echo '<tr class="warning"> <td>საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით :</td>
-                <td class="text-center"></td>
-                <td class="text-center"></td>
-                <td class="text-right"></td>
-                </tr>';
+                
+                
+                
+                // საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით               
                 
                  $sql_get_operators = $this->dashboard_model->get_all_persons();
                  foreach($sql_get_operators as $p_keys => $p_values)
@@ -552,14 +528,11 @@ class stattistics extends CI_Controller{
 		  $sql_get_operators[$p_keys]['all_persons_chats'] = $this->dashboard_model->get_all_persons_id($p_values['person_id'],$start_date,$end_date); 
                  }
                  
-                 foreach($sql_get_operators as $operators){
-
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$operators['first_name'] ."&nbsp;". $operators['last_name']."</td>
-                        <td class='thick-line text-right'>".$operators['all_persons_chats']."</td>
-                        </tr>";          
+              
+                $ex_operators[0] = array('საერთო ვიზიტორების რაოდენობა ოპერატორების მიხედვით:');
+                foreach($sql_get_operators as $operators){
+                  $i++;
+                  $ex_operators[$i] = array($operators['first_name'] ." ". $operators['last_name'],$operators['all_persons_chats']);                  
                 }
                 
                 // დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით
@@ -573,69 +546,56 @@ class stattistics extends CI_Controller{
                
                 $sul_sashualo = ($all_chats / $interval_val);
                 
+               // საშუალო ვიზიტორთა რაოდენობა
+                $ex_sashualo_all = array('დღეში საშუალო ვიზიტორების რაოდენობა',ceil($sul_sashualo));
+               
+                // საშუალო ვიზიტორთა რაოდენობა კატეგორიების მიხედვით ...
                
                 
-                echo "<tr>
-                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".ceil($sul_sashualo)."</td>
-                        </tr>";
-                
-                echo "<tr class='warning'>
-                        <td class='thick-line'>დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'></td>
-                        </tr>";
-               
-                 foreach($sql_get_services as $services){
-                       $sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
-                  echo "<tr>
-                        <td class='thick-line'></td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'>".$services['service_name_geo']."</td>
-                        <td class='thick-line text-right'>".ceil($sul_sashualo_byserv)."</td>
-                        </tr>";          
+                $ex_sashualo[0] = array('დღეში საშუალო ვიზიტორების რაოდენობა კატეგორიის მიხედვით:');
+                foreach($sql_get_services as $services){
+                  $sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
+                  $i++;
+                  $ex_sashualo[$i] = array($services['service_name_geo'],ceil($sul_sashualo_byserv));                  
                 }
                 
                  // საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა
                 $sashualo_visitori_operatorze = ( $all_chats / count($sql_get_operators));
-                 echo "<tr>
-                        <td class='thick-line'>საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>".ceil($sashualo_visitori_operatorze)."</td>
-                        </tr>";
-                 // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
-                 echo "<tr>
-                        <td class='thick-line'>ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>0</td>
-                        </tr>";
-                 
+                $ex_sashualo_op = array('საშუალოდ ოპერატორზე გადანაწილებული ვიზიტორთა რაოდენობა',ceil($sashualo_visitori_operatorze));
+              
+              
+                
                 // ცენზურის ფილტრით დაბლოკლი ვიზიტორების რაოდენობა
                  $get_sql_banlist = $this->dashboard_model->get_count_banlist(1);
-                 echo "<tr>
-                        <td class='thick-line'>ოპერატორების მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>$get_sql_banlist</td>
-                        </tr>";
-                 
+                
+                  $ex_ban_op = array('ოპერატორების მიერ დაბლოკილი ვიზიტორების რაოდენობა',$get_sql_banlist); 
                  // ადმინისტრატორის მიერ დაბლოკილი ვიზიტორების რაოდენობა
                  $get_sql_banlist = $this->dashboard_model->get_count_banlist_admn(0);
-                 echo "<tr>
-                        <td class='thick-line'>ადმინისტრატორის მიერ დაბლოკილი ვიზიტორების რაოდენობა</td>
-                        <td class='thick-line'></td>
-                        <td class='thick-line text-center'></td>
-                        <td class='thick-line text-right'>$get_sql_banlist</td>
-                        </tr>";
                
-                echo '</tbody>
-                </table>';  
-        
+                $ex_ban_adm = array('ადმინისტრატორის მიერ დაბლოკილი ვიზიტორების რაოდენობა',$get_sql_banlist); 
+             
+            $filename = "example.xlsx";
+            header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($filename).'"');
+            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            header('Content-Transfer-Encoding: binary');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public'); 
+           
+           
+            $rows = array($ex_all_chats,$ex_sashualo_all,$ex_sashualo_op,$ex_ban_op,$ex_ban_adm);
+            $rows = array_merge($rows,$ex_stat,$ex_operators,$ex_sashualo);
+          
+          
+            $writer = new XLSXWriter();
+            $writer->setAuthor('smartchat');
+            
+            foreach($rows as $row)
+            $writer->writeSheetRow('Sheet1', $row);
+           
+            $writer->writeToStdOut();
+            //$writer->writeToFile('example.xlsx');
+            //echo $writer->writeToString();
+            exit(0);     
          
         }
        
