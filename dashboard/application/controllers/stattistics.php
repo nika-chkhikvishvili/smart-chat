@@ -375,7 +375,12 @@ class stattistics extends CI_Controller{
         // არჩეულია სერვისით ფილტრი 
         if(@$_POST['service_id']>=1 && @$_POST['user_id']<1)
         {
-            $filename = "example.xlsx";
+            $fname = $this->dashboard_model->get_oneservice_name($_POST['service_id']);
+            
+            $filename = $fname['service_name_geo'] .$start_date." - ".$end_date.".xlsx";
+            
+        
+           
             
             header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($filename).'"');
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -384,13 +389,17 @@ class stattistics extends CI_Controller{
             header('Pragma: public'); 
              
             $byservice = $this->dashboard_model->get_count_byservices($start_date,$end_date,$_POST['service_id']);
+            
            
             $by_service_exc = array('საერთო ვიზიტორების რაოდენობა',$byservice);
-            $rows = array($by_service_exc);
+            
+            $rows = array($by_service_exc);    
             
             $writer = new XLSXWriter();
+           
             $writer->setAuthor('Some Author');
             foreach($rows as $row)
+           
             $writer->writeSheetRow('Sheet1', $row);
             $writer->writeToStdOut();
             //$writer->writeToFile('example.xlsx');
@@ -430,8 +439,14 @@ class stattistics extends CI_Controller{
              
                
             $ban_o = array('ოპერატორების მიერ დაბლოკილი ვიზიტორების რაოდენობა',$get_sql_banlist);
-                
-            $filename = "example.xlsx";
+            
+            
+            $pername = $this->dashboard_model->get_one_preson($_POST['user_id']);
+            
+            $filename = $pername['first_name']."_".$pername['last_name'] . $start_date." - ".$end_date.".xlsx";
+       
+            
+            
             header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($filename).'"');
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             header('Content-Transfer-Encoding: binary');
@@ -456,6 +471,12 @@ class stattistics extends CI_Controller{
         // არჩეულია service_id da user_id ფილტრი
         elseif (@$_POST['service_id']>=1 && @$_POST['user_id']>=1){
           
+            $fname = $this->dashboard_model->get_oneservice_name($_POST['service_id']);
+            
+            $pername = $this->dashboard_model->get_one_preson($_POST['user_id']);
+            
+            
+            
             // check person service 
             $check_service_by_user = $this->dashboard_model->check_person_service($_POST['service_id'],$_POST['user_id']);
             if($check_service_by_user){
@@ -465,7 +486,8 @@ class stattistics extends CI_Controller{
            
               $service_name =  $get_service_name['service_name_geo'];
               
-            $filename = "example.xlsx";
+            $filename = $fname['service_name_geo']." ".$pername['first_name']."_".$pername['last_name'] . $start_date." - ".$end_date.".xlsx";
+            
             header('Content-disposition: attachment; filename="'.XLSXWriter::sanitize_filename($filename).'"');
             header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             header('Content-Transfer-Encoding: binary');
