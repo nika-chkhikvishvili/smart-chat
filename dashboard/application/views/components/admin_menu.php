@@ -1,15 +1,29 @@
 <?php
 $session_data = $this->session->userdata('user');
+$this->db->select('*');
+$this->db->from('person_roles');
+$this->db->where('person_id',$session_data->person_id);
+$query = $this -> db ->get();
+$res = $query->result_array();
+
 ?>
 <ul>
     <li>
         <a href="<?= base_url(); ?>dashboard" class="waves-effect active"><i class="md md-home"></i><span> მთავარი გვერდი </span></a>
     </li>
 
-
+	<?php
+    foreach ($res as $get):
+    if(@$get['role_id'] ==1){        
+    
+    ?>
     <li>
     <a href="<?= base_url(); ?>history" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
     </li>
+	<?php
+    };
+	endforeach;
+	?>
 	<?php
     
     if($session_data->is_admin ==1){        
@@ -52,7 +66,16 @@ $session_data = $this->session->userdata('user');
  <?php
     };
 ?>
+<?php
+foreach ($res as $get):    
+if(@$get['role_id'] ==8){        
+
+?>
 <li><a href="<?=base_url();?>profile"><i class="md ion-android-contact"></i><span>პირადი პარამეტრები</span></a></li>
+ <?php
+    };
+	endforeach;
+?>
 <li><a href="<?=base_url();?>logout"><i class="glyphicon glyphicon-log-out"></i><span>გასვლა</span></a></li>  
 </ul>
 <div class="clearfix"></div>
