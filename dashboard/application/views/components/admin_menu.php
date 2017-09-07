@@ -66,6 +66,20 @@ $res = $query->result_array();
  <?php
     };
 ?>
+
+<?php
+foreach ($res as $get):    
+if(@$get['role_id'] ==7){        
+
+?>
+ <li>
+<a href="<?=base_url();?>files" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>
+</li>
+ <?php
+    };
+	endforeach;
+?>
+
 <?php
 foreach ($res as $get):    
 if(@$get['role_id'] ==8){        
