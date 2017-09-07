@@ -25,6 +25,18 @@ $res = $query->result_array();
 	endforeach;
 	?>
 	<?php
+   
+    if($session_data->is_admin ==1){        
+    
+    ?>
+    <li>
+    <a href="<?= base_url(); ?>history" class="waves-effect"><i class="md md-event"></i><span> ისტორია </span></a>
+    </li>
+	<?php
+    };
+	
+	?>
+	<?php
     
     if($session_data->is_admin ==1){        
     
