@@ -155,7 +155,7 @@
          ?> 
         <tr data-row-id="<?php echo $files['files_id'];?>" id="<?php echo $files['files_id'];?>">
          
-            <td><a href="<?=base_url();?>uploads/<?=$files['file_name'];?>"><?=$files['file_name'];? target="_blank"></a></td>
+             <td><a href="<?=base_url();?>uploads/<?=$files['file_name'];?>" target="_blank"><?=$files['file_name'];?></a></td>
            <td class="delete"> <a href="#" class="on-default remove-row" data-toggle="tooltip" id="<?php echo $files['files_id'];?>" data-placement="right" title="წაშლა"><i class="fa fa-trash-o"></i>&nbsp; წაშლა</a></td>
         </tr>
         <?php
