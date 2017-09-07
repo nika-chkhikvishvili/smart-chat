@@ -246,14 +246,15 @@ app.checkAvailableServiceForOperator = function (user) {
         if (err) {
             return app.databaseError(socket, err);
         }
-
+        let is_has_any = false;
         res.forEach(function (item) {
             let serviceQuee = app.waitingClients[item.service_id];
             if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
                 app.addOperatorToService(user.userId, item.service_id, 1)
+                is_has_any = true;
             }
         });
-        app.checkAvailableServiceForOperator(user);
+        if (is_has_any) app.checkAvailableServiceForOperator(user);
     })
 };
 
@@ -321,9 +322,12 @@ app.checkAvailableOperatorForService = function (serviceId) {
     });
 
     app.connection.query('SELECT person_id, (select count(*) from chat_rooms r where  r.person_id = p.person_id and chat_id ' +
-        ' in(SELECT chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1 ) ) as open_windows' +
+        ' in(SELECT chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1 ) ) as open_windows, ' +
+        ' (select count(*) from chat_rooms r1 where  r1.person_id = p.person_id   and r1.chat_id ' +
+        ' in(SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 ' +
+        ' AND c1.add_date   >= NOW() - INTERVAL 1 DAY) ) as last_1_day '+
         ' FROM smartchat.persons p WHERE person_id in ( select person_id from person_services  where service_id = ? and person_id in (' + wh + ') ) ' +
-        ' order by open_windows asc', [serviceId], function (err, res) {
+        ' order by open_windows asc, last_1_day asc', [serviceId], function (err, res) {
         if (err) {
             return app.databaseError(null, err);
         }
