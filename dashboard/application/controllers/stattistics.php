@@ -264,7 +264,7 @@ class stattistics extends CI_Controller{
 
                 $interval_val =  floor($datediff / (60 * 60 * 24));
                
-                $sul_sashualo = ($all_chats / $interval_val);
+                @$sul_sashualo = ($all_chats / $interval_val);
                 
                
                 
