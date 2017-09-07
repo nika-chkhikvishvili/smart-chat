@@ -114,11 +114,12 @@
                     <div class="input-group">
                         <label for="lastname" class="control-label">ოპერატორი</label>
                          <select class="form-control" id="sel1">
-                            
+                         <option value="0">ყველა ოპერატორი</option>   
                           
                         <?php
                         foreach ($persons as $get_persons){
-                            echo '<option>'.$get_persons['first_name']."&nbsp;".$get_persons['last_name'].'</option>';
+                            echo '<option value='.$get_persons['person_id'].'>'.$get_persons['first_name']."&nbsp;".$get_persons['last_name'].'</option>';
+							
                         }
                         ?>
                              </select>
