@@ -27,7 +27,7 @@ app.connection.connect();
 
 app.io = require('socket.io')(http_server);
 
-let redis = require("redis");
+/*let redis = require("redis");
 let redisClient = redis.createClient();
 
 redisClient.on("error", function (err) {
@@ -44,7 +44,7 @@ redisClient.hkeys("hash key", function (err, replies) {
         console.log("    " + i + ": " + reply);
     });
     //redisClient.quit();
-});
+});*/
 
 app.chats = new Map();
 app.lastChatCheckedTime = Date.now();

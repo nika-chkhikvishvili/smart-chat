@@ -16,6 +16,7 @@ function ChatClient($, socket) {
 
     let infoMessagePanel = $("#info_message_panel");
     let chatCloseInfoShowed = false;
+    let chatCloseInfoIsShowing = false;
     let chatCloseWarningShowed = false;
     let conversationStarted = false;
     let warningBeep = new Audio('/assets/audio/warning_beep.ogg');
@@ -119,6 +120,7 @@ function ChatClient($, socket) {
 
     function closeChatFn() {
         delete localStorage.chatUniqId;
+        conversationStarted = false;
         let closeText = auto_answering.connect_failed_geo || 'ჩატი დაიხურა';
         switch (language) {
             case 'en_US': closeText = auto_answering.connect_failed_eng || 'Chat is closed'; break;
@@ -186,12 +188,18 @@ function ChatClient($, socket) {
             chatCloseTime = parseInt(chatCloseTime);
 
             if (Date.now() - lastMeWritingTime > chatCloseTime - 60000) {
-                let str = auto_answering.passive_client_geo || '{time} წამში ჩატი დაიხურება პასიურობის გამო';
-                let repl = Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000);
+                if (chatCloseInfoIsShowing) {
+                    let str = auto_answering.passive_client_geo || '{time} წამში ჩატი დაიხურება პასიურობის გამო';
+                    let repl = Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000);
+                    infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
+                }
                 if (!chatCloseInfoShowed) {
                     chatCloseInfoShowed = true;
-                    infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
+                    let str = auto_answering.passive_client_geo || '{time} წამში ჩატი დაიხურება პასიურობის გამო';
+                    let repl = Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000);
+                    infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
+                    chatCloseInfoIsShowing = true;
                     infoMessagePanel.modal();
                     let playPromise = warningBeep.play();
                     // playPromise.then(function() {
@@ -205,6 +213,7 @@ function ChatClient($, socket) {
 
             if (!chatCloseWarningShowed && Date.now() - lastMeWritingTime > chatCloseTime) {
                 chatCloseWarningShowed = true;
+                chatCloseInfoIsShowing = false;
                 infoMessagePanel.find('.modal-title').html('უმოქმედობა');
                 infoMessagePanel.find('.modal-body').html('ჩატი დაიხურა უმოქმედობის გამო');
                 infoMessagePanel.modal();
