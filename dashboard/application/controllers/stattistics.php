@@ -283,7 +283,7 @@ class stattistics extends CI_Controller{
                         </tr>";
                
                  foreach($sql_get_services as $services){
-                       $sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
+                       @$sul_sashualo_byserv = ($services['all_chats'] / $interval_val);
                   echo "<tr>
                         <td class='thick-line'></td>
                         <td class='thick-line'></td>
