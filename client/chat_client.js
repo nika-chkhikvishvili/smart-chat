@@ -188,9 +188,9 @@ function ChatClient($, socket) {
             if (Date.now() - lastMeWritingTime > chatCloseTime - 60000) {
                 let str = auto_answering.passive_client_geo || '{time} წამში ჩატი დაიხურება პასიურობის გამო';
                 let repl = Math.round((chatCloseTime + lastMeWritingTime -Date.now())/1000);
-                infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
                 if (!chatCloseInfoShowed) {
                     chatCloseInfoShowed = true;
+                    infoMessagePanel.find('.modal-body').html( str.replace('{time}', repl ));
                     infoMessagePanel.find('.modal-title').html('უმოქმედობა');
                     infoMessagePanel.modal();
                     let playPromise = warningBeep.play();
