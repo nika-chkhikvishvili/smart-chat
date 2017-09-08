@@ -9,9 +9,16 @@ let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 
+let fs = require("fs");
 app.log = require('npmlog');
 let app1 = require('express')();
-let http_server = require('http').createServer(app1);
+let http_server = require('https').createServer({
+    key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
+    cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
+    // ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
+    requestCert: false,
+    rejectUnauthorized: false
+},app1);
 let mysql = require('mysql');
 let fifo = require('fifo');
 http_server.listen(3000);

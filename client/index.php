@@ -318,6 +318,7 @@ if (array_key_exists('lang', $_GET)) {
 
                 if ($services_list_results) {
                     while($row = mysqli_fetch_assoc($services_list_results)) {
+                        $services_list[$row['category_service_id']] = $row;
                         echo "<option value='{$row['category_service_id']}'>{$row[$service_name]}</option>";
                      }      
                 }
@@ -362,7 +363,7 @@ if (array_key_exists('lang', $_GET)) {
     					<ul class="list-unstyled media-block" id="chat-body-ul">
     						<li class="mar-btm">
     							<div class="media-left">
-    								<img src="http://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">
+    								<img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">
     							</div>
     							<div class="media-body pad-hor">
     								<div class="speech">
@@ -376,7 +377,7 @@ if (array_key_exists('lang', $_GET)) {
     						</li>
     						<li class="mar-btm">
     							<div class="media-right">
-    								<img src="http://bootdey.com/img/Content/avatar/avatar2.png" class="img-circle img-sm" alt="Profile Picture">
+    								<img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="img-circle img-sm" alt="Profile Picture">
     							</div>
     							<div class="media-body pad-hor speech-right">
     								<div class="speech">
@@ -390,7 +391,7 @@ if (array_key_exists('lang', $_GET)) {
     						</li>
     						<li class="mar-btm">
     							<div class="media-left">
-    								<img src="http://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">
+    								<img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-circle img-sm" alt="Profile Picture">
     							</div>
     							<div class="media-body pad-hor">
     								<div class="speech">
@@ -457,6 +458,13 @@ if (array_key_exists('lang', $_GET)) {
         echo "{};\n";
     }
 
+    echo 'var services_list = ';
+    if ($services_list) {
+        echo  json_encode($services_list, JSON_UNESCAPED_UNICODE),";\n";
+    } else {
+        echo "{};\n";
+    }
+
     ?>
 </script>
 <script
@@ -464,14 +472,14 @@ if (array_key_exists('lang', $_GET)) {
     integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
     crossorigin="anonymous"></script>
 
-<script src='http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-<script src='http://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
+<script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
-<script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
-<script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+<script src="//jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+<script src="//jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 <script src="libs/bootstrap-formhelpers/bootstrap-formhelpers.min.js"></script>
 <script src="libs/bootstrap-formhelpers/bootstrap-formhelpers-languages.js"></script>
 <script src="chat_client.js?<?=rand(); ?>"></script>
