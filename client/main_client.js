@@ -4,7 +4,7 @@
 
 'use strict';
 
-let socket = io(window.location.origin + ':3000');
+let socket = io(window.location.origin + ':8443');
 let infoMessagePanel = $("#info_message_panel");
 let chat = new ChatClient($, socket);
 

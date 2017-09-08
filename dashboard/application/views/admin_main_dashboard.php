@@ -144,7 +144,7 @@
                                                             <div class="left">
                                                                 <ul class="people" style="list-style-type: none;">
                                                                     <li class="person" data-chat="person1" style="display: none;">
-                                                                        <img src1="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                                                                        <img src1="//s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
                                                                         <span class="name">Thomas Bangalter</span>
                                                                         <span class="time">2:09 PM</span>
                                                                         <span class="preview">I was wondering...</span>
@@ -237,7 +237,7 @@
             </div>
             <ul class="people">
                 <li class="person" data-chat="person1" style="display: none;">
-                    <img src="http://s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
+                    <img src="//s13.postimg.org/ih41k9tqr/img1.jpg" alt="" />
                     <span class="name">Thomas Bangalter</span>
                     <span class="time">2:09 PM</span>
                     <span class="preview">I was wondering...</span>
@@ -517,8 +517,8 @@
     <script src="<?=base_url();?>assets/js/jquery.nicescroll.js"></script>
     <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
 
-    <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
-    <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js"></script>
 
     <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
 
