@@ -9,19 +9,38 @@ let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 
-let fs = require("fs");
-app.log = require('npmlog');
-let app1 = require('express')();
-let http_server = require('https').createServer({
+let https = require('https');
+// let http = require('http');
+let fs = require('fs');
+
+let options = {
     key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
     cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
-    // ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
+    ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
     requestCert: false,
     rejectUnauthorized: false
-},app1);
+};
+
+let app1 = require('express')();
+// let ser_http = http.createServer(app1);
+let ser_https = https.createServer(options, app1);
+
+// app1.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "https://smartchat.ge");
+//     res.header("Access-Control-Allow-Credentials", "true");
+    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header("Access-Control-Allow-Headers", "Content-Type");
+    // res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+    // next();
+// });
+
+app.io = require('socket.io')(ser_https);
+// ser_http.listen(8080);
+ser_https.listen(8443);
+
+app.log = require('npmlog');
 let mysql = require('mysql');
 let fifo = require('fifo');
-http_server.listen(3000);
 
 app.connection = mysql.createConnection({
     host: 'localhost',
@@ -32,7 +51,7 @@ app.connection = mysql.createConnection({
 
 app.connection.connect();
 
-app.io = require('socket.io')(http_server);
+
 
 /*let redis = require("redis");
 let redisClient = redis.createClient();
