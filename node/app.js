@@ -9,8 +9,7 @@ let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 
-let https = require('https');
-// let http = require('http');
+let http_instance = require('https');
 let fs = require('fs');
 
 let options = {
@@ -18,25 +17,16 @@ let options = {
     cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
     ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
     requestCert: false,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
 };
 
-let app1 = require('express')();
-// let ser_http = http.createServer(app1);
-let ser_https = https.createServer(options, app1);
+let express_server = require('express')();
+let http_server = http_instance.createServer(options, express_server);
 
-// app1.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "https://smartchat.ge");
-//     res.header("Access-Control-Allow-Credentials", "true");
-    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    // res.header("Access-Control-Allow-Headers", "Content-Type");
-    // res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-    // next();
-// });
-
-app.io = require('socket.io')(ser_https);
-// ser_http.listen(8080);
-ser_https.listen(8443);
+app.io = require('socket.io')(http_server);
+http_server.listen(8443, function() {
+    console.log('API Server Started On Port %d', 8443);
+});
 
 app.log = require('npmlog');
 let mysql = require('mysql');
@@ -51,27 +41,6 @@ app.connection = mysql.createConnection({
 
 app.connection.connect();
 
-
-
-/*let redis = require("redis");
-let redisClient = redis.createClient();
-
-redisClient.on("error", function (err) {
-    console.log("Error " + err);
-});
-
-redisClient.set("string key", "string val", redis.print);
-redisClient.hset("hash key", "hashtest 1", "some value", redis.print);
-redisClient.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-
-redisClient.hkeys("hash key", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
-    });
-    //redisClient.quit();
-});*/
-
 app.chats = new Map();
 app.lastChatCheckedTime = Date.now();
 app.waitingClients = [];
@@ -81,7 +50,6 @@ app.autoAnswering = {};
 
 let client = require('./client.js')(app);
 let server = require('./server.js')(app);
-
 
 // for debug
 global.app = app;

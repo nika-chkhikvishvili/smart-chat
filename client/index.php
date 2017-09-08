@@ -477,7 +477,7 @@ if (array_key_exists('lang', $_GET)) {
 <script src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
 
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script src="//jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
 <script src="//jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
 <script src="libs/bootstrap-formhelpers/bootstrap-formhelpers.min.js"></script>
