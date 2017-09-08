@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <meta name="description" content="Smart Logic  Open Source Chat System">
-        <meta name="author" content="Coderthemes">
-        <link rel="shortcut icon" href="<?=base_url();?>assets/images/favicon_1.ico">
-        <title>ჩეთის ადმინისტრატორი</title>
-        <link href="<?=base_url();?>assets/plugins/nestable/jquery.nestable.css" rel="stylesheet">
-        <link href="<?=base_url();?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/core.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/icons.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/components.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/pages.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/menu.css" rel="stylesheet" type="text/css">
-        <link href="<?=base_url();?>assets/css/responsive.css" rel="stylesheet" type="text/css">
-        <script src="<?=base_url();?>assets/js/modernizr.min.js"></script>
-	<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Smart Logic  Open Source Chat System">
+<meta name="author" content="Coderthemes">
+<link rel="shortcut icon" href="<?=base_url();?>assets/images/favicon_1.ico">
+<title>ჩეთის ადმინისტრატორი</title>
+<link href="<?=base_url();?>assets/plugins/nestable/jquery.nestable.css" rel="stylesheet">
+<link href="<?=base_url();?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/core.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/icons.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/components.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/pages.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/menu.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/css/responsive.css" rel="stylesheet" type="text/css">
+<script src="<?=base_url();?>assets/js/modernizr.min.js"></script>
+<link href="<?=base_url();?>assets/plugins/notifications/notification.css" rel="stylesheet">
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
 
-        <script src="<?=base_url();?>assets/js/jquery.min.js"></script>
-        <script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
- 
+<script src="<?=base_url();?>assets/js/jquery.min.js"></script>
+<script src="<?=base_url();?>assets/js/bootstrap.min.js"></script>
+
     </head>
 
 
@@ -76,15 +76,14 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
-
-
-                <div class="col-md-1">
+			 <form action="" method="post" />
+                <div class="col-md-2">
                     <div class="">
                         <label for="firstname" class="control-label">მომხ.სახელი</label>
                         <input type="text" class="form-control" id="firstname" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="lastname" class="control-label">მომხ.გვარი</label>
                         <input type="text" class="form-control" id="lastname" placeholder="">
@@ -93,8 +92,8 @@
                 <div class="col-md-2">
                     <div class="input-group">
                         <label for="lastname" class="control-label">სერვისი</label>
-                        <select class="select2 form-control" name='catID' id='catID'>
-                      <option value="0">ყველა სერვისი</option>
+                        <select class="select2 form-control" name="service_id" id='catID'>
+                      <option value="" >ყველა სერვისი</option>
                        <?php
                        if(is_array($get_services))
                        {
@@ -125,28 +124,28 @@
                              </select>
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="input-group">
                         <label for="lastname" class="control-label">Start </label>
                         <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="start_date"  id="lastname">
                     </div>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="input-group">
                         <label for="lastname" class="control-label">End </label>
                         <input type="text" class="form-control"  placeholder="DD/MM/YYYY-დან" name="end_date"  id="lastname">
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <button type="button" id="submit" name="submit" class="btn btn-primary" style="margin-top: 23px; margin-left: 50px; ">დამუშავება</button>
-                    &nbsp;
-                    <a href=""  id="submit" class="btn btn-primary" style="margin-top: 23px;">გასუფთავება</a>
-                   
-                </div>
-               
-                   
             </div>
         </div>
+		<br />
+		 <div class="col-md-3">
+					 <input  type="submit" name="submit" class="btn btn-primary" value="დამუშავება">
+                     <input  type="reset" name="reset" class="btn btn-primary" value="გასუფთავება">
+                   
+                   
+      </div>
+	</form>
 <div class="row">
 <div class="col-lg-4">
 
