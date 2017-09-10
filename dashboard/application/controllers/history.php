@@ -17,7 +17,7 @@ class History extends CI_Controller{
     public function index(){
         
         $this->load->model('dashboard_model');
-        
+        $this->load->helper('form');
         $this->load->library("pagination");
         $sql_history = $this->dashboard_model->count_history('','','');
         $data['persons'] = $this->dashboard_model->get_persons();
