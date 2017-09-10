@@ -80,13 +80,13 @@
                 <div class="col-md-2">
                     <div class="">
                         <label for="firstname" class="control-label">მომხ.სახელი</label>
-                        <input type="text" class="form-control" id="firstname" placeholder="">
+                        <input type="text" class="form-control" name="firstname" value="<?php echo set_value('firstname'); ?>" id="firstname" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="lastname" class="control-label">მომხ.გვარი</label>
-                        <input type="text" class="form-control" id="lastname" placeholder="">
+                        <input type="text" class="form-control" name="lastname" value="<?php echo set_value('lastname'); ?>"  id="lastname" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -101,7 +101,7 @@
 
 
                        ?>
-                       <option value="<?=$services['category_service_id'];?>"><?=$services['service_name_geo'];?></option>
+                       <option value="<?=$services['category_service_id'];?>" <?php echo set_select('service_id',  $services['category_service_id']); ?>><?=$services['service_name_geo'];?></option>
 
                         <?php                                        
                        endforeach; }
@@ -112,14 +112,15 @@
                 <div class="col-md-2">
                     <div class="input-group">
                         <label for="lastname" class="control-label">ოპერატორი</label>
-                         <select class="form-control" id="sel1">
+                         <select class="form-control" id="sel1" name="operator_name">
                          <option value="0">ყველა ოპერატორი</option>   
                           
                         <?php
-                        foreach ($persons as $get_persons){
-                            echo '<option value='.$get_persons['person_id'].'>'.$get_persons['first_name']."&nbsp;".$get_persons['last_name'].'</option>';
-							
-                        }
+                        foreach ($persons as $get_persons):
+						 ?>
+                            <option value='<?=$get_persons['person_id'];?>' <?php echo set_select('operator_name',  $get_persons['person_id']); ?>><?=$get_persons['first_name'];?> &nbsp; <?=$get_persons['last_name']; ?></option>
+						 <?php	
+                        endforeach;
                         ?>
                              </select>
                     </div>
