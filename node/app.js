@@ -9,7 +9,7 @@ let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 
-let http_instance = require('https');
+let http_instance = require('http');
 let fs = require('fs');
 let crypto = require('crypto');
 const sha384 = crypto.createHash('sha384');
@@ -25,7 +25,7 @@ let options = {
 };
 
 let express_server = require('express')();
-let http_server = http_instance.createServer(options, express_server);
+let http_server = http_instance.createServer( express_server);
 
 app.io = require('socket.io')(http_server);
 http_server.listen(8443, function() {

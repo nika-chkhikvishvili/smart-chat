@@ -221,7 +221,6 @@ function ChatClient($, socket) {
                 closeChatFn();
             }
         }
-
     }
 
     return {
