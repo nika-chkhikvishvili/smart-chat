@@ -11,11 +11,15 @@ let Message = require('./models/Message');
 
 let http_instance = require('https');
 let fs = require('fs');
+let crypto = require('crypto');
+const sha384 = crypto.createHash('sha384');
+sha384.update('ghf');
+console.log('sha384: ', sha384.digest('hex'));
 
 let options = {
     key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
     cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
-    ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
+    // ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
     requestCert: false,
     rejectUnauthorized: false,
 };

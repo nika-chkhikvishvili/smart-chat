@@ -70,28 +70,43 @@ $(document).ready(function () {
         let first_name_label = 'სახელი:';
         let last_name_label = 'გვარი:';
         let service_label = 'აირჩიეთ სერვისი:';
+        let service_field_name = 'service_name_geo';
+        let begin_btn_text = 'საუბრის დაწყება';
 
         switch (event.target.value){
             case "ka_GE" :
                 first_name_label = 'სახელი:';
                 last_name_label = 'გვარი:';
                 service_label = 'აირჩიეთ სერვისი:';
+                service_field_name = 'service_name_geo';
+                begin_btn_text = 'საუბრის დაწყება';
                 break;
             case "en_US" :
                 first_name_label = 'First Name:';
                 last_name_label = 'Last Name:';
                 service_label = 'Choose Service:';
+                service_field_name = 'service_name_eng';
+                begin_btn_text = 'Start conversation';
                 break;
             case "ru_RU" :
                 first_name_label = 'Имя:';
                 last_name_label = 'Фамилия:';
                 service_label = 'Выберите сервис:';
+                service_field_name = 'service_name_rus';
+                begin_btn_text = 'Начать';
                 break;
         }
 
         $('#first_name_label').html(first_name_label);
         $('#last_name_label').html(last_name_label);
         $('#service_label').html(service_label);
+        $('#begin_btn').html(begin_btn_text);
+        $('#select_theme').html('');
+        for (let x in services_list) {
+            let value = services_list[x];
+            $('#select_theme').append($("<option></option>").attr("value", value.category_service_id).text(value[service_field_name]));
+        }
+        $('.selectpicker').selectpicker('refresh');
     });
 
     let chatBody = $('#chat-body');
