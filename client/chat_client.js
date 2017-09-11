@@ -149,6 +149,7 @@ function ChatClient($, socket) {
         lastName = lN || '';
         language = lng || 'ka_GE';
         $('.panel-title').text(firstName + ' ' + lastName);
+        changeLanguageFn(language);
     }
 
     function getChatUniqIdFn() {
@@ -165,6 +166,51 @@ function ChatClient($, socket) {
         return {
             chatUniqId: chatUniqId
         };
+    }
+
+    function changeLanguageFn(lang) {
+        language = lang;
+        let first_name_label = 'სახელი:';
+        let last_name_label = 'გვარი:';
+        let service_label = 'აირჩიეთ სერვისი:';
+        let service_field_name = 'service_name_geo';
+        let begin_btn_text = 'საუბრის დაწყება';
+        let wait_operator_text = 'გთხოვთ დაელოდოთ ოპერატორს, თუ არ გსურთ ლოდინი, თქვენი შეკითხვა შეგიძლიათ გამოაგზავნოთ <a href="/offline.php" >მეილზე</a>';
+
+        switch (language){
+            case "en_US" :
+                first_name_label = 'First Name:';
+                last_name_label = 'Last Name:';
+                service_label = 'Choose Service:';
+                service_field_name = 'service_name_eng';
+                begin_btn_text = 'Start conversation';
+                wait_operator_text = 'Please wait for an operator; if you do not want to wait, you may send your question by <a href="/offline.php" >e-mail</a>.';
+                disconnect_chat_title = "Close chat";
+                disconnect_chat_message = "Do you really want to close chat?";
+                break;
+            case "ru_RU" :
+                first_name_label = 'Имя:';
+                last_name_label = 'Фамилия:';
+                service_label = 'Выберите сервис:';
+                service_field_name = 'service_name_rus';
+                begin_btn_text = 'Начать';
+                wait_operator_text = 'Пожалуйста подождите оператора, если желаете можете отправить нам ваш вопрос по <a href="/offline.php" >эл. почте</a>';
+                disconnect_chat_title = "Завершить разговор";
+                disconnect_chat_message = "Действительно желаете завершить разговор?";
+                break;
+        }
+
+        $('#first_name_label').html(first_name_label);
+        $('#last_name_label').html(last_name_label);
+        $('#service_label').html(service_label);
+        $('#begin_btn').html(begin_btn_text);
+        $('#select_theme').html('');
+        for (let x in services_list) {
+            let value = services_list[x];
+            $('#select_theme').append($("<option></option>").attr("value", value.category_service_id).text(value[service_field_name]));
+        }
+        $('.selectpicker').selectpicker('refresh');
+        $('#wait_operator').html(wait_operator_text);
     }
 
     function executeClientLoopFunctionFn() {
@@ -225,6 +271,7 @@ function ChatClient($, socket) {
 
     return {
         executeClientLoopFunction: executeClientLoopFunctionFn,
+        changeLanguage: changeLanguageFn,
         closeChat: closeChatFn,
         getChatUniqId: getChatUniqIdFn,
         getChatUniqObject: getChatUniqObjectFn,

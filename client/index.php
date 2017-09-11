@@ -330,7 +330,7 @@ if (array_key_exists('lang', $_GET)) {
     </div>
 
     <div id="wait_operator" class="col-md-12 col-lg-8 center-block" style="height:90%">
-        გთხოვთ დაელოდოთ ოპერატორს, თუ არ გსურთ ლოდინი, თქვენი შეკითხვა შეგიძლიათ გამოაგზავნოთ <a href="/offline.php" >მაილზე</a>
+        გთხოვთ დაელოდოთ ოპერატორს, თუ არ გსურთ ლოდინი, თქვენი შეკითხვა შეგიძლიათ გამოაგზავნოთ <a href="/offline.php" >მეილზე</a>
     </div>
 
     <div id ="chat_window" class="col-md-12 col-lg-8 center-block" style="height:90%">
@@ -475,7 +475,7 @@ if (array_key_exists('lang', $_GET)) {
 <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 <script src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.4.5/js/bootstrapvalidator.min.js'></script>
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
 <script src="//jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
