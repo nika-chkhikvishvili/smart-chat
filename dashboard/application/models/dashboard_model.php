@@ -396,7 +396,7 @@ class dashboard_model extends CI_Model{
     	    repo_categories.`repo_category_id`, repo_categories.`category_name` , category_services.`category_service_id`, 
     	    category_services.`service_name_geo`');
             $this->db->from('repo_categories');
-            $this->db->join('repositories', 'repositories.repository_id = repo_categories.repo_category_id');
+            $this->db->join('repositories', 'repositories.repository_id = repo_categories.repository_id');
             $this->db->join('category_services', 'category_services.repo_category_id = repo_categories.repo_category_id');
             $this->db->where('category_service_id > ', 0 );
             $query = $this->db->get();
