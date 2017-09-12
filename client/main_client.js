@@ -111,22 +111,11 @@ $(document).ready(function () {
 });
 
 
-socket.on('testResponse', function (data){
-    console.log('execute: testResponse');
-    console.log(data);
-});
-
-socket.on('serverError', function (data){
-    // alert('Server Error');
-});
-
 socket.io.on('reconnect', function () {
     socket.emit('clientCheckChatIfAvailable', chat.getChatUniqObject());
 });
 
 socket.on('clientCheckChatIfAvailableResponse', function (data) {
-    console.log('execute: clientCheckChatIfAvailableResponse');
-    console.log(data);
     if (data && data.hasOwnProperty('isValid') && data.isValid) {
         chat.setUserInformation(data.firstName, data.lastName, data.language);
         $('#asarchevi').hide();
@@ -153,19 +142,10 @@ socket.on('clientCheckChatIfAvailableResponse', function (data) {
 });
 
 socket.on('clientGetServicesResponse', function (data) {
-    console.log('execute: clientGetServicesResponse');
-    return;
-    // console.log(data);
-    if ($.isArray(data)){
-        $('#select_theme').html('');
-        $.each(data, function(key, value) {
-            $('#select_theme').append($("<option></option>").attr("value", value.category_service_id).text(value.category_name + ' - ' + value.service_name_geo));
-        });
-    }
+
 });
 
 socket.on('clientInitParamsResponse', function (data) {
-    console.log('execute: clientInitParamsResponse');
 
     if (!data) {
         alert('Error');
@@ -191,15 +171,12 @@ socket.on('clientInitParamsResponse', function (data) {
 });
 
 socket.on('operatorJoined', function () {
-    console.log('execute: operatorJoined');
     // console.log(data);
     $('#wait_operator').hide();
     $('#chat_window').show();
 });
 
 socket.on('message', function (data) {
-    console.log('execute: message');
-    console.log(data);
     socket.emit('clientMessageReceived', data.ran);
 
     if (data.messageType === 'operatorIsWorking') {
