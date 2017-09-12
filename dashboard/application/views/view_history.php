@@ -146,7 +146,7 @@
                 <div class="inbox-item">
                     <div class="inbox-item-img"></div>
                     <p class="inbox-item-author">ოპერატორი</p>
-                    <p class="inbox-item-text"><?=$his['first_name'];?> &nbsp; <?=$his['last_name'];?></p>                   
+                    <p class="inbox-item-text"><?=@$get_chat[0]['first_name'];?> &nbsp; <?=@$get_chat[0]['last_name'];?></p>                 
                 </div>
             </a>
             <a href="#">
