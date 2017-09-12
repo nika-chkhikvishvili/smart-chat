@@ -766,6 +766,7 @@ class dashboard_model extends CI_Model{
       $where = "chat_rooms.person_id is  NOT NULL"; 
       $this->db->where($where);
       $this->db->where('chat_status_id','3');
+      $this->db->order_by("chats.add_date", "desc")
       $this->db->limit('25', $start);
       $query = $this->db->get();
       return $query->result_array();
