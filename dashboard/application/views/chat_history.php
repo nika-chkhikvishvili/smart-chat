@@ -142,7 +142,7 @@
 		<br />
 		 <div class="col-md-3">
 					 <input  type="submit" name="submit" class="btn btn-primary" value="დამუშავება">
-                     <input  type="reset" name="reset" class="btn btn-primary" value="გასუფთავება">
+                       <a href="<?=base_url();?>history" name="reset" class="btn btn-primary"> გასუფთავება</a>
                    
                    
       </div>
