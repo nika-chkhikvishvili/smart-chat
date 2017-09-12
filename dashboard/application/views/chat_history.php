@@ -93,7 +93,7 @@
                     <div class="input-group">
                         <label for="lastname" class="control-label">სერვისი</label>
                         <select class="select2 form-control" name="service_id" id='catID'>
-                      <option value="" >ყველა სერვისი</option>
+                      <option value="">ყველა სერვისი</option>
                        <?php
                        if(is_array($get_services))
                        {
@@ -113,7 +113,7 @@
                     <div class="input-group">
                         <label for="lastname" class="control-label">ოპერატორი</label>
                          <select class="form-control" id="sel1" name="operator_name">
-                         <option value="0">ყველა ოპერატორი</option>   
+                         <option value="">ყველა ოპერატორი</option>   
                           
                         <?php
                         foreach ($persons as $get_persons):
