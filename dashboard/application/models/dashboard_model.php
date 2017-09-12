@@ -721,7 +721,7 @@ class dashboard_model extends CI_Model{
    # end of  
    # სერვისი
     // chat history 
-    function get_all_history($service_id=false,$start_date=false,$end_date=false,$start)
+  function get_all_history($service_id = false,$first_name = false,$last_name = false, $operator = false,  $start_date = false,$end_date = false,$start)
    {
       $this->db->select('*');
       $this->db->from('chats'); 
@@ -729,7 +729,27 @@ class dashboard_model extends CI_Model{
       $this->db->join('online_users', 'online_users.online_user_id = chats.online_user_id');
       $this->db->join('category_services', 'category_services.category_service_id = chats.service_id');     
       $this->db->join('persons', 'persons.person_id = chat_rooms.person_id');
+	  
+	  if($first_name)
+      {        
+        $this->db->where("online_users_name", $first_name);   
+      }
+	  
+	  if($last_name)
+      {        
+        $this->db->where("online_users_lastname", $last_name);   
+      }
+	  
+	  if($service_id)
+      {        
+        $this->db->where("category_service_id", $service_id);   
+      }
       
+	  if($operator)
+      {        
+        $this->db->where("persons.person_id", $operator);   
+      }
+	  
       if($start_date)
       {
         $start_date = $start_date." 00:00:00"  ;
@@ -741,6 +761,8 @@ class dashboard_model extends CI_Model{
         $end_date = $end_date." 00:00:00";    
         $this->db->where("person_id", $end_date);   
       }
+	  
+	  
       $where = "chat_rooms.person_id is  NOT NULL"; 
       $this->db->where($where);
       $this->db->where('chat_status_id','3');
