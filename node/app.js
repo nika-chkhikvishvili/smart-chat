@@ -10,19 +10,14 @@ let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 
 let http_instance = require('http');
-let fs = require('fs');
-let crypto = require('crypto');
-const sha384 = crypto.createHash('sha384');
-sha384.update('ghf');
-console.log('sha384: ', sha384.digest('hex'));
-
-let options = {
-    key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
-    cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
-    // ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
-    requestCert: false,
-    rejectUnauthorized: false,
-};
+// let fs = require('fs');
+// let options = {
+//     key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
+//     cert: fs.readFileSync('/etc/pki/tls/certs/smartchat.crt'),
+//     // ca: fs.readFileSync('/etc/pki/CA/certs/digicert.crt'),
+//     requestCert: false,
+//     rejectUnauthorized: false,
+// };
 
 let express_server = require('express')();
 let http_server = http_instance.createServer( express_server);
@@ -48,6 +43,7 @@ app.connection.connect();
 app.chats = new Map();
 app.lastChatCheckedTime = Date.now();
 app.waitingClients = [];
+app.onlineUsersByRepos = [];
 app.users = new Map();
 app.onlineGuests = new Map();
 app.autoAnswering = {};
@@ -100,29 +96,23 @@ app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function (err
             firstName: row.first_name,
             lastName: row.last_name,
             isAdmin: row.is_admin,
-            isOnline: 0
+            isOnline: 0,
+            repoId: row.repo_id
         }));
     });
 });
 
-// initialite services
-/*app.connection.query('SELECT `t`.`token`, `t`.`person_id`, `t`.`add_date`, `t`.`expire`, `t`.`expired` ' +
- 'FROM `person_tokens` t', function(err, rows, fields) {
- if(err) {
- console.log(err);
- process.exit(1);
- }
- rows.forEach(function (row){
- if (!app.onlineUsers[row.person_id]) {
- app.onlineUsers[row.person_id] = {
- isAdmin : false,
- sockets : [],
- tokens :[]
- }
- }
- app.onlineUsers[row.person_id].tokens.push(row.token);
- });
- });*/
+app.sendActiveListByRepo = function(repoId) {
+    app.users.forEach(function (user) {
+         if (!!user) {
+             let ans = [];
+             app.onlineUsersByRepos[repoId].forEach(function (id) {
+                 ans.push(app.getUser(id).getLimited());
+             });
+             user.sockets.forEach(function (socketId) {app.io.sockets.sockets[socketId].emit('activeUsers', ans);});
+        }
+    });
+};
 
 //გლობალური პარამეტრების ინიციალიზაცია
 app.connection.query('SELECT auto_answering_id, repository_id, start_chating_geo, start_chating_rus, start_chating_eng, mail_offline, waiting_message_geo,' +
@@ -442,7 +432,7 @@ app.io.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
         if (socket.hasOwnProperty('user')) {
-            socket.user.removeSocket(socket);
+            socket.user.removeSocket(app, socket);
         }
 
         if (socket.hasOwnProperty('guestUserId')) {

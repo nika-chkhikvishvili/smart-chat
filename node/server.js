@@ -38,7 +38,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         return;
     }
 
-    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id,  nickname ' +
+    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id,  nickname, repo_id ' +
         ' FROM `persons` WHERE person_id in ' +
         '(SELECT history_person_id as person_id FROM xlog_login_history WHERE php_session_id = ? )', [data.token], function (err, res) {
         if (err) {
@@ -53,13 +53,20 @@ ChatServer.prototype.checkToken = function (socket, data) {
         let ans = res[0];
 
         if (!app.users.has(ans.person_id)) {
-            app.users.set(ans.person_id, new User({userId: ans.person_id, firstName:ans.first_name, lastName: ans.last_name, isOnline: true, userName: ans.nickname}));
+            app.users.set(ans.person_id, new User({userId: ans.person_id, firstName:ans.first_name,
+                lastName: ans.last_name, userName: ans.nickname, repoId: ans.repo_id}));
         }
 
         let user = app.users.get(ans.person_id);
         user.addSocket(socket);
         socket.user = user;
         socket.emit("userInfo", user.getLimited());
+
+        if (!(user.repoId in app.onlineUsersByRepos) ) {
+            app.onlineUsersByRepos[user.repoId] = new Set();
+        }
+
+        app.onlineUsersByRepos[user.repoId].add(user.userId);
 
         app.connection.query('SELECT r.person_mode, c.chat_uniq_id, r.*, o.online_users_name as first_name, o.online_users_lastname as last_name ' +
             ' FROM chat_rooms r, chats c, online_users o where c.chat_id = r.chat_id and c.chat_status_id = 1 and  c.online_user_id = o.online_user_id ' +
@@ -83,6 +90,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
                 })
             }
             socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
+            app.sendActiveListByRepo(user.repoId);
 
             app.checkAvailableServiceForOperator(user);
         });
@@ -133,7 +141,7 @@ ChatServer.prototype.getActiveChats = function (socket) {
     });
 };
 
-//აბრუნებს ჩატის სურლ მიმოწერას
+//აბრუნებს ჩატის სრულ მიმოწერას
 ChatServer.prototype.getChatAllMessages = function (socket, data) {
     if (isNotValidDataChatUniqueId(data)) {
         return socket.emit("getAllChatMessagesResponse", {messages: []});

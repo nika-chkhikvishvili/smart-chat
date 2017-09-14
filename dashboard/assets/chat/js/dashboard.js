@@ -534,7 +534,26 @@ $(document).ready(function () {
 socket.on('operatorIsWorking', function (data) {
     console.log('execute: operatorIsWorking');
     console.log(data);
+});
 
+socket.on('activeUsers', function (data) {
+    console.log('execute: activeUsers');
+    console.log(data);
+    let ool = $('#online_operators_list');
+    ool.html('');
+    $.each(data, function (id, user) {
+        console.log(user);
+        ool.append('            <li class="list-group-item"> ' +
+            '<a href="#"> ' +
+            '<div class="avatar"> ' +
+            '<img src="/assets/images/users/girl.png" alt=""> ' +
+            '</div> ' +
+            '<span class="name">' + user.firstName + ' ' + user.lastName + '</span> ' +
+            '<i class="fa fa-circle online"></i> ' +
+            '</a> ' +
+            '<span class="clearfix"></span> ' +
+            '</li>')
+    });
 });
 
 socket.on('message', function (data) {

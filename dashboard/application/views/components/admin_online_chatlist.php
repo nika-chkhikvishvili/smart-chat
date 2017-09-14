@@ -1,7 +1,7 @@
 ﻿<div class="side-bar right-bar nicescroll">
     <h4 class="text-center">ხაზზეა</h4>
     <div class="contact-list nicescroll">
-        <ul class="list-group contacts-list">
+        <ul class="list-group contacts-list" id="online_operators_list">
 <!--            <li class="list-group-item">-->
 <!--                <a href="#">-->
 <!--                    <div class="avatar">-->

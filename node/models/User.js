@@ -19,6 +19,7 @@ function User(user) {
     this.isAdmin     = user.isAdmin     || null;
     this.statusId    = user.statusId    || null;
     this.isOnline    = user.isOnline    || null;
+    this.repoId      = user.repoId      || null;
     this.sockets     = new Set();
     // this.tokens      = {};
     this.chatRooms = new Map();
@@ -30,14 +31,19 @@ User.prototype.addSocket = function (socket) {
     }
     this.sockets.add(socket.id);
     this.isOnline = true;
+
 };
 
-User.prototype.removeSocket = function (socket) {
+User.prototype.removeSocket = function (app, socket) {
     if (!socket) {
         return;
     }
     this.sockets.delete(socket.id);
     this.isOnline = this.sockets.size > 0;
+    if (!this.isOnline) {
+        app.onlineUsersByRepos[this.repoId].delete(this.userId);
+        app.sendActiveListByRepo(this.repoId);
+    }
 };
 
 // User.prototype.addToken = function (token) {
@@ -47,6 +53,7 @@ User.prototype.removeSocket = function (socket) {
 
 User.prototype.getLimited = function () {
     return {
+        userId: this.personId,
         personId: this.personId,
         firstName: this.firstName,
         lastName: this.lastName,
