@@ -619,14 +619,17 @@ socket.on('clientGetServicesResponse', function (data) {
 });
 
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
-socket.on('getWaitingListResponse', function (data){
+socket.on('getWaitingListResponse', function (data) {
     console.log('execute: getWaitingListResponse');
     console.log(data);
     let ans="";
-    if (Array.isArray(data)){
-        $.each(data,function(key, value) {
+    if (Array.isArray(data.guests)){
+        $.each(data.guests, function(key, value) {
             if (value) {
-                ans = ans + '<tr><td>'+services[key]+"</td><td>";
+                ans = ans + '<tr><td><a class="btn" href="#" data-toggle="popover" data-content="' + data.serviceUsers[key] + '" ' +
+                    ' rel="popover" data-placement="right" title="' + services[key] + '" data-trigger="hover" data-html="true">'
+                    + services[key] + '</a></td><td>';
+
                 $.each(value, function(i, val){
                     ans = ans + val.guestUser.firstName + " " + val.guestUser.lastName + ", ";
                 });
@@ -635,6 +638,7 @@ socket.on('getWaitingListResponse', function (data){
         })
     }
     $("#clients_queee_body").html(ans);
+    $('[data-toggle="popover"]').popover();
 });
 
 socket.on('getActiveChatsResponse', function (data){

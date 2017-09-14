@@ -1,6 +1,5 @@
 'use strict';
 
-
 let app = {};
 
 let GuestUser = require('./models/GuestUser');
@@ -238,7 +237,7 @@ app.checkAvailableServiceForOperator = function (user) {
         res.forEach(function (item) {
             let serviceQuee = app.waitingClients[item.service_id];
             if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
-                app.addOperatorToService(user.userId, item.service_id, 1)
+                app.addOperatorToService(user.userId, item.service_id, 1);
                 is_has_any = true;
             }
         });

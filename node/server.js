@@ -99,16 +99,30 @@ ChatServer.prototype.checkToken = function (socket, data) {
 
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 ChatServer.prototype.getWaitingList = function (socket) {
-    //TODo უნდა შეამოწმოს ასევე უფლება
-    let ans = [];
-    if (!!app.waitingClients && Array.isArray(app.waitingClients)) {
-        app.waitingClients.forEach(function(val, idx){
-            if (!!val) {
-                ans[idx] = val.toArray();
+    app.connection.query('SELECT s.service_id, p.person_id, p.first_name, p.last_name FROM smartchat.person_services s, persons p WHERE p.person_id = s.person_id and p.repo_id = ?', [socket.user.repoId], function (err, res) {
+        if (err) {
+            return app.databaseError(socket, err);
+        }
+        let serviceUsers = [];
+        res.forEach(function (item) {
+            if (!serviceUsers[item.service_id]) {
+                serviceUsers[item.service_id] = '';
+            }
+            if (app.getUser(item.person_id).isOnline) {
+                serviceUsers[item.service_id] = serviceUsers[item.service_id] + item.first_name + ' ' + item.last_name + '<br>';
             }
         });
-    }
-    socket.emit('getWaitingListResponse', ans);
+
+        let ans = [];
+        if (!!app.waitingClients && Array.isArray(app.waitingClients)) {
+            app.waitingClients.forEach(function(val, idx){
+                if (!!val) {
+                    ans[idx] = val.toArray();
+                }
+            });
+        }
+        socket.emit('getWaitingListResponse', {serviceUsers: serviceUsers, guests: ans});
+    });
 };
 
 //აბრუნებს მიმდინარეების სიას
