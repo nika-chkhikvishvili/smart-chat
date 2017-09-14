@@ -71,3 +71,11 @@
 #template_dialog_form_table tr {
     text-align: justify;
 }
+
+.user_status {
+    color: #843534;
+}
+
+.user_is_online .user_status {
+    color: #7ab800;
+}

@@ -53,8 +53,7 @@ User.prototype.removeSocket = function (app, socket) {
 
 User.prototype.getLimited = function () {
     return {
-        userId: this.personId,
-        personId: this.personId,
+        userId: this.userId,
         firstName: this.firstName,
         lastName: this.lastName,
         userName: this.userName

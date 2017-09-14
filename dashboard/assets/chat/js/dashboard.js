@@ -217,10 +217,6 @@ function close_chat(){
 
 /** END CLOSE CHAT */
 
-
-
-
-
 function send_file(fileId, fileName){
 
     let elChatbox = $('.active-chat');
@@ -238,9 +234,6 @@ function send_file(fileId, fileName){
     filesDialog.modal( "toggle" );
 }
 
-
-
-
 //ჩატის ფანჯარას ქმნის და მონაცემებს წამოიღებს
 function createChatWindowAndLoadDataSimple(data){
     console.log('execute: createChatWindowAndLoadData');
@@ -253,7 +246,6 @@ function createChatWindowAndLoadDataSimple(data){
     chatManager.createChatWindow(data);
     socket.emit('getChatAllMessages', { chatUniqId: data.chatUniqId});
 }
-
 
 function leaveReadOnlyRoom(chatId) {
     socket.emit('leaveReadOnlyRoom', chatId);
@@ -269,7 +261,6 @@ function takeRoom() {
     $('.person').removeClass('readonly');
     socket.emit('joinToRoom', {chatUniqId:chatUniqId, joinType: 1});
 }
-
 
 function createChatWindowAndLoadData(data){
     console.log('execute: createChatWindowAndLoadData');
@@ -351,7 +342,6 @@ socket.on('sendMessageResponse', function (data){
         //TODO შეცდომა მესიჯის გაგზავნისას, აქ უნდა დამუშავდეს
     }
 });
-
 
 function getNextWaitingClient(data){
     console.log(data);
@@ -530,7 +520,6 @@ $(document).ready(function () {
     setInterval(chatManager.executeLoopFunction, 10000);
 });
 
-
 socket.on('operatorIsWorking', function (data) {
     console.log('execute: operatorIsWorking');
     console.log(data);
@@ -538,12 +527,13 @@ socket.on('operatorIsWorking', function (data) {
 
 socket.on('activeUsers', function (data) {
     console.log('execute: activeUsers');
-    console.log(data);
+    // console.log(data);
     let ool = $('#online_operators_list');
     ool.html('');
+    $('#chat-redirect-person-dialog tbody tr').removeClass('user_is_online');
     $.each(data, function (id, user) {
-        console.log(user);
-        ool.append('            <li class="list-group-item"> ' +
+        $('#redirect_person_tr_' + user.userId ).addClass('user_is_online');
+        ool.append('<li class="list-group-item"> ' +
             '<a href="#"> ' +
             '<div class="avatar"> ' +
             '<img src="/assets/images/users/girl.png" alt=""> ' +
@@ -552,7 +542,7 @@ socket.on('activeUsers', function (data) {
             '<i class="fa fa-circle online"></i> ' +
             '</a> ' +
             '<span class="clearfix"></span> ' +
-            '</li>')
+            '</li>');
     });
 });
 
@@ -590,7 +580,6 @@ socket.on('message', function (data) {
 }
 });
 
-
 //////////////////DONE//////////////////////////////////////////////////
 
 //ეს მოდის როცა ახალი მომხმარებელი შემოვა ჩატში,
@@ -621,7 +610,7 @@ socket.on('clientGetServicesResponse', function (data) {
 //აბრუნებს რიგში მყოფი, ოპერატორების მომლოდინეების სიას
 socket.on('getWaitingListResponse', function (data) {
     console.log('execute: getWaitingListResponse');
-    console.log(data);
+    // console.log(data);
     let ans="";
     if (Array.isArray(data.guests)){
         $.each(data.guests, function(key, value) {
@@ -699,12 +688,10 @@ function makeRandomString() {
 
 ////////////////////////////////////////////////// //////////////////////
 
-
 socket.io.on('reconnect', function () {
     console.log('execute: reconnect');
     socket.emit('checkToken',{token : token});
 });
-
 
 socket.on('messageReceived', function (data) {
     console.log('execute: messageReceived');
@@ -720,12 +707,10 @@ socket.on('clientMessageResponse', function (data) {
     //console.log(data);
 });
 
-
 function redAlert(id) {
     let el = $('#message_' + id);
     if (el.val() !== 'submited') el.css({'background-color': 'red'});
 }
-
 
 socket.on('newChatWindow', function (data) {
     console.log('execute: newChatWindow');
