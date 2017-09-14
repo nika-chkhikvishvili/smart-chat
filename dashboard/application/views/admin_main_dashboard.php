@@ -41,7 +41,7 @@
                     <div class="container">
                         <!-- Start Widget -->
 
-                        <?php if ($user->is_admin == 1) : ?>
+                        <?php if(has_role('SHOW_GUESTS_QUEE')) : ?>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -74,8 +74,8 @@
                                 </div>
                             </div>
                         </div> <!-- end row -->
-
-
+                        <?php endif;
+                        if (has_role('SHOW_ONLINE_CHATS')) : ?>
                         <div class="row">
                            <div class="col-md-12">
                                 <div class="panel panel-default">
@@ -485,9 +485,9 @@
                 <?php
                 foreach ($all_users as $key => $val) {
 //                    var_dump($val);
-                    echo '<tr>';
+                    echo '<tr id="redirect_person_tr_' . $val['person_id'] . '">';
                     echo '<td>' . $val['person_id'] . '</td>';
-                    echo '<td><a href="javascript:redirect_to_person(' . $val['person_id'] . ');">' . $val['first_name'] . ' ' . $val['last_name'] . '</a></td>';
+                    echo '<td class="user_status"><i class="fa fa-circle" aria-hidden="true"></i> &nbsp;&nbsp;<a href="javascript:redirect_to_person(' . $val['person_id'] . ');">' . $val['first_name'] . ' ' . $val['last_name'] . '</a></td>';
                     echo '</tr>';
                 }
                 ?>
