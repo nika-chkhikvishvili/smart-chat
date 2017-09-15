@@ -15,7 +15,7 @@
 <script src="<?=base_url();?>assets/js/modernizr.min.js"></script>
 
 <link href="<?=base_url();?>assets/chat/css/style.css?3" rel="stylesheet" type="text/css">
-<link href="<?=base_url();?>assets/chat/css/giga.css?3" rel="stylesheet" type="text/css">
+<link href="<?=base_url();?>assets/chat/css/giga.css?4" rel="stylesheet" type="text/css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.9/css/bootstrap-dialog.min.css" rel="stylesheet" type="text/css" />
 
 <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
