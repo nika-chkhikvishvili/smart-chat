@@ -104,7 +104,7 @@
                    
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                         <input type="email" class="form-control" id="email" name="post_mail" placeholder="ელ-ფოსტა" value="<?php echo set_value('post_mail'); ?>mail@mail.ge">
+                         <input type="email" class="form-control" id="email" name="post_mail" placeholder="ელ-ფოსტა" value="<?php echo set_value('post_mail'); ?>">
                     </div>
 
                     <div class="input-group">
