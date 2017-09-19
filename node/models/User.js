@@ -20,6 +20,7 @@ function User(user) {
     this.statusId    = user.statusId    || null;
     this.isOnline    = user.isOnline    || null;
     this.repoId      = user.repoId      || null;
+    this.isAvailable = user.isAvailable || true;
     this.sockets     = new Set();
     // this.tokens      = {};
     this.chatRooms = new Map();
@@ -56,7 +57,8 @@ User.prototype.getLimited = function () {
         userId: this.userId,
         firstName: this.firstName,
         lastName: this.lastName,
-        userName: this.userName
+        userName: this.userName,
+        openChats: this.chatRooms.size
     }
 };
 
@@ -67,7 +69,10 @@ User.prototype.addChat = function (chatId) {
 };
 
 User.prototype.canTakeMore = function () {
-    return this.chatRooms.size < 5;
+    return this.isAvailable && (this.chatRooms.size < 5);
 };
 
+User.prototype.setAvailability = function (isAvailable) {
+    this.isAvailable = isAvailable === true;
+};
 module.exports = User;

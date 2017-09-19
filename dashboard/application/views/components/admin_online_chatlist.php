@@ -2,7 +2,7 @@
     <h4 class="text-center">ხაზზეა</h4>
     <div style="width: 112px; display: inline-block; padding-left: 20px;">არ მივიღო<br>ახალი ჩატი</div>
     <label class="switch">
-        <input type="checkbox" class="toggle_switch" onchange="alert(this)">
+        <input type="checkbox" class="toggle_switch" id="operator_on_of_switch">
         <div class="slider round"></div>
     </label>
 

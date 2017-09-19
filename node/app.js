@@ -429,6 +429,9 @@ app.io.on('connection', function (socket) {
     socket.on('takeRoom', function (data) {
         server.takeRoom(socket, data);
     });
+    socket.on('setAvailability', function (data) {
+        server.setAvailability(socket, data);
+    });
     socket.on('disconnect', function () {
         if (socket.hasOwnProperty('user')) {
             socket.user.removeSocket(app, socket);

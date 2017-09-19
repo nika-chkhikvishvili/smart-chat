@@ -17,7 +17,8 @@
 <div class="sidebar-inner slimscrollleft">
 <div class="user-details">
 	<div class="pull-left">
-	<img src="<?=base_url();?>assets/images/users/girl.png" alt="" class="thumb-md img-circle">
+	<div id="connection_to_server_circle" class="circle"></div>
+	<div id="available_circle" class="circle"></div>
 	</div>
 	<div class="user-info">
 	 <?php require_once 'components/user_info.php'; ?>
@@ -41,7 +42,7 @@
                     <div class="container">
                         <!-- Start Widget -->
 
-                        <?php if(has_role('SHOW_GUESTS_QUEE')) : ?>
+                        <?php if(has_role('SHOW_GUESTS_QUEUE')) : ?>
 
                         <div class="row">
                             <div class="col-md-12">

@@ -89,9 +89,8 @@ ChatServer.prototype.checkToken = function (socket, data) {
                     });
                 })
             }
-            socket.emit("checkTokenResponse", {isValid: true, ans: chatAns});
+            socket.emit("checkTokenResponse", {isAvailable:user.isAvailable, isValid: true, ans: chatAns});
             app.sendActiveListByRepo(user.repoId);
-
             app.checkAvailableServiceForOperator(user);
         });
     });
@@ -350,6 +349,17 @@ ChatServer.prototype.leaveReadOnlyRoom = function (socket, data) {
         chat.removeUser(user);
         socket.emit("leaveReadOnlyRoomResponse", {success: true});
     });
+};
+
+ChatServer.prototype.setAvailability = function (socket, data) {
+    let user = socket.user;
+    if (!user || !data || !data.hasOwnProperty('isAvailable')) {
+        return;
+    }
+    user.setAvailability(data.isAvailable === true);
+    if (data.isAvailable === true) {
+        app.checkAvailableServiceForOperator(user);
+    }
 };
 
 ChatServer.prototype.takeRoom = function (socket, data) {

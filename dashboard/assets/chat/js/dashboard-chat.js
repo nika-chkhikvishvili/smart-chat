@@ -107,8 +107,22 @@ function DashboardChat($, socket) {
         chat.turnOffIAmWorkingFun()
     }
 
+    function setAvailabilityFn(availability, changeSwitchPosition) {
+        let isAvailable = availability === true;
+        $('#available_circle').css("background-color", isAvailable ? 'green':'red');
+        if (changeSwitchPosition === true) {
+            $("#operator_on_of_switch").prop('checked', isAvailable);
+        } else {
+            socket.emit('setAvailability', {isAvailable: isAvailable});
+        }
+    }
+
     function executeLoopFunctionFn() {
-        chats.forEach(function(chat, chatId){
+        if (!socket.connected) {
+            return;
+        }
+
+        chats.forEach(function(chat){
             chat.checkIAmWorkingAndSend();
         });
 
@@ -116,16 +130,17 @@ function DashboardChat($, socket) {
 
     return {
         executeLoopFunction: executeLoopFunctionFn,
-        showInfoMessage:showInfoMessageFn,
-        showLoader: showLoaderFn,
-        hideLoader: hideLoaderFn,
-        createChatWindow: createChatWindowFn,
-        messageGuest: messageGuestFn,
-        messageMe: messageMeFn,
-        closeDashboardChat: closeDashboardChatFn,
-        makeActiveChat: makeActiveChatFn,
-        toggleIAmWorking: toggleIAmWorkingFn,
-        turnOffIAmWorking: turnOffIAmWorkingFn,
+        showInfoMessage    : showInfoMessageFn,
+        showLoader         : showLoaderFn,
+        hideLoader         : hideLoaderFn,
+        createChatWindow   : createChatWindowFn,
+        messageGuest       : messageGuestFn,
+        messageMe          : messageMeFn,
+        closeDashboardChat : closeDashboardChatFn,
+        makeActiveChat     : makeActiveChatFn,
+        toggleIAmWorking   : toggleIAmWorkingFn,
+        turnOffIAmWorking  : turnOffIAmWorkingFn,
+        setAvailability    : setAvailabilityFn
     };
 
     function ChatWindow($, socket, chatIdInit){

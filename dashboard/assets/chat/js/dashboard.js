@@ -309,10 +309,10 @@ socket.on('checkTokenResponse', function (data){
     // console.log(data);
 
     if (data.isValid){
-        //socket.emit('get',{token : token});
-
         $(".person").remove();
         $(".chat").remove();
+
+        chatManager.setAvailability((data.hasOwnProperty('isAvailable') && data.isAvailable === true), true);
 
         socket.emit('getWaitingList');
         socket.emit('getActiveChats');
@@ -513,11 +513,27 @@ $(document).ready(function () {
     searchTemplates();
     $("#template_dialog_form_search_field").keyup(searchTemplates);
     $("#dialog_form_files_search_field")   .keyup(searchFiles);
-    $("#template_service, #template_lang").change(searchTemplates);
+    $("#template_service, #template_lang") .change(searchTemplates);
+
+    $("#operator_on_of_switch").change(function (obj) {
+        chatManager.setAvailability(obj.currentTarget.checked, false);
+    });
 
     setInterval(function () {$.get( "/checksession", function( data ) {if (data !== 'OK' ) {window.location = '/';}});}, 60000);
-
     setInterval(chatManager.executeLoopFunction, 10000);
+});
+
+socket.on('connect', () => {
+    console.log('execute: connect');
+    $('#connection_to_server_circle').css("background-color", 'green');
+});
+
+socket.on('disconnect', (reason) => {
+    console.log('execute: disconnect');
+    console.log(reason);
+    $('#connection_to_server_circle').css("background-color", 'red');
+    $("#operator_on_of_switch").attr('checked', false);
+    $('#available_circle').css("background-color", 'red');
 });
 
 socket.on('operatorIsWorking', function (data) {
@@ -551,8 +567,6 @@ socket.on('message', function (data) {
     console.log(data);
 
     socket.emit('messageReceivedFromClient', {chatUniqId: data.chatUniqId, msgId: data.ran});
-
-    let elChatbox = $(".chat[data-chat=" + data.chatUniqId + "]");
 
     if(data.messageType === 'writing') {
         console.log('ბეჭდავს');
