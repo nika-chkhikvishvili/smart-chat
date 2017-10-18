@@ -15,7 +15,7 @@ class History extends CI_Controller{
 
 
         public function index(){
-       
+       /*
         $this->load->model('dashboard_model');
         $this->load->helper('form');
         $this->load->library("pagination");
@@ -30,7 +30,7 @@ class History extends CI_Controller{
         }
 
       }
-       /*
+       
         $config = array();
         $config["base_url"] = base_url()."history";
         $config["total_rows"] = count($record);
