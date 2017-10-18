@@ -14,8 +14,8 @@ class History extends CI_Controller{
     }
 
 
-    public function index(){
-        
+        public function index(){
+        /*
         $this->load->model('dashboard_model');
         $this->load->helper('form');
         $this->load->library("pagination");
@@ -64,6 +64,9 @@ class History extends CI_Controller{
         
        $data['get_services'] = $this->dashboard_model->get_all_services();
         $this->load->view('chat_history',$data);
+
+        */
+        echo "history page...";
     }
     
     
