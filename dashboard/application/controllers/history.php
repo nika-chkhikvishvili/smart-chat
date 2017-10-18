@@ -19,10 +19,11 @@ class History extends CI_Controller{
         $this->load->model('dashboard_model');
         $this->load->helper('form');
         $this->load->library("pagination");
-       
+         $data['persons'] = $this->dashboard_model->get_persons();    
+        /*
         $sql_history = $this->dashboard_model->count_history(false,false,false);
-         /*         
-        $data['persons'] = $this->dashboard_model->get_persons();
+                 
+       
         $record = array();
         $name = array();
         foreach($sql_history as $key=>$value){
