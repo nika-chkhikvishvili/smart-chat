@@ -772,7 +772,7 @@ class dashboard_model extends CI_Model{
       return $query->result_array();
    }
    
-   function count_history($service_id,$start_date,$end_date){
+   function count_history($service_id=false,$start_date=false,$end_date=false){
     $this->db->select('*');
       $this->db->from('chats'); 
       $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
