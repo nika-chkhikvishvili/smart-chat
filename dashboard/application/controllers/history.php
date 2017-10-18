@@ -21,7 +21,7 @@ class History extends CI_Controller{
         $this->load->library("pagination");
         $data['persons'] = $this->dashboard_model->get_persons();  
         $sql_history = $this->dashboard_model->count_history('','','');   
-        /*
+       
        
                  
        
@@ -70,8 +70,7 @@ class History extends CI_Controller{
        $data['get_services'] = $this->dashboard_model->get_all_services();
         $this->load->view('chat_history',$data);
 
-        */
-        echo "history page... 3";
+       
     }
     
     
