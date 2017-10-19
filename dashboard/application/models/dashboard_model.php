@@ -773,7 +773,8 @@ class dashboard_model extends CI_Model{
    }
    
    function count_history(){
-    $this->db->select('*');
+	   /*
+     $this->db->select('*');
       $this->db->from('chats'); 
       $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
       $this->db->join('online_users', 'online_users.online_user_id = chats.online_user_id');
@@ -787,6 +788,7 @@ class dashboard_model extends CI_Model{
     
       $query = $this->db->get();
       return $query->result_array();
+      */
    }
    
    
