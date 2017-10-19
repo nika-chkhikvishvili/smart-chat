@@ -20,7 +20,7 @@ class History extends CI_Controller{
         $this->load->helper('form');
         $this->load->library("pagination");
         $data['persons'] = $this->dashboard_model->get_persons();  
-       // $sql_history = $this->dashboard_model->count_history('','','');   
+        $sql_history = $this->dashboard_model->count_history();   
        
        
                  
