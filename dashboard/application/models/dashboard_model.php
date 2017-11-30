@@ -778,23 +778,60 @@ class dashboard_model extends CI_Model{
       return $query->result_array();
    }
    
-   function count_history(){
-	   /*
-     $this->db->select('*');
+    function count_history($service_id = false,
+						  $first_name = false,
+						  $last_name = false, 
+						  $operator = false,  
+						  $start_date = false,
+						  $end_date = false){
+	   $this->db->select('*');
       $this->db->from('chats'); 
       $this->db->join('chat_rooms', 'chat_rooms.chat_id = chats.chat_id');
       $this->db->join('online_users', 'online_users.online_user_id = chats.online_user_id');
       $this->db->join('category_services', 'category_services.category_service_id = chats.service_id');     
       $this->db->join('persons', 'persons.person_id = chat_rooms.person_id');
+	  
+	  if($first_name)
+      {        
+        $this->db->where("online_users.online_users_name", $first_name);   
+      }
+	  
+	  if($last_name)
+      {        
+        $this->db->where("online_users.online_users_lastname", $last_name);   
+      }
+	  
+	  if($service_id)
+      {        
+        $this->db->where("online_users.category_service_id", $service_id);   
+      }
       
-    
+	  if($operator)
+      {        
+        $this->db->where("online_users.persons.person_id", $operator);   
+      }
+	  
+      if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("chats.add_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";
+		
+        $this->db->where("chats.add_date <=", $end_date);   
+      }
+	  
+	  
       $where = "chat_rooms.person_id is  NOT NULL"; 
       $this->db->where($where);
       $this->db->where('chat_status_id','3');
-    
+      $this->db->order_by("add_date", "desc");
+   
       $query = $this->db->get();
-      return $query->result_array();
-      */
+      return $query->num_rows();
    }
    
    
