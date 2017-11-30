@@ -721,7 +721,13 @@ class dashboard_model extends CI_Model{
    # end of  
    # სერვისი
     // chat history 
-  function get_all_history($service_id = false,$first_name = false,$last_name = false, $operator = false,  $start_date = false,$end_date = false,$start)
+  function get_all_history(
+						  $service_id = false,
+						  $first_name = false,
+						  $last_name = false, 
+						  $operator = false,  
+						  $start_date = false,
+						  $end_date = false,$start)
    {
       $this->db->select('*');
       $this->db->from('chats'); 
@@ -759,7 +765,7 @@ class dashboard_model extends CI_Model{
       if($end_date)
       {
         $end_date = $end_date." 00:00:00";    
-        $this->db->where("person_id", $end_date);   
+        $this->db->where("add_date <=", $end_date);   
       }
 	  
 	  
