@@ -16,24 +16,21 @@ class History extends CI_Controller{
 
         public function index(){
        
-       $this->load->model('dashboard_model');
+              $this->load->model('dashboard_model');
         $this->load->helper('form');
         $this->load->library("pagination");
         $data['persons'] = $this->dashboard_model->get_persons();  
-        $sql_history = $this->dashboard_model->count_history();  
-        $record = array();
-        $name = array();
-        foreach($sql_history as $key=>$value){
-        if(!in_array($value['chat_id'], $name)){
-               $name[] = $value['chat_id'];
-               $record[$key] = $value;
-        }
-
-      }
-       
+        $sql_history = $this->dashboard_model->count_history($this->input->post('service_id'),
+																	$this->input->post('firstname'),
+																	$this->input->post('lastname'),
+																	$this->input->post('operator_name'),
+																	$this->input->post('start_date'),
+																	$this->input->post('end_date'));  
+   
+      
         $config = array();
         $config["base_url"] = base_url()."history";
-        $config["total_rows"] = count($record);
+        $config["total_rows"] = $sql_history;
         $config["per_page"] = 15;
         $config["uri_segment"] = 2;
         $config['full_tag_open'] = '<ul class="pagination">';
@@ -69,10 +66,8 @@ class History extends CI_Controller{
 																	$this->input->post('end_date'),$page);	
         
         $data['get_services'] = $this->dashboard_model->get_all_services();
-       
-		$this->load->view('chat_history',$data);
-
-       
+        
+	$this->load->view('chat_history',$data);
     }
     
     
