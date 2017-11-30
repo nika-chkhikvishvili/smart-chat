@@ -178,7 +178,8 @@ function DashboardChat($, socket) {
             personBox.find(".preview").html(shorter(message));
             let badge = personBox.find(".badge");
             badge.html(parseInt(badge.html() || 0) + 1);
-            personBox.find(".time").html(new Date().toISOString().substr(11, 5));
+            let curDate = new Date();
+            personBox.find(".time").html(curDate.getHours() + ' ' + curDate.getMinutes());
             chatBox.animate({scrollTop: chatBox[0].scrollHeight}, 'normal');
 
             if (!(personBox.hasClass('active'))) {
