@@ -416,6 +416,10 @@ app.io.on('connection', function (socket) {
         socket.emit('testResponse', socket.blockCheckCount);
     });
 
+    socket.on('clientGetServices', function () {
+        client.clientGetServices(socket);
+    });
+
     socket.on('checkToken', function (data) {
         server.checkToken(socket, data);
     });
