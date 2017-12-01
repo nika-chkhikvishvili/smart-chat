@@ -89,7 +89,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
                     });
                 })
             }
-            socket.emit("checkTokenResponse", {isAvailable:user.isAvailable, isValid: true, ans: chatAns});
+            socket.emit("checkTokenResponse", {isAvailable:user.isAvailable(), isValid: true, ans: chatAns});
             app.sendActiveListByRepo(user.repoId);
             app.checkAvailableServiceForOperator(user);
         });
@@ -357,7 +357,8 @@ ChatServer.prototype.setAvailability = function (socket, data) {
         return;
     }
     user.setAvailability(data.isAvailable === true);
-    if (data.isAvailable === true) {
+    user.sendUserState(app);
+    if (user.isAvailable()) {
         app.checkAvailableServiceForOperator(user);
     }
 };
@@ -439,7 +440,9 @@ ChatServer.prototype.redirectToService = function (socket, data) {
             socket.emit("redirectToServiceResponse", {success: true, chatUniqId: data.chatUniqId});
 
             app.io.emit('checkClientCount');
+            app.ioGuests.emit('checkClientCount');
             app.io.emit('checkActiveChats');
+            app.ioGuests.emit('checkActiveChats');
         });
     });
 };

@@ -78,9 +78,10 @@ Chat.prototype.closeChat = function (app, socket) {
 
         let message = new Message({chatUniqId: me.chatUniqId, messageType: 'close'});
 
-        me.users.forEach(function(status, userId){
+        me.users.forEach(function(status, userId) {
             let user = app.users.get(userId);
             user.chatRooms.delete(me.chatUniqId);
+            user.sendUserState(app);
         });
         me.chatStatusId = 3;
 

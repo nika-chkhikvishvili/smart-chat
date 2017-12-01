@@ -9,11 +9,11 @@
   "license": "GPL",
   "dependencies": {
     "express": "4.15.4",
-    "fifo" : "2.3.0",
+    "fifo": "2.3.0",
     "npmlog": "4.1.2",
-    "socket.io" : "2.0.3",
+    "socket.io": "2.0.3",
     "mysql": "2.14.1",
-    "randomstring" : "1.1.5",
-    "html-escape" :  "2.0.0"
+    "randomstring": "1.1.5",
+    "html-escape": "2.0.0"
   }
 }

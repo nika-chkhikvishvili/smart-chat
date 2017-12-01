@@ -10,6 +10,10 @@ let chat = new ChatClient($, socket);
 let disconnect_chat_title = "ჩატის დასრულება";
 let disconnect_chat_message = "ნამდვილად გსურთ საუბრის დასრულება?";
 
+socket.on('testResponse', function (data) {
+    console.log('execute: testResponse');
+    console.log(data);
+});
 
 $(document).ready(function () {
 
@@ -186,7 +190,7 @@ socket.on('message', function (data) {
     } else if (data.messageType === 'ban') {
         chat.banUser(data.message);
         socket.disconnect();
-    } else if (data.messageType === 'close') {
+        } else if (data.messageType === 'close') {
         chat.closeChat();
     } else {
         if (data.guestUserId) {

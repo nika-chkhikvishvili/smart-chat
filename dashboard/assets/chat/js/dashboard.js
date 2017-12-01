@@ -312,7 +312,9 @@ socket.on('checkTokenResponse', function (data){
         $(".person").remove();
         $(".chat").remove();
 
-        chatManager.setAvailability((data.hasOwnProperty('isAvailable') && data.isAvailable === true), true);
+        let available = (data.hasOwnProperty('isAvailable') && data.isAvailable === true);
+
+        chatManager.setAvailability(available, true);
 
         socket.emit('getWaitingList');
         socket.emit('getActiveChats');
@@ -516,7 +518,7 @@ $(document).ready(function () {
     $("#template_service, #template_lang") .change(searchTemplates);
 
     $("#operator_on_of_switch").change(function (obj) {
-        chatManager.setAvailability(obj.currentTarget.checked, false);
+        chatManager.setAvailability(!obj.currentTarget.checked, false);
     });
 
     setInterval(function () {$.get( "/checksession", function( data ) {if (data !== 'OK' ) {window.location = '/';}});}, 60000);
@@ -549,13 +551,15 @@ socket.on('activeUsers', function (data) {
     $('#chat-redirect-person-dialog tbody tr').removeClass('user_is_online');
     $.each(data, function (id, user) {
         $('#redirect_person_tr_' + user.userId ).addClass('user_is_online');
-        ool.append('<li class="list-group-item"> ' +
+        let onlcls =  !user.available ? 'offline' : 'online';
+        ool.append('<li class="list-group-item online_operator_' + user.userId + '"> ' +
             '<a href="#"> ' +
             '<div class="avatar"> ' +
             '<img src="/assets/images/users/girl.png" alt=""> ' +
             '</div> ' +
             '<span class="name">' + user.firstName + ' ' + user.lastName + '</span> ' +
-            '<i class="fa fa-circle online"></i> ' +
+            '<span class="opened_chats">' + user.openChats + '</span> ' +
+            '<i class="fa fa-circle ' + onlcls + '"></i> ' +
             '</a> ' +
             '<span class="clearfix"></span> ' +
             '</li>');
@@ -642,6 +646,17 @@ socket.on('getWaitingListResponse', function (data) {
     }
     $("#clients_queee_body").html(ans);
     $('[data-toggle="popover"]').popover();
+});
+
+
+socket.on('leak', function (data){
+    console.log('execute: leak');
+    console.log(data);
+});
+
+socket.on('stats', function (data){
+    console.log('execute: stats');
+    console.log(data);
 });
 
 socket.on('getActiveChatsResponse', function (data){
@@ -738,4 +753,23 @@ socket.on('userInfo', function (data) {
     // console.log(data);
     user = data;
 
+});
+
+socket.on('userAvailabilityChanged', function (data) {
+    console.log('execute: userAvailabilityChanged');
+    // console.log(data);
+    let el = $('.online_operator_' + data.userId + ' i');
+
+    if (data.available === true) {
+        el.removeClass('offline');
+        el.addClass('online');
+    } else {
+        el.removeClass('online');
+        el.addClass('offline');
+    }
+
+    if (user.userId === data.userId) {
+        chatManager.setAvailability(data.available === true, true);
+    }
+    $('.online_operator_' + data.userId + ' .opened_chats').html(data.openChats);
 });

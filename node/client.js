@@ -104,7 +104,9 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
 
                     //უგზავნის სუყველას შეტყობინებას რომ ახალი მომხმარებელი შემოვიდა
                     app.io.emit('checkClientCount');
+                    app.ioGuests.emit('checkClientCount');
                     app.io.emit('checkActiveChats');
+                    app.ioGuests.emit('checkActiveChats');
                     socket.emit("clientInitParamsResponse", {chatUniqId: chat.chatUniqId});
 
                 });

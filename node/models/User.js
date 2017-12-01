@@ -20,7 +20,7 @@ function User(user) {
     this.statusId    = user.statusId    || null;
     this.isOnline    = user.isOnline    || null;
     this.repoId      = user.repoId      || null;
-    this.isAvailable = user.isAvailable || true;
+    this.available   = user.available   || true;
     this.sockets     = new Set();
     // this.tokens      = {};
     this.chatRooms = new Map();
@@ -58,7 +58,8 @@ User.prototype.getLimited = function () {
         firstName: this.firstName,
         lastName: this.lastName,
         userName: this.userName,
-        openChats: this.chatRooms.size
+        openChats: this.chatRooms.size,
+        available:this.available
     }
 };
 
@@ -69,10 +70,27 @@ User.prototype.addChat = function (chatId) {
 };
 
 User.prototype.canTakeMore = function () {
-    return this.isAvailable && (this.chatRooms.size < 5);
+    return this.isAvailable() && (this.chatRooms.size < 5);
 };
 
-User.prototype.setAvailability = function (isAvailable) {
-    this.isAvailable = isAvailable === true;
+User.prototype.setAvailability = function (available) {
+    this.available = available === true;
 };
+
+User.prototype.isAvailable = function () {
+    return this.available;
+};
+
+User.prototype.openedChatRoomsSize = function () {
+    return this.chatRooms.size;
+};
+
+User.prototype.sendUserState = function (app) {
+    app.io.emit('userAvailabilityChanged', {
+        userId: this.userId,
+        available: this.isAvailable(),
+        openChats: this.openedChatRoomsSize()
+    });
+};
+
 module.exports = User;

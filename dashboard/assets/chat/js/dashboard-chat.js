@@ -108,13 +108,23 @@ function DashboardChat($, socket) {
     }
 
     function setAvailabilityFn(availability, changeSwitchPosition) {
-        let isAvailable = availability === true;
-        $('#available_circle').css("background-color", isAvailable ? 'green':'red');
+        let available = availability === true;
+        $('#available_circle').css("background-color", available ? 'green':'red');
         if (changeSwitchPosition === true) {
-            $("#operator_on_of_switch").prop('checked', isAvailable);
+            $("#operator_on_of_switch").prop('checked', !available);
         } else {
-            socket.emit('setAvailability', {isAvailable: isAvailable});
+            socket.emit('setAvailability', {isAvailable: available});
         }
+/*
+        let el = $('.online_operator_' + data.userId + ' i');
+        if (data.available === true) {
+            el.removeClass('offline');
+            el.addClass('online');
+        } else {
+            el.removeClass('online');
+            el.addClass('offline');
+        }
+        */
     }
 
     function executeLoopFunctionFn() {

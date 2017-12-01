@@ -7,6 +7,18 @@ let Chat = require('./models/Chat');
 let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
+/*
+let memwatch = require('memwatch');
+
+memwatch.on('leak', function(info) {
+    app.io.emit('leak', arguments);
+});
+
+memwatch.on('stats', function(info) {
+    app.io.emit('stats', arguments);
+});
+*/
+
 
 let http_instance = require('http');
 // let fs = require('fs');
@@ -20,9 +32,16 @@ let http_instance = require('http');
 
 let express_server = require('express')();
 let http_server = http_instance.createServer( express_server);
+let http_server1 = http_instance.createServer( express_server);
 
 app.io = require('socket.io')(http_server);
-http_server.listen(8443, function() {
+app.ioGuests = require('socket.io')(http_server1);
+
+http_server.listen(8444, function() {
+    console.log('API Server Started On Port %d', 8444);
+});
+
+http_server1.listen(8443, function() {
     console.log('API Server Started On Port %d', 8443);
 });
 
@@ -197,7 +216,7 @@ app.sendMessageToRoomGuests = function (message) {
         return;
     }
     chat.guestUser.sockets.forEach(function (socketId) {
-        app.io.sockets.sockets[socketId].emit('message', message);
+        app.ioGuests.sockets.sockets[socketId].emit('message', message);
     });
 };
 
@@ -262,6 +281,7 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
             return app.databaseError(null, err);
         }
 
+
         app.connection.query('INSERT INTO chat_rooms SET ? ', chat.getInsertUserObject(userId, 1, joinedModeId), function (err) {
             if (err) {
                 return app.databaseError(null, err);
@@ -282,9 +302,10 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
             }
 
             chat.guestUser.sockets.forEach(function (socketId) {
-                app.io.sockets.sockets[socketId].emit('operatorJoined');
+                app.ioGuests.sockets.sockets[socketId].emit('operatorJoined');
             });
             app.io.emit('checkActiveChats');
+            user.sendUserState(app);
         });
     });
 };
@@ -329,7 +350,7 @@ app.checkAvailableOperatorForService = function (serviceId) {
     });
 };
 
-app.io.on('connection', function (socket) {
+app.ioGuests.on('connection', function (socket) {
 
     // check if blocked
     app.connection.query('SELECT count(*) as cou FROM banlist WHERE ip_address = ? ' +
@@ -366,9 +387,29 @@ app.io.on('connection', function (socket) {
     socket.on('clientCloseChat', function () {
         client.clientCloseChat(socket);
     });
+
     socket.on('userIsWriting', function (data) {
         client.userIsWriting(socket, data);
     });
+
+    socket.on('disconnect', function () {
+        if (socket.hasOwnProperty('user')) {
+            socket.user.removeSocket(app, socket);
+        }
+
+        if (socket.hasOwnProperty('guestUserId')) {
+            let chat = app.getChat(socket.chatUniqId);
+            if (!!chat) {
+                chat.guestLeave(socket);
+            }
+        }
+        app.io.emit('userDisconnect', {
+            id: socket.id
+        });
+    });
+});
+
+app.io.on('connection', function (socket) {
 
     socket.on('test', function () {
         console.dir('test');
