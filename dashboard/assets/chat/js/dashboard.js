@@ -352,7 +352,7 @@ function getNextWaitingClient(data){
 
 socket.on('userDisconnect', function (data){
     console.log('execute: userDisconnect');
-    //console.log(data);
+    console.log(data);
 
    // clients_queee_body
 });
