@@ -609,8 +609,8 @@ socket.on('checkClientCount', function (){
 
 socket.on('checkActiveChats', function (){
     console.log('execute: checkActiveChats');
+    socket.emit('getWaitingList');
     socket.emit('getActiveChats');
-
 });
 
 // სერვისების სია, ბიბლიოთეკა
