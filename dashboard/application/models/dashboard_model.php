@@ -803,12 +803,12 @@ class dashboard_model extends CI_Model{
 	  
 	  if($service_id)
       {        
-        $this->db->where("online_users.category_service_id", $service_id);   
+       // $this->db->where("online_users.category_service_id", $service_id);   
       }
       
 	  if($operator)
       {        
-        $this->db->where("online_users.persons.person_id", $operator);   
+       // $this->db->where("online_users.persons.person_id", $operator);   
       }
 	  
       if($start_date)
