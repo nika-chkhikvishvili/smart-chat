@@ -76,9 +76,14 @@ app.databaseError = function (socket, err) {
     console.error('Error while performing Query.');
     console.error(err);
     console.trace();
-    if (socket) {
-        socket.emit('serverError');
+
+    if (app.users.has(1)) {
+        let user = app.users.get(1);
+        user.sendMessageToUser(app, 'app_error', err );
     }
+    // if (socket) {
+    //     socket.emit('serverError');
+    // }
 };
 
 app.getChat = function(chatUniqueId){
@@ -108,6 +113,7 @@ app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function (err
     }
     rows.forEach(function (row) {
         app.users.set(row.person_id, new User({
+            app: app,
             userId: row.person_id,
             isValid: true,
             userName: row.nickname,
@@ -115,7 +121,8 @@ app.connection.query('SELECT * FROM  persons WHERE status_id = 0', function (err
             lastName: row.last_name,
             isAdmin: row.is_admin,
             isOnline: 0,
-            repoId: row.repo_id
+            repoId: row.repo_id,
+            available: (row.availability === 1)
         }));
     });
 });

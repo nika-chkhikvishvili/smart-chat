@@ -98,7 +98,6 @@ socket.on('redirectToServiceResponse', function (data) {
         return ;
     }
     chatManager.closeDashboardChat(data.chatUniqId, 'redirect');
-
 });
 
 /* Redirect to person */
@@ -528,6 +527,11 @@ $(document).ready(function () {
 socket.on('connect', () => {
     console.log('execute: connect');
     $('#connection_to_server_circle').css("background-color", 'green');
+});
+
+socket.on('app_error', (data) => {
+    console.log('execute: app_error');
+    console.log(data);
 });
 
 socket.on('disconnect', (reason) => {

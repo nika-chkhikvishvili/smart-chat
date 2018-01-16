@@ -38,7 +38,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
         return;
     }
 
-    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id,  nickname, repo_id ' +
+    app.connection.query('SELECT person_id, first_name, last_name, photo, is_admin, status_id,  nickname, repo_id, availability ' +
         ' FROM `persons` WHERE person_id in ' +
         '(SELECT history_person_id as person_id FROM xlog_login_history WHERE php_session_id = ? )', [data.token], function (err, res) {
         if (err) {
@@ -53,8 +53,8 @@ ChatServer.prototype.checkToken = function (socket, data) {
         let ans = res[0];
 
         if (!app.users.has(ans.person_id)) {
-            app.users.set(ans.person_id, new User({userId: ans.person_id, firstName:ans.first_name,
-                lastName: ans.last_name, userName: ans.nickname, repoId: ans.repo_id}));
+            app.users.set(ans.person_id, new User({app: app, userId: ans.person_id, firstName:ans.first_name,
+                lastName: ans.last_name, userName: ans.nickname, repoId: ans.repo_id, available: (ans.availability == 1)}));
         }
 
         let user = app.users.get(ans.person_id);

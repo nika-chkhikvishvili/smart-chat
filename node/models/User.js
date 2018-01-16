@@ -10,6 +10,7 @@ function User(user) {
     if (!(this instanceof User)) {
         return new User(user);
     }
+    this.app         = user.app;
     this.userId      = user.userId      || null;
     this.isValid     = user.isValid     || null;
     this.userName    = user.userName    || null;
@@ -18,9 +19,9 @@ function User(user) {
     this.photo       = user.photo       || null;
     this.isAdmin     = user.isAdmin     || null;
     this.statusId    = user.statusId    || null;
-    this.isOnline    = user.isOnline    || null;
+    this.isOnline    = user.isOnline    || false;
     this.repoId      = user.repoId      || null;
-    this.available   = user.available   || true;
+    this.available   = user.available !== false;
     this.sockets     = new Set();
     // this.tokens      = {};
     this.chatRooms = new Map();
@@ -31,8 +32,12 @@ User.prototype.addSocket = function (socket) {
         return;
     }
     this.sockets.add(socket.id);
-    this.isOnline = true;
 
+    if (!this.isOnline) {
+        let undata = {type_id: 2, user_id: this.userId, state_id: 1};
+        this.app.connection.query('INSERT INTO xlog_available_history SET ?', undata, function (err) {if (err) {return app.databaseError(null, err);}});
+    }
+    this.isOnline = true;
 };
 
 User.prototype.removeSocket = function (app, socket) {
@@ -44,6 +49,8 @@ User.prototype.removeSocket = function (app, socket) {
     if (!this.isOnline) {
         app.onlineUsersByRepos[this.repoId].delete(this.userId);
         app.sendActiveListByRepo(this.repoId);
+        let undata = {type_id: 2, user_id: this.userId, state_id: 0};
+        this.app.connection.query('INSERT INTO xlog_available_history SET ?', undata, function (err) {if (err) {return app.databaseError(null, err);}});
     }
 };
 
@@ -74,11 +81,31 @@ User.prototype.canTakeMore = function () {
 };
 
 User.prototype.setAvailability = function (available) {
-    this.available = available === true;
+    available = (available === true);
+    if (this.available === available) {
+        return ;
+    }
+    this.available = available;
+
+    let undata = {
+        type_id: 1,
+        user_id: this.userId,
+        state_id: this.isAvailable() ? 1 : 0
+    };
+
+    this.app.connection.query('INSERT INTO xlog_available_history SET ?', undata, function (err) {
+        if (err) {
+            return app.databaseError(null, err);
+        }
+        app.connection.query('UPDATE persons SET availability = ? WHERE person_id = ?', [undata.state_id, undata.user_id], function(err) {
+            if (err) {return app.databaseError(null, err);}
+
+        });
+    });
 };
 
 User.prototype.isAvailable = function () {
-    return this.available;
+    return this.available === true;
 };
 
 User.prototype.openedChatRoomsSize = function () {
@@ -90,6 +117,12 @@ User.prototype.sendUserState = function (app) {
         userId: this.userId,
         available: this.isAvailable(),
         openChats: this.openedChatRoomsSize()
+    });
+};
+
+User.prototype.sendMessageToUser = function (app, s, message) {
+    this.sockets.forEach(function (socketId) {
+        app.io.sockets.sockets[socketId].emit(s, message);
     });
 };
 
