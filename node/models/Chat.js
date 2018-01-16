@@ -54,7 +54,6 @@ Chat.prototype.getInsertUserObject = function (userId, person_mode, person_join_
 Chat.prototype.addUser = function (user, userMode) {
     if (!user) return false;
     user.addChat(this.chatUniqId);
-    if (this.users.has(user.userId)) return false;
     this.users.set(user.userId, userMode || 1);
 };
 
