@@ -186,7 +186,18 @@ if($notify==1){
   $('.clockpicker').clockpicker();
   </script>
 </div>
-		
+	 
+<div class="form-group">
+<div class="col-sm-offset-3 col-sm-9">
+	<div class="checkbox checkbox-primary">
+		<input id="checkbox2" name="weekends" type="checkbox">
+		<label for="checkbox2">
+			უქმე დღეები
+		</label>
+	</div>
+</div>
+</div>
+	 
 <div class="form-group">
 <div class="col-lg-offset-2 col-lg-9">
    <input type="submit" class="btn btn-primary" type="submit" name="add_service" value="შენახვა" />
