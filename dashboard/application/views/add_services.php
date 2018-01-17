@@ -188,13 +188,11 @@ if($notify==1){
 </div>
 	 
 <div class="form-group">
-<div class="col-sm-offset-3 col-sm-9">
-	<div class="checkbox checkbox-primary">
-		<input id="checkbox2" name="weekends" type="checkbox">
-		<label for="checkbox2">
-			უქმე დღეები
-		</label>
-	</div>
+<div class="checkbox checkbox-primary">
+	<input id="checkbox1" type="checkbox">
+	<label for="checkbox1">
+		უქმე დღეები
+	</label>
 </div>
 </div>
 	 
