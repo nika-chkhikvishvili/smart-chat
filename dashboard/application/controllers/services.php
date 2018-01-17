@@ -42,7 +42,8 @@ class Services extends CI_Controller{
                     'service_name_rus' => $this->input->post('service_name_rus'),
                     'service_name_eng' => $this->input->post('service_name_eng'),
                     'start_time' => $this->input->post('start_time'),
-                    'end_time' => $this->input->post('end_time')
+                    'end_time' => $this->input->post('end_time'),
+                    'weekends' => $this->input->post('weekends')
                 );
                 if ($this->dashboard_model->add_services($add_institution_data)) {
                     $data['notify'] = 1;
