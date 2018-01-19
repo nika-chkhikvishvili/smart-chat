@@ -34,7 +34,7 @@ $services_list_results = $conn->query(
         'SELECT cs.category_service_id, rc.repository_id, rc.category_name, 
                cs.service_name_geo, cs.service_name_rus, cs.service_name_eng, cs.start_time, cs.end_time
            FROM category_services cs, repo_categories rc 
-     WHERE cs.repo_category_id = rc.repo_category_id');
+     WHERE cs.repo_category_id = rc.repo_category_id' . $disabled_services);
 
 $lang = 'ka_GE';
 $service_name = 'service_name_geo';
