@@ -24,11 +24,17 @@ user_block_geo, user_block_rus, user_block_eng, auto_answering_geo, auto_answeri
 repeat_auto_answering, time_off_geo, time_off_rus, time_off_eng, passive_client_geo, passive_client_rus, 
 passive_client_eng FROM auto_answering limit 1");
 
+$disabled_services = '';
+$weekDay = date('w');
+if ($weekDay == 0 || $weekDay == 6) {
+    $disabled_services = ' AND weekends = 1 ';
+}
+
 $services_list_results = $conn->query(
         'SELECT cs.category_service_id, rc.repository_id, rc.category_name, 
                cs.service_name_geo, cs.service_name_rus, cs.service_name_eng, cs.start_time, cs.end_time
            FROM category_services cs, repo_categories rc 
-     WHERE cs.repo_category_id = rc.repo_category_id');
+     WHERE cs.repo_category_id = rc.repo_category_id' + $disabled_services);
 
 $lang = 'ka_GE';
 $service_name = 'service_name_geo';
