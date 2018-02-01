@@ -857,4 +857,17 @@ class dashboard_model extends CI_Model{
 	  $query = $this->db->get();
       return $query->result_array();
    }
+	
+	 function get_notready_bygrid($user_id,$id)
+   {
+	  $id = $id + 1;
+	  $this->db->select('*');
+      $this->db->from('xlog_available_history');
+      $this->db->where('user_id', $user_id);
+	  $this->db->where('type_id', '1'); 	 
+	  $this->db->where('id >=',$id);
+	  $this->db->limit(1);  
+	  $query = $this->db->get();
+      return $query->row_array();
+   }
 }
