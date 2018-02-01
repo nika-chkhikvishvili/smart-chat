@@ -18,7 +18,37 @@ window.setTimeout(function() {
 <?php
 };
 ?>
-
+<script type="text/javascript">
+        data = {};
+        $(document).ready(function(){
+         $.ajax({
+            type: "POST", 
+            url: "<?=base_url();?>notready/get_all_notread/",
+            data: data,
+            success: function(html) {               
+                $("#table-responsive").html(html);
+            }
+        });    
+            
+        $('#submit').click(function() {
+        data = {};
+       
+        data['user_id'] = $("#by_users").val();
+        data['start_date'] = $("#start_date").val();
+        data['end_date'] = $("#end_date").val();
+        data['submit'] = $("#submit").val();
+        $.ajax({
+            type: "POST", 
+            url: "<?=base_url();?>notready/get_all_notread/",
+            data: data,
+            success: function(html) {
+                
+                $("#table-responsive").html(html);
+            }
+        });     
+        });
+        });
+</script> 
 
 <style type="text/css">
 
