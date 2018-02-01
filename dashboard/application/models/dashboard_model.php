@@ -847,5 +847,14 @@ class dashboard_model extends CI_Model{
         return $query->result_array();
      
    }
-   
+    function get_notready_byuser($user_id)
+   {
+	  $this->db->select('*');
+      $this->db->from('xlog_available_history');
+      $this->db->where('user_id', $user_id);
+	  $this->db->where('type_id', '1'); 
+	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 	  
+	  $query = $this->db->get();
+      return $query->result_array();
+   }
 }
