@@ -36,7 +36,7 @@ class notready extends CI_Controller{
                 <tr style="background:#F8FCFC;">
 					<th>Operator</th>
 					<th>Not Ready Start</th> 
-					<th>Not Ready ENd</th>
+					<th>Not Ready End</th>
 					<th>interval</th>
                 </tr>
                 </thead>
