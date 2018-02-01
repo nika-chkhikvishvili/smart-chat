@@ -40,18 +40,52 @@ class notready extends CI_Controller{
                 ';
 				
 		foreach($byservice as $services){
-				  if($services['state_id']==0)
+				 echo "<tr>";
+				
+				 
+				 if($services['state_id']==0)
 				  {
-					  $x = "<span style='color:#F13E12;'>მონიშნა სტატუსი დაკავებული ვარ</span>";
+					  $x = "<span style='color:#F13E12;'>სტაუტი დაკავებული ვარ</span>";
+					  $monishvna = $services['change_date'];
+					  $id = $services['id'];
+					  
+					  $get_out = $this->dashboard_model->get_notready_bygrid(@$_POST['user_id'],$id);
+					  if($get_out['id']){
+						  $active = "ხელმისაწვდომია";
+						  $on_active = $get_out['change_date'];
+						
+						$start_date = new DateTime($monishvna);
+						$end_date = new DateTime($on_active);
+						$interval = $start_date->diff($end_date);
+						$hours   = $interval->format('%h'); 
+						$minutes = $interval->format('%i');
+						$full_interval = 'ინტერვალი: '.($hours * 60 + $minutes);
+					  }
+						echo "<td class='thick-line'>".$services['first_name']."&nbsp;". $services['last_name']."</td>";
+						echo "<td class='thick-line text-center'>".$x."&nbsp;".$monishvna."</td>";
+						echo "<td class='thick-line text-center'>".$active."&nbsp;".$on_active."</td>"; 
+						echo "<td class='thick-line text-center'>&nbsp;".$full_interval."</td>";
+						
+						
+						
 				  }
-				  else{
-					  $x = "მოიხსნა სტატუსი დაკავებული ვარ";
+				  else
+				  {
+					  $x = "ხელმისაწვდომია";
+					  $monishvna = $services['change_date'];
+					  $xx = "<span style='color:#F13E12;'>ხელმისაწვდომია</span>";
+					  $monishvna2 = $services['change_date']; 
+					  
+					 
+                       
 				  }
-                  echo "<tr>
-                        <td class='thick-line'>".$services['first_name']."&nbsp;". $services['last_name']."</td>                        
-                        <td class='thick-line text-center'>".$x."</td>
-                        <td class='thick-line text-right'>".$services['change_date']."</td>
-                        </tr>";          
+				   echo "</tr>";
+					
+				 
+				
+						
+				  
+                        
                 }		
        
 	}
