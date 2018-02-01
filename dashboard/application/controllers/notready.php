@@ -28,19 +28,23 @@ class notready extends CI_Controller{
 		function get_all_notread()
 	{
 		
-		   
+		   $count_interval = "";
 		   $this->load->model('dashboard_model');
            $byservice = $this->dashboard_model->get_notready_byuser(@$_POST['user_id']);
             echo '<table class="table table-condensed">
                 <thead>
-                <tr>
+                <tr style="background:#F8FCFC;">
+					<th>Operator</th>
+					<th>Not Ready Start</th> 
+					<th>Not Ready ENd</th>
+					<th>interval</th>
                 </tr>
                 </thead>
                 <tbody>
                 ';
 				
 		foreach($byservice as $services){
-				 echo "<tr>";
+				
 				
 				 
 				 if($services['state_id']==0)
@@ -60,12 +64,14 @@ class notready extends CI_Controller{
 						$hours   = $interval->format('%h'); 
 						$minutes = $interval->format('%i');
 						$full_interval = 'ინტერვალი: '.($hours * 60 + $minutes);
+						$count_interval = $count_interval + ($hours * 60 + $minutes);
 					  }
+					    echo "<tr>";
 						echo "<td class='thick-line'>".$services['first_name']."&nbsp;". $services['last_name']."</td>";
 						echo "<td class='thick-line text-center'>".$x."&nbsp;".$monishvna."</td>";
 						echo "<td class='thick-line text-center'>".$active."&nbsp;".$on_active."</td>"; 
-						echo "<td class='thick-line text-center'>&nbsp;".$full_interval."</td>";
-						
+						echo "<td class='thick-line text-center'>&nbsp;".$full_interval." წუთი</td>";
+						echo "</tr>";
 						
 						
 				  }
@@ -79,14 +85,16 @@ class notready extends CI_Controller{
 					 
                        
 				  }
-				   echo "</tr>";
-					
-				 
-				
-						
-				  
                         
-                }		
+                }	
+				
+
+					echo "<tr>";
+					echo "<td class='thick-line'></td>";
+					echo "<td class='thick-line text-center'></td>";
+					echo "<td class='thick-line text-center'>ჯამური დრო</td>"; 
+					echo "<td class='thick-line text-center'>&nbsp;".$count_interval." წუთი</td>";
+					echo "</tr>";
        
 	}
     
