@@ -72,6 +72,9 @@ $res = $query->result_array();
     <li>
 <a href="<?= base_url(); ?>blacklist" class="waves-effect"><i class="md md-block"></i><span> შავი სია </span></a>
 </li>
+<li>
+<a href="<?= base_url(); ?>notready" class="waves-effect"><i class="md md-event-busy"></i><span> ხელმისაწვდომობა </span></a>
+</li>	
  <li>
 <a href="<?=base_url();?>files" class="waves-effect"><i class="md  md-attach-file"></i><span> ფაილების მენეჯმენტი </span></a>
 </li>
