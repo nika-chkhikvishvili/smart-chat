@@ -172,7 +172,8 @@ td:last-child {
 
                        <select class="select2 form-control" name='singin_singout' id='singin_singout'>
                         <option value="0">სტატუსი Not Ready</option>
-						<option value="1">signin / signout</option>                      
+						<option value="1">signin / signout</option>
+						<option value="3">Offline</option>
                        </select>
                     </div>
                   </div>
