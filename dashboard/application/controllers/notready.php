@@ -197,8 +197,15 @@ class notready extends CI_Controller{
 					  $get_out = $this->dashboard_model->get_offline_bygridout(@$_POST['user_id'],$id);
 					  if($get_out['type_id']==1){
 						  $active = "<span style='color:#329305;' class='fa fa-play-circle-o'>&nbsp;online</span>";
+						  
+						  if($get_out['change_date']){
 						  $on_active = $get_out['change_date'];
-						
+						  }
+						  else
+						  {
+							$on_active = date("Y-m-d h:i:sa");  
+						  }	
+						  
 						$start_date = new DateTime($monishvna);
 						$end_date = new DateTime($on_active);
 						$interval = $start_date->diff($end_date);
@@ -209,8 +216,17 @@ class notready extends CI_Controller{
 					  }
 					  else
 					  {
-						$active = "<span style='color:#EA6A6A;' class='fa fa-lock'>&nbsp;Signin</span>";
-						$on_active = $get_out['change_date'];
+						
+						 
+						  if($get_out['change_date']){
+						  $on_active = $get_out['change_date'];
+						  $active = "<span style='color:#EA6A6A;' class='fa fa-lock'>&nbsp;Signin</span>";
+						  }
+						  else
+						  {
+							$on_active = date("Y-m-d H:i:s");
+							$active = "<span style='color:#EA6A6A;' class='fa fa-lock'>&nbsp; till current time </span>";	
+						  }
 						
 						$start_date = new DateTime($monishvna);
 						$end_date = new DateTime($on_active);
