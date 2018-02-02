@@ -49,13 +49,13 @@ class notready extends CI_Controller{
 				 
 				 if($services['state_id']==0)
 				  {
-					  $x = "<span style='color:#C6BD10;' class='fa fa-lock'>&nbsp;სტაუტი დაკავებული ვარ</span>";
+					  $x = "<span style='color:#C6BD10;' class='fa fa-lock'>&nbsp;busy</span>";
 					  $monishvna = $services['change_date'];
 					  $id = $services['id'];
 					  
 					  $get_out = $this->dashboard_model->get_notready_bygrid(@$_POST['user_id'],$id);
 					  if($get_out['type_id']==1){
-						  $active = "<span style='color:#329305;' class='fa fa-play-circle-o'>&nbsp;ხელმისაწვდომია</span>";
+						  $active = "<span style='color:#329305;' class='fa fa-play-circle-o'>&nbsp;online</span>";
 						  $on_active = $get_out['change_date'];
 						
 						$start_date = new DateTime($monishvna);
@@ -68,7 +68,7 @@ class notready extends CI_Controller{
 					  }
 					  else
 					  {
-						$active = "<span style='color:#EA6A6A;' class='fa fa-power-off'>&nbsp;გასვლა/დახურვა</span>";
+						$active = "<span style='color:#EA6A6A;' class='fa fa-power-off'>&nbsp;close</span>";
 						$on_active = $get_out['change_date'];
 						
 						$start_date = new DateTime($monishvna);
