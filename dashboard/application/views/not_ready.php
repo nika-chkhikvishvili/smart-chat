@@ -32,9 +32,11 @@ window.setTimeout(function() {
             
         $('#submit').click(function() {
         data = {};
-       
+        
+		
+		
         data['user_id'] = $("#by_users").val();
-        data['start_date'] = $("#start_date").val();
+        data['singin_singout'] = $("#singin_singout").val();
         data['end_date'] = $("#end_date").val();
         data['submit'] = $("#submit").val();
         $.ajax({
@@ -157,13 +159,21 @@ td:last-child {
                         ?>        
                        </select>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                        <label for="cname" class="control-label col-lg-12">კიდური თარიღები</label> 
                       <input class="form-control" id="start_date" name="start_date"  placeholder="DD/MM/YYYY-დან" type="text" style="width: 150px; float:left; margin-right: 15px;"/>
 
 
 
                       <input class="form-control" id="end_date" name="end_date" placeholder="DD/MM/YYYY-მდე" type="text" style="width: 150px;"/>
+                    </div>
+					 <div class="col-sm-3">
+                    <label for="cname" class="control-label col-lg-5">ძიების ტიპი:</label>
+
+                       <select class="select2 form-control" name='singin_singout' id='singin_singout'>
+                        <option value="0">სტატუსი Not Ready</option>
+						<option value="1">signin / signout</option>                      
+                       </select>
                     </div>
                   </div>
 
