@@ -847,26 +847,43 @@ class dashboard_model extends CI_Model{
         return $query->result_array();
      
    }
-    function get_notready_byuser($user_id)
+   function get_notready_byuser($user_id)
    {
 	  $this->db->select('*');
       $this->db->from('xlog_available_history');
       $this->db->where('user_id', $user_id);
-	  $this->db->where('type_id', '1'); 
-	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 	  
+	  $this->db->where('type_id', '1');
+	  $this->db->where('state_id', '0'); 
+	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 
+	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
       return $query->result_array();
    }
-	
-	 function get_notready_bygrid($user_id,$id)
+   
+   function get_notready_bygrid($user_id,$id)
+   {
+	  $id = $id + 1;
+	  $this->db->select('*');
+      $this->db->from('xlog_available_history');
+      $this->db->where('user_id', $user_id);	  
+	  $this->db->where('id >=',$id);
+	  $this->db->limit(1);  
+	  $this->db->order_by('change_date','ASC');
+	  $query = $this->db->get();
+      return $query->row_array();
+   }
+   
+   function get_notready_bygridout($user_id,$id)
    {
 	  $id = $id + 1;
 	  $this->db->select('*');
       $this->db->from('xlog_available_history');
       $this->db->where('user_id', $user_id);
-	  $this->db->where('type_id', '1'); 	 
+	  $this->db->where('type_id', '2');
+	  $this->db->where('state_id', '0'); 	  
 	  $this->db->where('id >=',$id);
-	  $this->db->limit(1);  
+	  $this->db->limit(1);
+	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
       return $query->row_array();
    }
