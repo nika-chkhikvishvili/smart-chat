@@ -37,7 +37,8 @@ window.setTimeout(function() {
 		
         data['user_id'] = $("#by_users").val();
         data['singin_singout'] = $("#singin_singout").val();
-        data['end_date'] = $("#end_date").val();
+        data['start_date'] = $("#start_date").val();
+		data['end_date'] = $("#end_date").val();
         data['submit'] = $("#submit").val();
         $.ajax({
             type: "POST", 
@@ -258,13 +259,13 @@ td:last-child {
 		var end_date=$('input[name="end_date"]'); //our date input has the name "date"		
 		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
 		start_date.datepicker({
-			format: 'dd-mm-yyyy',
+			format: 'yyyy-mm-dd',
 			container: container,
 			todayHighlight: true,
 			autoclose: true,
 		})
                 end_date.datepicker({
-			format: 'dd-mm-yyyy',
+			format: 'yyyy-mm-dd',
 			container: container,
 			todayHighlight: true,
 			autoclose: true,
