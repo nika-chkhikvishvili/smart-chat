@@ -847,13 +847,28 @@ class dashboard_model extends CI_Model{
         return $query->result_array();
      
    }
-   function get_notready_byuser($user_id)
+
+	   function get_notready_byuser($user_id, $start_date = false, $end_date = false)
    {
 	  $this->db->select('*');
       $this->db->from('xlog_available_history');
       $this->db->where('user_id', $user_id);
 	  $this->db->where('type_id', '1');
-	  $this->db->where('state_id', '0'); 
+	  $this->db->where('state_id', '0');
+	  
+	  if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("change_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";
+		
+        $this->db->where("change_date <=", $end_date);   
+      }
+	  
 	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 
 	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
@@ -887,13 +902,28 @@ class dashboard_model extends CI_Model{
 	  $query = $this->db->get();
       return $query->row_array();
    }
-   function get_singout_byuser($user_id)
+   //
+   
+   function get_singout_byuser($user_id,$start_date = false, $end_date = false)
    {
 	  $this->db->select('*');
       $this->db->from('xlog_available_history');
       $this->db->where('user_id', $user_id);
 	  $this->db->where('type_id', '2');
 	  $this->db->where('state_id', '1'); 
+	  
+	  if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("change_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";
+		
+        $this->db->where("change_date <=", $end_date);   
+      }
 	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 
 	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
@@ -914,14 +944,27 @@ class dashboard_model extends CI_Model{
 	  $query = $this->db->get();
       return $query->row_array();
    }
-///
-    function get_offline_byuser($user_id)
+   
+   ///
+    function get_offline_byuser($user_id,$start_date = false, $end_date = false)
    {
 	  $this->db->select('*');
       $this->db->from('xlog_available_history');
       $this->db->where('user_id', $user_id);
 	  $this->db->where('type_id', '2');
-	  $this->db->where('state_id', '0'); 
+	  $this->db->where('state_id', '0');
+	  if($start_date)
+      {
+        $start_date = $start_date." 00:00:00"  ;
+        $this->db->where("change_date >=", $start_date);   
+      }
+      
+      if($end_date)
+      {
+        $end_date = $end_date." 00:00:00";
+		
+        $this->db->where("change_date <=", $end_date);   
+      }
 	  $this->db->join('persons', 'persons.person_id = xlog_available_history.user_id','LEFT'); 
 	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
@@ -941,5 +984,5 @@ class dashboard_model extends CI_Model{
 	  $this->db->order_by('change_date','ASC');
 	  $query = $this->db->get();
       return $query->row_array();
-   }	
+   }
 }
