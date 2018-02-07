@@ -41,7 +41,7 @@ class notready extends CI_Controller{
                 ';
 				
 		if($_POST['singin_singout']==1){
-		$byservice = $this->dashboard_model->get_singout_byuser(@$_POST['user_id']);
+		$byservice = $this->dashboard_model->get_singout_byuser(@$_POST['user_id'],$_POST['start_date'],$_POST['end_date']);
 	
 		foreach($byservice as $services){
 				
@@ -110,7 +110,7 @@ class notready extends CI_Controller{
 		{	
 		   $count_interval = "";
 		   
-           $byservice = $this->dashboard_model->get_notready_byuser(@$_POST['user_id']);
+           $byservice = $this->dashboard_model->get_notready_byuser(@$_POST['user_id'],$_POST['start_date'],$_POST['end_date']);
           
 				
 			foreach($byservice as $services){
@@ -182,7 +182,7 @@ class notready extends CI_Controller{
 	}
 	else
 	{
-	$byservice = $this->dashboard_model->get_offline_byuser(@$_POST['user_id']);
+	$byservice = $this->dashboard_model->get_offline_byuser(@$_POST['user_id'],$_POST['start_date'],$_POST['end_date']);
 	
 		foreach($byservice as $services){
 				
