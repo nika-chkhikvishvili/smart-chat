@@ -80,13 +80,13 @@
                 <div class="col-md-2">
                     <div class="">
                         <label for="firstname" class="control-label">მომხ.სახელი</label>
-                        <input type="text" class="form-control" name="firstname" value="<?php echo set_value('firstname'); ?>" id="firstname" placeholder="">
+                        <input type="text" class="form-control" name="firstname" value="<?php  if (is_array($search) && array_key_exists('firstname', $search)) echo  $search['firstname'];  ?>" id="firstname" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="lastname" class="control-label">მომხ.გვარი</label>
-                        <input type="text" class="form-control" name="lastname" value="<?php echo set_value('lastname'); ?>"  id="lastname" placeholder="">
+                        <input type="text" class="form-control" name="lastname" value="<?php  if (is_array($search) && array_key_exists('lastname', $search)) echo  $search['lastname'];  ?>"  id="lastname" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-2">
@@ -98,13 +98,14 @@
                        if(is_array($get_services))
                        {
                            foreach($get_services as $services):
-
-
                        ?>
-                       <option value="<?=$services['category_service_id'];?>" <?php echo set_select('service_id',  $services['category_service_id']); ?>><?=$services['service_name_geo'];?></option>
-
+                       <option value="<?=$services['category_service_id'];?>"
+                           <?php  if (is_array($search) && array_key_exists('category_service_id', $search) && $search['category_service_id '] == $get_persons['service_id'] ) echo  ' selected="selected"';  ?>
+                           <?php echo set_select('service_id',  $services['category_service_id']); ?>>
+                           <?=$services['service_name_geo'];?></option>
                         <?php                                        
-                       endforeach; }
+                       endforeach;
+                       }
                         ?>        
                     </select>
                     </div>
@@ -118,7 +119,11 @@
                         <?php
                         foreach ($persons as $get_persons):
 						 ?>
-                            <option value='<?=$get_persons['person_id'];?>' <?php echo set_select('operator_name',  $get_persons['person_id']); ?>><?=$get_persons['first_name'];?> &nbsp; <?=$get_persons['last_name']; ?></option>
+                            <option value='<?=$get_persons['person_id'];?>'
+                                <?php  if (is_array($search) && array_key_exists('operator_name', $search) && $search['operator_name'] == $get_persons['person_id'] ) echo  ' selected="selected"';  ?>
+                                <?php echo set_select('operator_name',  $get_persons['person_id']); ?>>
+                                <?=$get_persons['first_name'];?> &nbsp; <?=$get_persons['last_name']; ?>
+                            </option>
 						 <?php	
                         endforeach;
                         ?>

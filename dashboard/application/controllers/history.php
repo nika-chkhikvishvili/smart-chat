@@ -14,20 +14,41 @@ class History extends CI_Controller{
     }
 
 
-        public function index(){
+    public function index(){
        
-              $this->load->model('dashboard_model');
+        $this->load->model('dashboard_model');
         $this->load->helper('form');
         $this->load->library("pagination");
-        $data['persons'] = $this->dashboard_model->get_persons();  
-        $sql_history = $this->dashboard_model->count_history($this->input->post('service_id'),
-																	$this->input->post('firstname'),
-																	$this->input->post('lastname'),
-																	$this->input->post('operator_name'),
-																	$this->input->post('start_date'),
-																	$this->input->post('end_date'));  
-   
-      
+        $this->load->library('session');
+
+        $data['persons'] = $this->dashboard_model->get_persons();
+        $searchParams = [];
+
+
+        if($this->input->post('submit') != NULL ){
+            $searchParams['service_id'] = $this->input->post('service_id');
+            $searchParams['firstname'] = $this->input->post('firstname');
+            $searchParams['lastname'] = $this->input->post('lastname');
+            $searchParams['operator_name'] = $this->input->post('operator_name');
+            $searchParams['start_date'] = $this->input->post('start_date');
+            $searchParams['end_date'] = $this->input->post('end_date');
+            $this->session->set_userdata(array("search"=>$searchParams));
+        }else{
+            if ($this->uri->segment(2)) {
+                if ($this->session->userdata('search') != NULL) {
+                    $searchParams = $this->session->userdata('search');
+                }
+            }
+        }
+        $data["search"] = $searchParams;
+
+        $sql_history = $this->dashboard_model->count_history($searchParams['service_id'],
+															 $searchParams['firstname'],
+															 $searchParams['lastname'],
+															 $searchParams['operator_name'],
+															 $searchParams['start_date'],
+															 $searchParams['end_date']);
+
         $config = array();
         $config["base_url"] = base_url()."history";
         $config["total_rows"] = $sql_history;
@@ -58,12 +79,12 @@ class History extends CI_Controller{
 
         $page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
         $data["links"] = $this->pagination->create_links(); 
-        $data['history'] = $this->dashboard_model->get_all_history($this->input->post('service_id'),
-																	$this->input->post('firstname'),
-																	$this->input->post('lastname'),
-																	$this->input->post('operator_name'),
-																	$this->input->post('start_date'),
-																	$this->input->post('end_date'),$page);	
+        $data['history'] = $this->dashboard_model->get_all_history($searchParams['service_id'],
+                                                                   $searchParams['firstname'],
+                                                                   $searchParams['lastname'],
+                                                                   $searchParams['operator_name'],
+                                                                   $searchParams['start_date'],
+                                                                   $searchParams['end_date'],$page);
         
         $data['get_services'] = $this->dashboard_model->get_all_services();
         
