@@ -20,12 +20,12 @@ $(document).ready(function () {
     /////
 
     document.addEventListener("message", function(data) {
-        if (data.type === 'token') {
-            socket.emit('clientSetPushNotificationToken', {token: data.value });
-        } else if (data.type === 'state') {
-            if (data.value === 'inactive') {
+        if (data.data.type === 'token') {
+            socket.emit('clientSetPushNotificationToken', {token: data.data.value });
+        } else if (data.data.type === 'state') {
+            if (data.data.value === 'inactive') {
                 socket.emit('clientSetDeviceInactive');
-            } else if (data.value === 'active') {
+            } else if (data.data.value === 'active') {
                 socket.emit('clientSetDeviceActive');
             }
         }
