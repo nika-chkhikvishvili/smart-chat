@@ -17,6 +17,23 @@ socket.on('testResponse', function (data) {
 
 $(document).ready(function () {
 
+    /////
+
+    document.addEventListener("message", function(data) {
+        if (data.type === 'token') {
+            socket.emit('clientSetPushNotificationToken', {token: data.value });
+        } else if (data.type === 'state') {
+            if (data.value === 'inactive') {
+                socket.emit('clientSetDeviceInactive');
+            } else if (data.value === 'active') {
+                socket.emit('clientSetDeviceActive');
+            }
+        }
+    });
+
+    ////
+
+
     socket.emit('clientCheckChatIfAvailable', chat.getChatUniqObject());
 
     $("#disconnect-chat").click(function () {

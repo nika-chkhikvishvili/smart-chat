@@ -41,3 +41,4 @@ jspm_packages
 # Created by .ignore support plugin (hsz.mobi)
 /client/uploads
 /dashboard/uploads
+/node/params_local.json

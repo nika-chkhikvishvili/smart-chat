@@ -12,6 +12,8 @@ function GuestUser(user) {
     this.lastName    = user.hasOwnProperty('lastName')    ? user.lastName    : null;
     this.mail        = user.hasOwnProperty('mail')        ? user.mail        : null;
     this.ip_string   = user.hasOwnProperty('ip')          ? user.ip          : null;
+    this.inactive  = false;
+    this.token       = false;
     this.sockets     = new Set();
 }
 
@@ -37,6 +39,18 @@ GuestUser.prototype.addSocket = function (id) {
 
 GuestUser.prototype.removeSocket = function (id) {
     this.sockets.delete(id);
+};
+
+GuestUser.prototype.setActive = function (active) {
+    this.inactive = !active;
+};
+
+GuestUser.prototype.isInactive = function () {
+    return this.inactive;
+};
+
+GuestUser.prototype.setPushNotificationToken = function (token) {
+    this.token = token;
 };
 
 module.exports = GuestUser;

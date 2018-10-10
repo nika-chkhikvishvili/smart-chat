@@ -1,12 +1,15 @@
 'use strict';
 
-let app = {};
+const app = {};
 
 let GuestUser = require('./models/GuestUser');
 let Chat = require('./models/Chat');
 let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
+const request = require('request');
+app.params = require('./params_local.json');
+
 /*
 let memwatch = require('memwatch');
 
@@ -20,7 +23,7 @@ memwatch.on('stats', function(info) {
 */
 
 
-let http_instance = require('http');
+const http_instance = require('http');
 // let fs = require('fs');
 // let options = {
 //     key: fs.readFileSync('/etc/pki/tls/private/smartchat.key'),
@@ -30,9 +33,9 @@ let http_instance = require('http');
 //     rejectUnauthorized: false,
 // };
 
-let express_server = require('express')();
-let http_server = http_instance.createServer( express_server);
-let http_server1 = http_instance.createServer( express_server);
+const express_server = require('express')();
+const http_server = http_instance.createServer( express_server);
+const http_server1 = http_instance.createServer( express_server);
 
 app.io = require('socket.io')(http_server);
 app.ioGuests = require('socket.io')(http_server1);
@@ -46,14 +49,14 @@ http_server1.listen(8443, function() {
 });
 
 app.log = require('npmlog');
-let mysql = require('mysql');
+const mysql = require('mysql');
 let fifo = require('fifo');
 
 app.connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'smartchat',
-    password: 'smartchat',
-    database: 'smartchat'
+    host: app.params.dbHost || 'localhost',
+    user: app.params.dbUser || 'smartchat',
+    password: app.params.dbPassword || 'smartchat',
+    database: app.params.dbDatabase || 'smartchat'
 });
 
 app.connection.connect();
@@ -66,8 +69,8 @@ app.users = new Map();
 app.onlineGuests = new Map();
 app.autoAnswering = {};
 
-let client = require('./client.js')(app);
-let server = require('./server.js')(app);
+const client = require('./client.js')(app);
+const server = require('./server.js')(app);
 
 // for debug
 global.app = app;
@@ -222,6 +225,38 @@ app.sendMessageToRoomGuests = function (message) {
     if (!chat) {
         return;
     }
+
+    if (chat.guestUser.isInactive() && message.messageType !== 'writing'
+        && !!chat.guestUser.token && chat.guestUser.token.length > 5
+        && !!app.params.googleAuthorizationKey && app.params.googleAuthorizationKey.length > 5) {
+        request({
+            url: 'https://fcm.googleapis.com/fcm/send',
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": app.params.googleAuthorizationKey
+            },
+            json: {
+                'to' : chat.guestUser.token,
+                'notification': {
+                    "body":  message.message,
+                    "title": "Title",
+                    "icon": "myicon"
+                },
+                'priority': 'high',
+            },
+        }, function (error, response, body) {
+            // if (!error && response.statusCode === 200) {
+            //     console.log(body);
+            // }
+            // else {
+            //     console.log("error: " + error);
+            //     console.log("response.statusCode: " + response.statusCode);
+            //     console.log("response.statusText: " + response.statusText);
+            // }
+        });
+    }
+
     chat.guestUser.sockets.forEach(function (socketId) {
         app.ioGuests.sockets.sockets[socketId].emit('message', message);
     });
@@ -413,6 +448,18 @@ app.ioGuests.on('connection', function (socket) {
         app.io.emit('userDisconnect', {
             id: socket.id
         });
+    });
+
+    socket.on('clientSetPushNotificationToken', function (data) {
+        client.clientSetPushNotificationToken(socket, data);
+    });
+
+    socket.on('clientSetDeviceInactive', function () {
+        client.clientSetDeviceInactive(socket);
+    });
+
+    socket.on('clientSetDeviceActive', function () {
+        client.clientSetDeviceActive(socket);
     });
 });
 

@@ -192,6 +192,8 @@ ChatClient.prototype.clientMessage = function (socket, data) {
     }
 
     let chat = app.chats.get(socket.chatUniqId);
+    chat.guestUser.setActive(true);
+
     let messageText = Escape(data.message);
 
     let message = new Message({chatId: chat.chatId, guestUserId: socket.guestUserId, message: messageText});
@@ -240,6 +242,30 @@ ChatClient.prototype.userIsWriting = function (socket) {
     message.messageType = 'writing';
 
     app.sendMessageToRoom(message);
+};
+
+ChatClient.prototype.clientSetPushNotificationToken = function (socket, data) {
+    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10 || !data.hasOwnProperty('token') ) {
+        return;
+    }
+    let chat = app.chats.get(socket.chatUniqId);
+    chat.guestUser.setPushNotificationToken(data.token);
+};
+
+ChatClient.prototype.clientSetDeviceInactive = function (socket) {
+    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10) {
+        return;
+    }
+    let chat = app.chats.get(socket.chatUniqId);
+    chat.guestUser.setActive(false);
+};
+
+ChatClient.prototype.clientSetDeviceActive = function (socket) {
+    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10) {
+        return;
+    }
+    let chat = app.chats.get(socket.chatUniqId);
+    chat.guestUser.setActive(true);
 };
 
 module.exports = ChatClient;
