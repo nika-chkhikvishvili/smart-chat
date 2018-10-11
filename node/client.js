@@ -245,6 +245,8 @@ ChatClient.prototype.userIsWriting = function (socket) {
 };
 
 ChatClient.prototype.clientSetPushNotificationToken = function (socket, data) {
+    socket.guestUserToken = data.token;
+
     if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10 || !data.hasOwnProperty('token') ) {
         return;
     }

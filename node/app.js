@@ -467,7 +467,6 @@ app.ioGuests.on('connection', function (socket) {
     });
 
     socket.on('clientSendPushNotification', function (data) {
-        let chat = app.chats.get(socket.chatUniqId);
         request({
             url: 'https://fcm.googleapis.com/fcm/send',
             method: "POST",
@@ -476,7 +475,7 @@ app.ioGuests.on('connection', function (socket) {
                 "Authorization": app.params.googleAuthorizationKey
             },
             json: {
-                'to' : chat.guestUser.token,
+                'to' : socket.guestUserToken,
                 'notification': {
                     "body":  JSON.stringify(data.message),
                     "title": "Title",
