@@ -759,6 +759,11 @@ socket.on('userInfo', function (data) {
 
 });
 
+socket.on('getGuestResponse', function (data) {
+    console.log('execute: getGuestResponse');
+    console.log(data);
+});
+
 socket.on('userAvailabilityChanged', function (data) {
     console.log('execute: userAvailabilityChanged');
     // console.log(data);
