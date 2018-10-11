@@ -20,17 +20,19 @@ $(document).ready(function () {
     /////
 
     document.addEventListener("message", function(data) {
+        alert(JSON.stringify(data));
         if (typeof data === 'string'){
             data = JSON.parse(data);
         }
+        alert(JSON.stringify(data));
         if (data.hasOwnProperty('data')) {
             data = data.data;
         }
-
+        alert(JSON.stringify(data));
         if (typeof data === 'string'){
             data = JSON.parse(data);
         }
-
+        alert(JSON.stringify(data));
         if (data.data.type === 'token') {
             socket.emit('clientSetPushNotificationToken', {token: data.data.value });
         } else if (data.data.type === 'state') {
