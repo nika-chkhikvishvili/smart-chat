@@ -226,7 +226,7 @@ app.sendMessageToRoomGuests = function (message) {
         return;
     }
 
-    if (chat.guestUser.isInactive() && message.messageType !== 'writing'
+    if (chat.guestUser.isInactive() && message.messageType === 'message'
         && !!chat.guestUser.token && chat.guestUser.token.length > 5
         && !!app.params.googleAuthorizationKey && app.params.googleAuthorizationKey.length > 5) {
         request({
@@ -504,6 +504,23 @@ app.io.on('connection', function (socket) {
     socket.on('clientGetServices', function () {
         client.clientGetServices(socket);
     });
+
+    socket.on('getGuest', function (data) {
+        if (!data.chatUniqId) {
+            return socket.emit("getGuestResponse", {isValid: false, error: 'chatUniqId', data: data});
+        }
+
+        let chat = app.chats.get(data.chatUniqId);
+
+        if (!chat) {
+            return socket.emit("getGuestResponse", {isValid: false, error: 'chat'});
+        }
+
+        socket.emit("getGuestResponse", chat.guestUser);
+
+    });
+
+
 
     socket.on('checkToken', function (data) {
         server.checkToken(socket, data);

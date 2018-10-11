@@ -211,7 +211,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
         return socket.emit("sendMessageResponse", {isValid: false, error: 'Not Allowed'});
     }
 
-    let message = new Message( {chatId: chat.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId});
+    let message = new Message( {chatId: chat.chatId, userId: socket.user.userId, message: data.message, chatUniqId : data.chatUniqId, messageType: 'message'});
 
     app.connection.query('INSERT INTO `chat_messages` SET ? ', message.getInsertObject(), function (err, res) {
         if (err) {
