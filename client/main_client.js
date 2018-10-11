@@ -47,7 +47,7 @@ $(document).ready(function () {
     });
 
     socket.on('clientSendPushNotificationResponse', function (data) {
-        alert(JSON.stringify(data));
+        // alert(JSON.stringify(data));
     });
 
 
