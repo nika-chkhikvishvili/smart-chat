@@ -24,7 +24,6 @@ $(document).ready(function () {
         if (typeof data.data === 'string'){
             req = JSON.parse(data.data);
         }
-        alert(JSON.stringify(req));
 
         if (req.type === 'token') {
             socket.emit('clientSetPushNotificationToken', {token: req.value });
