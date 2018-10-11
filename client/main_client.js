@@ -20,26 +20,18 @@ $(document).ready(function () {
     /////
 
     document.addEventListener("message", function(data) {
-        alert(JSON.stringify(data.data));
+        let req = data.data;
+        if (typeof data.data === 'string'){
+            req = JSON.parse(data.data);
+        }
+        alert(JSON.stringify(req));
 
-        if (typeof data === 'string'){
-            data = JSON.parse(data);
-        }
-        // alert(JSON.stringify(data));
-        if (data.hasOwnProperty('data')) {
-            data = data.data;
-        }
-        // alert(JSON.stringify(data));
-        if (typeof data === 'string'){
-            data = JSON.parse(data);
-        }
-        // alert(JSON.stringify(data));
-        if (data.data.type === 'token') {
-            socket.emit('clientSetPushNotificationToken', {token: data.data.value });
-        } else if (data.data.type === 'state') {
-            if (data.data.value === 'inactive') {
+        if (req.type === 'token') {
+            socket.emit('clientSetPushNotificationToken', {token: req.value });
+        } else if (req.type === 'state') {
+            if (req.value === 'inactive') {
                 socket.emit('clientSetDeviceInactive');
-            } else if (data.data.value === 'active') {
+            } else if (req.value === 'active') {
                 socket.emit('clientSetDeviceActive');
             }
         }
