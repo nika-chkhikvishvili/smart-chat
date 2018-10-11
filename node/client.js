@@ -268,4 +268,14 @@ ChatClient.prototype.clientSetDeviceActive = function (socket) {
     chat.guestUser.setActive(true);
 };
 
+
+ChatClient.prototype.clientGetPushNotificationToken = function (socket) {
+    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10) {
+        return;
+    }
+    let chat = app.chats.get(socket.chatUniqId);
+    socket.emit("clientGetPushNotificationTokenResponse",  chat.guestUser.token);
+};
+
+
 module.exports = ChatClient;

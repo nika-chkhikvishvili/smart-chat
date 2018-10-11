@@ -461,6 +461,34 @@ app.ioGuests.on('connection', function (socket) {
     socket.on('clientSetDeviceActive', function () {
         client.clientSetDeviceActive(socket);
     });
+
+    socket.on('clientGetPushNotificationToken', function () {
+        client.clientGetPushNotificationToken(socket);
+    });
+
+    socket.on('clientSendPushNotification', function (data) {
+        let chat = app.chats.get(socket.chatUniqId);
+        request({
+            url: 'https://fcm.googleapis.com/fcm/send',
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": app.params.googleAuthorizationKey
+            },
+            json: {
+                'to' : chat.guestUser.token,
+                'notification': {
+                    "body":  JSON.stringify(data),
+                    "title": "Title",
+                    "icon": "myicon"
+                },
+                'priority': 'high',
+            },
+        }, function (error, response, body) {
+        });
+
+    });
+
 });
 
 app.io.on('connection', function (socket) {

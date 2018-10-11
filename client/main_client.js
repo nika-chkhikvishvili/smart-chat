@@ -33,7 +33,15 @@ $(document).ready(function () {
             } else if (req.value === 'active') {
                 socket.emit('clientSetDeviceActive');
             }
+        } if (req.type === 'getToken') {
+            socket.emit('clientGetPushNotificationToken');
+        } if (req.type === 'notify') {
+            socket.emit('clientSendPushNotification', { message: req.value });
         }
+    });
+
+    socket.on('clientGetPushNotificationTokenResponse', function (data) {
+        alert(JSON.stringify(data));
     });
 
     ////
