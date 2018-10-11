@@ -251,7 +251,7 @@ ChatClient.prototype.clientSetPushNotificationToken = function (socket, data) {
         return;
     }
     let chat = app.chats.get(socket.chatUniqId);
-    chat.guestUser.setPushNotificationToken(data.token);
+    if (!!chat) chat.guestUser.setPushNotificationToken(data.token);
 };
 
 ChatClient.prototype.clientSetDeviceInactive = function (socket) {
@@ -259,7 +259,7 @@ ChatClient.prototype.clientSetDeviceInactive = function (socket) {
         return;
     }
     let chat = app.chats.get(socket.chatUniqId);
-    chat.guestUser.setActive(false);
+    if (!!chat) chat.guestUser.setActive(false);
 };
 
 ChatClient.prototype.clientSetDeviceActive = function (socket) {
