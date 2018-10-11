@@ -203,7 +203,7 @@ ChatServer.prototype.sendMessage = function (socket, data) {
     let chat = app.chats.get(data.chatUniqId);
     let user = socket.user;
 
-    if (chat.users.get(user.userId)!==1) {
+    if (!!user &&user.hasOwnProperty('userId') && chat.users.get(user.userId)!==1) {
         return socket.emit("sendMessageResponse", {isValid: false, error: 'Not Allowed'});
     }
 
