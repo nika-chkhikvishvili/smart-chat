@@ -272,11 +272,7 @@ ChatClient.prototype.clientSetDeviceActive = function (socket) {
 
 
 ChatClient.prototype.clientGetPushNotificationToken = function (socket) {
-    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10) {
-        return;
-    }
-    let chat = app.chats.get(socket.chatUniqId);
-    socket.emit("clientGetPushNotificationTokenResponse",  chat.guestUser.token);
+    socket.emit("clientGetPushNotificationTokenResponse",  socket.guestUserToken);
 };
 
 
