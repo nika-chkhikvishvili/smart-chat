@@ -73,7 +73,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             }
         }
 
-        let guestUser = new GuestUser({firstName: data.firstName, lastName: data.lastName, ip: socket.conn.remoteAddress});
+        let guestUser = new GuestUser({firstName: data.firstName, lastName: data.lastName, ip: socket.conn.remoteAddress, pushNotificationToken: socket.pushNotificationToken});
 
         app.connection.query('INSERT INTO `online_users` SET ? ', guestUser.getInsertObject(), function (err, res) {
             if (err) {
@@ -245,13 +245,7 @@ ChatClient.prototype.userIsWriting = function (socket) {
 };
 
 ChatClient.prototype.clientSetPushNotificationToken = function (socket, data) {
-    socket.guestUserToken = data.token;
-
-    if (!socket || !socket.hasOwnProperty('chatUniqId') || !socket.chatUniqId || socket.chatUniqId.length < 10 || !data.hasOwnProperty('token') ) {
-        return;
-    }
-    let chat = app.chats.get(socket.chatUniqId);
-    if (!!chat) chat.guestUser.setPushNotificationToken(data.token);
+    socket.pushNotificationToken = data.token || false;
 };
 
 ChatClient.prototype.clientSetDeviceInactive = function (socket) {
@@ -272,7 +266,7 @@ ChatClient.prototype.clientSetDeviceActive = function (socket) {
 
 
 ChatClient.prototype.clientGetPushNotificationToken = function (socket) {
-    socket.emit("clientGetPushNotificationTokenResponse",  socket.guestUserToken);
+    socket.emit("clientGetPushNotificationTokenResponse",  socket.pushNotificationToken);
 };
 
 

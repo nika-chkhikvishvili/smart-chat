@@ -227,7 +227,7 @@ app.sendMessageToRoomGuests = function (message) {
     }
 
     if (chat.guestUser.isInactive() && message.messageType === 'message'
-        && !!chat.guestUser.token && chat.guestUser.token.length > 5
+        && !!chat.guestUser.pushNotificationToken && chat.guestUser.pushNotificationToken.length > 5
         && !!app.params.googleAuthorizationKey && app.params.googleAuthorizationKey.length > 5) {
         request({
             url: 'https://fcm.googleapis.com/fcm/send',
@@ -237,7 +237,7 @@ app.sendMessageToRoomGuests = function (message) {
                 "Authorization": app.params.googleAuthorizationKey
             },
             json: {
-                'to' : chat.guestUser.token,
+                'to' : chat.guestUser.pushNotificationToken,
                 'notification': {
                     "body":  message.message,
                     "title": "Title",
@@ -478,7 +478,7 @@ app.ioGuests.on('connection', function (socket) {
                 "Authorization": app.params.googleAuthorizationKey
             },
             json: {
-                'to' : socket.guestUserToken,
+                'to' : socket.pushNotificationToken,
                 'notification': {
                     "body":  JSON.stringify(data.message),
                     "title": "Title",

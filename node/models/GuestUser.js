@@ -12,8 +12,8 @@ function GuestUser(user) {
     this.lastName    = user.hasOwnProperty('lastName')    ? user.lastName    : null;
     this.mail        = user.hasOwnProperty('mail')        ? user.mail        : null;
     this.ip_string   = user.hasOwnProperty('ip')          ? user.ip          : null;
-    this.inactive  = false;
-    this.token       = false;
+    this.inactive    = false;
+    this.pushNotificationToken  = user.hasOwnProperty('pushNotificationToken') ? user.pushNotificationToken : false;
     this.sockets     = new Set();
 }
 
@@ -50,7 +50,7 @@ GuestUser.prototype.isInactive = function () {
 };
 
 GuestUser.prototype.setPushNotificationToken = function (token) {
-    this.token = token;
+    this.pushNotificationToken = token;
 };
 
 module.exports = GuestUser;
