@@ -27,6 +27,8 @@ $(document).ready(function () {
 
         if (req.type === 'token') {
             socket.emit('clientSetPushNotificationToken', {token: req.value });
+            alert(req.value);
+
         } else if (req.type === 'state') {
             if (req.value === 'inactive') {
                 socket.emit('clientSetDeviceInactive');

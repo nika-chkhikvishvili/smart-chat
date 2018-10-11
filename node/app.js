@@ -478,7 +478,7 @@ app.ioGuests.on('connection', function (socket) {
             json: {
                 'to' : chat.guestUser.token,
                 'notification': {
-                    "body":  JSON.stringify(data),
+                    "body":  JSON.stringify(data.message),
                     "title": "Title",
                     "icon": "myicon"
                 },
