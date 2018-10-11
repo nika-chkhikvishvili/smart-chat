@@ -467,6 +467,9 @@ app.ioGuests.on('connection', function (socket) {
     });
 
     socket.on('clientSendPushNotification', function (data) {
+        if (!socket.guestUserToken) {
+            socket.emit("clientSendPushNotificationResponse",  'No Token');
+        }
         request({
             url: 'https://fcm.googleapis.com/fcm/send',
             method: "POST",
@@ -485,6 +488,7 @@ app.ioGuests.on('connection', function (socket) {
             },
         }, function (error, response, body) {
         });
+        socket.emit("clientSendPushNotificationResponse",  'sent: ' + JSON.stringify(data.message));
 
     });
 

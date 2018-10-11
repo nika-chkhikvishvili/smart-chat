@@ -46,6 +46,11 @@ $(document).ready(function () {
         alert(JSON.stringify(data));
     });
 
+    socket.on('clientSendPushNotificationResponse', function (data) {
+        alert(JSON.stringify(data));
+    });
+
+
     ////
 
 
