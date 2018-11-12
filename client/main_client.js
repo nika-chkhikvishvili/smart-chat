@@ -43,7 +43,7 @@ $(document).ready(function () {
     });
 
     socket.on('clientGetPushNotificationTokenResponse', function (data) {
-        alert(data);
+   //     alert(data);
     });
 
     socket.on('clientSendPushNotificationResponse', function (data) {
