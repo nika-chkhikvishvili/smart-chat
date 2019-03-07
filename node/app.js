@@ -7,6 +7,7 @@ let Chat = require('./models/Chat');
 let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
+let locks = require('locks');
 const request = require('request');
 app.params = require('./params_local.json');
 
@@ -105,7 +106,7 @@ app.addChatToQueue = function(socket, chat){
         app.waitingClients[chat.serviceId] = fifo();
     }
     app.waitingClients[chat.serviceId].push(chat);
-    setTimeout(function () {app.checkAvailableOperatorForService(chat.serviceId);}, 1000);
+    setTimeout(function () {app.checkAvailableOperatorForService(chat.serviceId);}, 2000);
 
 };
 
@@ -371,25 +372,34 @@ app.checkAvailableOperatorForService = function (serviceId) {
         }
     });
 
-    app.connection.query('SELECT person_id, (select count(*) from chat_rooms r where  r.person_id = p.person_id and chat_id ' +
-        ' in(SELECT chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1 ) ) as open_windows, ' +
-        ' (select count(*) from chat_rooms r1 where  r1.person_id = p.person_id   and r1.chat_id ' +
-        ' in(SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 ' +
-        ' AND c1.add_date   >= NOW() - INTERVAL 1 DAY) ) as last_1_day '+
-        ' FROM smartchat.persons p WHERE person_id in ( select person_id from person_services  where service_id = ? and person_id in (' + wh + ') ) ' +
-        ' order by open_windows asc, last_1_day asc', [serviceId], function (err, res) {
-        if (err) {
-            return app.databaseError(null, err);
-        }
+    let mutex = locks.createMutex();
 
-        if (!res || !Array.isArray(res) || res.length === 0) {
-            return;
-        }
+    mutex.lock(function () {
+        app.connection.query('SELECT person_id, (select count(*) from chat_rooms r where  r.person_id = p.person_id and chat_id ' +
+            ' in(SELECT chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1 ) ) as open_windows, ' +
+            ' (select count(*) from chat_rooms r1 where  r1.person_id = p.person_id   and r1.chat_id ' +
+            ' in(SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 ' +
+            ' AND c1.add_date   >= NOW() - INTERVAL 1 DAY) ) as last_1_day '+
+            ' FROM smartchat.persons p WHERE person_id in ( select person_id from person_services  where service_id = ? and person_id in (' + wh + ') ) ' +
+            ' order by open_windows asc, last_1_day asc', [serviceId], function (err, res) {
+            if (err) {
+                mutex.unlock();
+                return app.databaseError(null, err);
+            }
 
-        if (res[0].open_windows < 5) {
-            app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
-        }
+            if (!res || !Array.isArray(res) || res.length === 0) {
+                mutex.unlock();
+                return;
+            }
+
+            if (res[0].open_windows < 5) {
+                app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
+                mutex.unlock();
+            }
+        });
     });
+
+
 };
 
 app.ioGuests.on('connection', function (socket) {

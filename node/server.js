@@ -107,7 +107,7 @@ ChatServer.prototype.getWaitingList = function (socket) {
             if (!serviceUsers[item.service_id]) {
                 serviceUsers[item.service_id] = '';
             }
-            if (app.getUser(item.person_id).isOnline) {
+            if (!!app.getUser(item.person_id) && app.getUser(item.person_id).isOnline) {
                 serviceUsers[item.service_id] = serviceUsers[item.service_id] + item.first_name + ' ' + item.last_name + '<br>';
             }
         });

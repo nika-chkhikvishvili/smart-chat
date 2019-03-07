@@ -170,7 +170,8 @@
                                                                 <div class="write close_on_readonly">
                                                                     <a href="javascript:;" class="write-link attach"></a>
                                                                     <a href="javascript:;" class="write-link draft"></a>
-                                                                    <input type="text" />
+                                                                    <textarea rows='1' style="resize: none;"></textarea>
+<!--                                                                    <input type="text">-->
                                                                     <a href="javascript:;" class="write-link send"></a>
                                                                 </div>
                                                             </div>
@@ -527,6 +528,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
+    <script type = "text/javascript" src="<?=base_url();?>assets/js/autosize.min.js"></script>
+
 
     <script type="application/javascript">
         var token = "<?=$this->session->userdata['token'] ; ?>";
@@ -539,6 +542,9 @@
     <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard-chat.js?<?=rand(); ?>"></script>
     <script type = "text/javascript" src="<?=base_url();?>assets/chat/js/dashboard.js?<?=rand(); ?>"></script>
     <div id="overlay"><div id="loader"></div></div>
+        <script>
+            autosize(document.querySelectorAll('.write textarea'));
+        </script>
 </body>
 
 </html>

@@ -358,6 +358,10 @@ socket.on('userDisconnect', function (data){
 
 $(document).ready(function () {
 
+    if (!socket.disconnected) {
+        $('#connection_to_server_circle').css("background-color", 'green');
+    }
+
     //$('.chat[data-chat=person2]').addClass('active-chat');
     //$('.person[data-chat=person2]').addClass('active');
 
@@ -387,9 +391,9 @@ $(document).ready(function () {
     });
 
     // checks and authoriser user
-
-    //ამოჭმებს ნამდვილად არის თუ არა აუტორიზებულე პიროვნება, და ასევე აბრუნებს ღია ფანჯრების სიას
+    //ამოწმებს ნამდვილად არის თუ არა აუტორიზებული პიროვნება, და ასევე აბრუნებს ღია ფანჯრების სიას
     socket.emit('checkToken',{token : token});
+
 
     //სასაუბრო ფანჯრის ჩაკეცვა
     $("#msgbox_container").on('click', '.msgbox_left', function () {
@@ -414,7 +418,7 @@ $(document).ready(function () {
     });
 
     // ჩატის ტექსტის აკრეფინს ფანჯარაზე ენტერ ღილაკზე დაჭერა
-    $(".write input").on('keyup', function (event) {
+    $(".write textarea").on('keyup', function (event) {
         let elChatbox = $('.active-chat');
         socket.emit('operatorIsWriting', {chatUniqId: elChatbox.data("chat")});
         if (event.keyCode === 13 ) {
@@ -438,7 +442,7 @@ $(document).ready(function () {
             return ;
         }
 
-        let message = $("div.write input").val();
+        let message = $("div.write textarea").val();
         if (message.length < 3 ) {
             return;
         }
@@ -450,7 +454,9 @@ $(document).ready(function () {
             message: message,
             id: id
         });
-        $(".write input").val('');
+
+        $(".write textarea").val('');
+        autosize.update(document.querySelectorAll('.write textarea'));
         chatManager.turnOffIAmWorking(chatUniqId);
         // elChatbox.append('<div class="bubble me">'+ message + '</div>' );
         // elChatbox.animate({scrollTop: elChatbox[0].scrollHeight}, 'normal');
@@ -466,12 +472,12 @@ $(document).ready(function () {
 
 
     $("#dialog-form-template").on('click', 'li', function (e) {
-        $("div.write input").val($(this).html());
+        $("div.write textarea").val($(this).html());
         dialogFormTemplate.modal('toggle');
     });
 
     $("#template_dialog_form_table").on('click', 'td', function (e) {
-        $("div.write input").val($(this).html());
+        $("div.write textarea").val($(this).html());
         dialogFormTemplate.modal('toggle');
     });
 

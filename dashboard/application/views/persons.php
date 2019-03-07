@@ -317,7 +317,8 @@ $('.change').click(function() {
         <script src="<?=base_url();?>assets/js/jquery.scrollTo.min.js"></script>
 
         <script src="<?=base_url();?>assets/js/jquery.app.js"></script>
-     
+
+        <script src="<?=base_url();?>assets/plugins/notifyjs/dist/notify.min.js"></script>
         <script src="<?=base_url();?>assets/plugins/notifications/notify-metro.js"></script>
         <script src="<?=base_url();?>assets/plugins/notifications/notifications.js"></script>
       

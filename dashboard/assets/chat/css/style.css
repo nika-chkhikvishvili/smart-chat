@@ -289,7 +289,7 @@
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-.container_chat .right .write input {
+.container_chat .right .write input , .container_chat .right .write textarea {
   font-size: 16px;
   float: left;
   width:  calc(100% - 90px);
