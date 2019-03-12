@@ -74,6 +74,7 @@ User.prototype.addChat = function (chatId) {
     if (!this.chatRooms.has(chatId)) {
         this.chatRooms.set(chatId, null);
     }
+    this.sendUserState();
 };
 
 /**
@@ -134,7 +135,7 @@ User.prototype.sendMessageToUser = function (app, s, message) {
 
 User.prototype.removeUserFromChatAndNotifyUsers = function (chatUniqId) {
     const user = this;
-    user.chatRooms.delete(this.chatUniqId);
+    user.chatRooms.delete(chatUniqId);
     setTimeout(()=>user.app.checkAvailableOperatorForServiceOrServiceForOperator(null, user), 500);
     user.sendUserState();
     user.app.io.emit('checkClientCount');
