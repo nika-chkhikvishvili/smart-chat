@@ -367,7 +367,7 @@ app.checkAvailableOperatorForService = function (serviceId) {
     let wh = '-1';
 
     app.users.forEach(function (user) {
-        if (user.isOnline && user.canTakeMore()) {
+        if (user.isOnline ) {
             wh = wh + ',' + user.userId;
         }
     });
@@ -375,13 +375,23 @@ app.checkAvailableOperatorForService = function (serviceId) {
     let mutex = locks.createMutex();
 
     mutex.lock(function () {
-        app.connection.query('SELECT person_id, (select count(*) from chat_rooms r where  r.person_id = p.person_id and chat_id ' +
-            ' in(SELECT chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1 ) ) as open_windows, ' +
-            ' (select count(*) from chat_rooms r1 where  r1.person_id = p.person_id   and r1.chat_id ' +
-            ' in(SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 ' +
-            ' AND c1.add_date   >= NOW() - INTERVAL 1 DAY) ) as last_1_day '+
-            ' FROM smartchat.persons p WHERE person_id in ( select person_id from person_services  where service_id = ? and person_id in (' + wh + ') ) ' +
-            ' order by open_windows asc, last_1_day asc', [serviceId], function (err, res) {
+        app.connection.query(' SELECT person_id, open_windows, last_1_day ' +
+            ' FROM (SELECT p.person_id, IFNULL(ow.open_windows, 0) AS open_windows, IFNULL(ld.last_1_day, 0) AS last_1_day ' +
+            '  FROM smartchat.persons p ' +
+            ' LEFT JOIN (SELECT person_id, COUNT(*) AS open_windows FROM chat_rooms ' +
+            '      WHERE chat_id IN (SELECT  chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1) ' +
+            '      GROUP BY person_id) AS ow ' +
+            '  ON ow.person_id = p.person_id ' +
+            ' LEFT JOIN (SELECT person_id, COUNT(*) AS last_1_day FROM chat_rooms ' +
+            '      WHERE chat_id IN (SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 AND c1.add_date >= NOW() - INTERVAL 1 DAY)\n' +
+            '      GROUP BY person_id) AS ld ' +
+            '  ON ld.person_id = p.person_id ' +
+            ' JOIN person_services on person_services.person_id = p.person_id ' +
+            ' WHERE person_services.service_id = ? and p.person_id in (' + wh + ') ' +
+            ' ) AS operators ' +
+            ' WHERE operators.open_windows < (SELECT operator_max_load FROM sys_control LIMIT 1) ' +
+            ' ORDER BY open_windows ASC , last_1_day ASC ' +
+            ' limit 1', [serviceId], function (err, res) {
             if (err) {
                 mutex.unlock();
                 return app.databaseError(null, err);
@@ -392,14 +402,10 @@ app.checkAvailableOperatorForService = function (serviceId) {
                 return;
             }
 
-            if (res[0].open_windows < 5) {
-                app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
-                mutex.unlock();
-            }
+            app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
+            mutex.unlock();
         });
     });
-
-
 };
 
 app.ioGuests.on('connection', function (socket) {
