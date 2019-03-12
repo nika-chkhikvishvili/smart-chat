@@ -13,7 +13,7 @@
     "npmlog": "4.1.2",
     "socket.io": "2.0.3",
     "mysql": "2.16.0",
-    "randomstring": "1.1.5",
+    "uuid4": "1.1.4",
     "html-escape": "2.0.0",
     "request": "2.88.0",
     "locks": "0.2.2"

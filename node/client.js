@@ -225,7 +225,7 @@ ChatClient.prototype.clientCloseChat = function (socket) {
     }
 
     let chat = app.getChat(socket.chatUniqId);
-    chat.closeChat(app, socket);
+    chat.closeChatAndNotifyUsers(app, socket);
 };
 
 ChatClient.prototype.userIsWriting = function (socket) {

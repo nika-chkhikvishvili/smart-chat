@@ -8,6 +8,7 @@ let User = require('./models/User');
 let AutoAnswering = require('./models/AutoAnswering');
 let Message = require('./models/Message');
 let locks = require('locks');
+let mutex = locks.createMutex();
 const request = require('request');
 app.params = require('./params_local.json');
 
@@ -106,7 +107,7 @@ app.addChatToQueue = function(socket, chat){
         app.waitingClients[chat.serviceId] = fifo();
     }
     app.waitingClients[chat.serviceId].push(chat);
-    setTimeout(function () {app.checkAvailableOperatorForService(chat.serviceId);}, 2000);
+    setTimeout(function () {app.checkAvailableOperatorForServiceOrServiceForOperator(chat.serviceId, null);  }, 1000);
 
 };
 
@@ -287,26 +288,6 @@ app.sendMessageReceivedToRoom = function (socket, chatUniqId, msgId) {
     // });
 };
 
-app.checkAvailableServiceForOperator = function (user) {
-    if (!user || !user.isOnline || !user.canTakeMore()) {
-        return;
-    }
-    app.connection.query('SELECT service_id FROM person_services WHERE person_id = ?', [user.userId], function (err, res) {
-        if (err) {
-            return app.databaseError(socket, err);
-        }
-        let is_has_any = false;
-        res.forEach(function (item) {
-            let serviceQuee = app.waitingClients[item.service_id];
-            if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
-                app.addOperatorToService(user.userId, item.service_id, 1);
-                is_has_any = true;
-            }
-        });
-        if (is_has_any) app.checkAvailableServiceForOperator(user);
-    })
-};
-
 app.addOperatorToService = function (userId, serviceId, joinedModeId) {
     if (app.waitingClients[serviceId].length === 0) {
         return ;
@@ -348,63 +329,106 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
                 app.ioGuests.sockets.sockets[socketId].emit('operatorJoined');
             });
             app.io.emit('checkActiveChats');
-            user.sendUserState(app);
+            user.sendUserState();
         });
     });
 };
 
-//სერვისის მიხედვით იღებს პირველ კლიენტს და ხსნის საუბარს, აბრუნებს ჩატის უნიკალურ იდს
-app.checkAvailableOperatorForService = function (serviceId) {
-    let serviceIdParsed = parseInt(serviceId);
-    if (isNaN(serviceIdParsed)
-        || !app.waitingClients
-        || !Array.isArray(app.waitingClients)
-        || !app.waitingClients[serviceIdParsed]
-        || app.waitingClients[serviceIdParsed].isEmpty()) {
-        return;
-    }
-
-    let wh = '-1';
-
-    app.users.forEach(function (user) {
-        if (user.isOnline ) {
-            wh = wh + ',' + user.userId;
-        }
-    });
-
-    let mutex = locks.createMutex();
-
+/**
+ * ამოწმებს თუ არის თავისუფალი ოპერატორი სერვისისთვის, ან ამ ოპერატორისთვის რიგში მდგომი სერვისი,
+ * ორივეს ერთ ფუნქციაში მოთავსების მიზეზი იყო ის რომ ეს დათვლები არ გაეშვეს პარალელურად, და ორივე ფუნქციამ ერთდროულად არ გადასცეს ჩატი ერთდაიგივე პიროვნებას,
+ *
+ * აუცილებლად უნდა იყოს გათვალისწინებული რომ mutex.unlock()- ის გამოძახება აუცილებელია ნებისმიერი return-ის წინ.
+*/
+app.checkAvailableOperatorForServiceOrServiceForOperator = function (serviceId, user) {
     mutex.lock(function () {
-        app.connection.query(' SELECT person_id, open_windows, last_1_day ' +
-            ' FROM (SELECT p.person_id, IFNULL(ow.open_windows, 0) AS open_windows, IFNULL(ld.last_1_day, 0) AS last_1_day ' +
-            '  FROM smartchat.persons p ' +
-            ' LEFT JOIN (SELECT person_id, COUNT(*) AS open_windows FROM chat_rooms ' +
-            '      WHERE chat_id IN (SELECT  chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1) ' +
-            '      GROUP BY person_id) AS ow ' +
-            '  ON ow.person_id = p.person_id ' +
-            ' LEFT JOIN (SELECT person_id, COUNT(*) AS last_1_day FROM chat_rooms ' +
-            '      WHERE chat_id IN (SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 AND c1.add_date >= NOW() - INTERVAL 1 DAY)\n' +
-            '      GROUP BY person_id) AS ld ' +
-            '  ON ld.person_id = p.person_id ' +
-            ' JOIN person_services on person_services.person_id = p.person_id ' +
-            ' WHERE person_services.service_id = ? and p.person_id in (' + wh + ') ' +
-            ' ) AS operators ' +
-            ' WHERE operators.open_windows < (SELECT operator_max_load FROM sys_control LIMIT 1) ' +
-            ' ORDER BY open_windows ASC , last_1_day ASC ' +
-            ' limit 1', [serviceId], function (err, res) {
-            if (err) {
-                mutex.unlock();
-                return app.databaseError(null, err);
-            }
-
-            if (!res || !Array.isArray(res) || res.length === 0) {
+        if (!user) {
+            let serviceIdParsed = parseInt(serviceId);
+            if (isNaN(serviceIdParsed)
+                || !app.waitingClients
+                || !Array.isArray(app.waitingClients)
+                || !app.waitingClients[serviceIdParsed]
+                || app.waitingClients[serviceIdParsed].isEmpty()) {
                 mutex.unlock();
                 return;
             }
 
-            app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
-            mutex.unlock();
-        });
+            let wh = '-1';
+
+            app.users.forEach(function (user) {
+                if (user.canTakeMore()) {
+                    wh = wh + ',' + user.userId;
+                }
+            });
+//
+            app.connection.query(' SELECT person_id, open_windows, last_1_day ' +
+                ' FROM (SELECT p.person_id, IFNULL(ow.open_windows, 0) AS open_windows, IFNULL(ld.last_1_day, 0) AS last_1_day ' +
+                '  FROM smartchat.persons p ' +
+                ' LEFT JOIN (SELECT person_id, COUNT(*) AS open_windows FROM chat_rooms ' +
+                '      WHERE chat_id IN (SELECT  chat_id FROM smartchat.chats c WHERE c.chat_status_id = 1) ' +
+                '      GROUP BY person_id) AS ow ' +
+                '  ON ow.person_id = p.person_id ' +
+                ' LEFT JOIN (SELECT person_id, COUNT(*) AS last_1_day FROM chat_rooms ' +
+                '      WHERE chat_id IN (SELECT c1.chat_id FROM smartchat.chats c1 WHERE c1.chat_status_id = 3 AND c1.add_date >= NOW() - INTERVAL 1 DAY)\n' +
+                '      GROUP BY person_id) AS ld ' +
+                '  ON ld.person_id = p.person_id ' +
+                ' JOIN person_services on person_services.person_id = p.person_id ' +
+                ' WHERE person_services.service_id = ? and p.person_id in (' + wh + ') ' +
+                ' ) AS operators ' +
+                ' WHERE operators.open_windows < (SELECT operator_max_load FROM sys_control LIMIT 1) ' +
+                ' ORDER BY open_windows ASC , last_1_day ASC ' +
+                ' limit 1', [serviceId], function (err, res) {
+                if (err) {
+                    mutex.unlock();
+                    return app.databaseError(null, err);
+                }
+
+                if (!res || !Array.isArray(res) || res.length === 0) {
+                    mutex.unlock();
+                    return;
+                }
+
+                app.addOperatorToService(res[0].person_id, serviceIdParsed, 1);
+                mutex.unlock();
+            });
+        } else {
+            if (!user.canTakeMore()) {
+                mutex.unlock();
+                return;
+            }
+            app.connection.query('SELECT service_id FROM person_services WHERE person_id = ?', [user.userId], function (err, res) {
+                if (err) {
+                    mutex.unlock();
+                    return app.databaseError(socket, err);
+                }
+
+                let chatId = Number.MAX_SAFE_INTEGER;
+                let serviceId = -1;
+
+                //ნახავს მინიმალური ID-ს მქონე ჩატს, სამართლიანად რო გადასცეს ოპერატორს
+                res.forEach(function (item) {
+                    let serviceQuee = app.waitingClients[item.service_id];
+                    if (!!serviceQuee && !serviceQuee.isEmpty() && user.canTakeMore()) {
+                        let chatForCheck = serviceQuee.first();
+                        if (chatForCheck.chatId < chatId) {
+                            chatId = chatForCheck.chatId;
+                            serviceId = item.service_id;
+                        }
+                    }
+                });
+
+                if (serviceId > -1) {
+                    app.addOperatorToService(user.userId, serviceId, 1);
+                    //შეამოწმოს კიდე ხო არ შეუძლია დაიმატოს
+                    setTimeout(function(){
+                        app.checkAvailableOperatorForServiceOrServiceForOperator(null, user);
+                    },100);
+
+                }
+                mutex.unlock();
+            })
+        }
+
     });
 };
 
@@ -618,7 +642,7 @@ setInterval(function () {
         app.lastChatCheckedTime = Date.now();
         app.chats.forEach(function (chat) {
             if (chat.chatStatusId !== 3 && !chat.isAvailable()) {
-                chat.closeChat(app, null);
+                chat.closeChatAndNotifyUsers(app, null);
             }
         })
     }

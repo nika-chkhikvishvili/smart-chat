@@ -91,7 +91,7 @@ ChatServer.prototype.checkToken = function (socket, data) {
             }
             socket.emit("checkTokenResponse", {isAvailable:user.isAvailable(), isValid: true, ans: chatAns});
             app.sendActiveListByRepo(user.repoId);
-            app.checkAvailableServiceForOperator(user);
+            app.checkAvailableOperatorForServiceOrServiceForOperator(null, user);
         });
     });
 };
@@ -361,9 +361,9 @@ ChatServer.prototype.setAvailability = function (socket, data) {
         return;
     }
     user.setAvailability(data.isAvailable === true);
-    user.sendUserState(app);
+    user.sendUserState();
     if (user.isAvailable()) {
-        app.checkAvailableServiceForOperator(user);
+        app.checkAvailableOperatorForServiceOrServiceForOperator(null, user);
     }
 };
 
@@ -422,7 +422,7 @@ ChatServer.prototype.operatorCloseChat = function (socket,data) {
     }
 
     let chat = app.getChat(data.chatUniqId);
-    chat.closeChat(app, socket);
+    chat.closeChatAndNotifyUsers(app, socket);
 };
 
 ChatServer.prototype.redirectToService = function (socket, data) {
@@ -441,11 +441,10 @@ ChatServer.prototype.redirectToService = function (socket, data) {
             if (err) {return app.databaseError(socket, err);}
 
             app.addChatToQueue(socket, chat);
+            const user = socket.user;
+            chat.removeUserFromChatAndNotify(user);
             socket.emit("redirectToServiceResponse", {success: true, chatUniqId: data.chatUniqId});
-
-            app.io.emit('checkClientCount');
             app.ioGuests.emit('checkClientCount');
-            app.io.emit('checkActiveChats');
             app.ioGuests.emit('checkActiveChats');
         });
     });
@@ -483,10 +482,10 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
         if (err) {
             return app.databaseError(null, err);
         }
-        let user = app.users.get(data.personId);
-        chat.addUser(user, 1);
+        let newUser = app.users.get(data.personId);
+        chat.addUser(newUser, 1);
 
-        user.sockets.forEach(function (socketId) {
+        newUser.sockets.forEach(function (socketId) {
             socket.broadcast.to(socketId).emit('newChatWindow', chat);
         });
 
@@ -498,9 +497,7 @@ ChatServer.prototype.redirectToPerson = function (socket, data) {
                 if (err) {
                     return app.databaseError(socket, err);
                 }
-
-                chat.removeUser(socket.user);
-
+                chat.removeUserFromChatAndNotify(socket.user);
                 let message = new Message({chatUniqId : data.chatUniqId, messageType : 'close'});
                 socket.emit('message', message);
             });

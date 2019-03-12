@@ -76,11 +76,17 @@ User.prototype.addChat = function (chatId) {
     }
 };
 
+/**
+ * აბრუნებს შეუძლია თუ არა ოპერატორს ახალი ჩატის მიღება, ამოწმებს არის თუ არა ონლაინ, ღებულობს თუ არა ახალ ჩატებს
+ *    და ასევე უკვე გახსნილების რაოდენობა 5 მეტი ხო არ არის
+ * @returns {*|boolean}
+ */
 User.prototype.canTakeMore = function () {
-    return this.isAvailable() && (this.chatRooms.size < 5);
+    return this.isOnline && this.isAvailable() && (this.chatRooms.size < 5);
 };
 
 User.prototype.setAvailability = function (available) {
+    const me = this;
     available = (available === true);
     if (this.available === available) {
         return ;
@@ -93,13 +99,12 @@ User.prototype.setAvailability = function (available) {
         state_id: this.isAvailable() ? 1 : 0
     };
 
-    this.app.connection.query('INSERT INTO xlog_available_history SET ?', undata, function (err) {
+    me.app.connection.query('INSERT INTO xlog_available_history SET ?', undata, function (err) {
         if (err) {
-            return app.databaseError(null, err);
+            return me.app.databaseError(null, err);
         }
-        app.connection.query('UPDATE persons SET availability = ? WHERE person_id = ?', [undata.state_id, undata.user_id], function(err) {
-            if (err) {return app.databaseError(null, err);}
-
+        me.app.connection.query('UPDATE persons SET availability = ? WHERE person_id = ?', [undata.state_id, undata.user_id], function(err) {
+            if (err) {return me.app.databaseError(null, err);}
         });
     });
 };
@@ -112,8 +117,8 @@ User.prototype.openedChatRoomsSize = function () {
     return this.chatRooms.size;
 };
 
-User.prototype.sendUserState = function (app) {
-    app.io.emit('userAvailabilityChanged', {
+User.prototype.sendUserState = function () {
+    this.app.io.emit('userAvailabilityChanged', {
         userId: this.userId,
         available: this.isAvailable(),
         openChats: this.openedChatRoomsSize()
@@ -121,9 +126,19 @@ User.prototype.sendUserState = function (app) {
 };
 
 User.prototype.sendMessageToUser = function (app, s, message) {
+    const me = this;
     this.sockets.forEach(function (socketId) {
-        app.io.sockets.sockets[socketId].emit(s, message);
+        me.io.sockets.sockets[socketId].emit(s, message);
     });
+};
+
+User.prototype.removeUserFromChatAndNotifyUsers = function (chatUniqId) {
+    const user = this;
+    user.chatRooms.delete(this.chatUniqId);
+    setTimeout(()=>user.app.checkAvailableOperatorForServiceOrServiceForOperator(null, user), 500);
+    user.sendUserState();
+    user.app.io.emit('checkClientCount');
+    user.app.io.emit('checkActiveChats');
 };
 
 module.exports = User;

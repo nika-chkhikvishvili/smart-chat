@@ -4,7 +4,7 @@
 
 'use strict';
 
-let randomStringGenerator = require("randomstring");
+let uuid4 = require("uuid4");
 let Message = require('./Message');
 
 function Chat(initParams) {
@@ -13,8 +13,7 @@ function Chat(initParams) {
     }
 
     initParams = initParams || {};
-
-    this.chatUniqId   = initParams.hasOwnProperty('chatUniqId')   ? initParams.chatUniqId      : randomStringGenerator.generate();
+    this.chatUniqId   = initParams.hasOwnProperty('chatUniqId')   ? initParams.chatUniqId      : uuid4();
     this.chatId       = initParams.hasOwnProperty('chatId')       ? initParams.chatId          : null;
     this.guestUserId  = initParams.hasOwnProperty('guestUserId')  ? initParams.guestUserId     : null;
     this.guestUser    = initParams.hasOwnProperty('guestUser')    ? initParams.guestUser       : null;
@@ -67,38 +66,44 @@ Chat.prototype.isAlreadyInTheRoom = function (userId) {
     return this.users.has(userId);
 };
 
-Chat.prototype.closeChat = function (app, socket) {
-    let me = this;
+Chat.prototype.removeUserFromChatAndNotify = function (user) {
+    if (!user || !this.users.has(user.userId)) return false;
+    const chat = this;
+    chat.users.delete(user.userId);
+    user.removeUserFromChatAndNotifyUsers(chat.chatUniqId);
+};
 
-    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_uniq_id = ?', [me.chatUniqId], function (err) {
+Chat.prototype.closeChatAndNotifyUsers = function (app, socket) {
+    let chat = this;
+
+    app.connection.query('UPDATE  chats SET chat_status_id = 3 WHERE chat_id = ?', [chat.chatId], function (err) {
         if (err) {
             return app.databaseError(socket, err);
         }
 
-        let message = new Message({chatUniqId: me.chatUniqId, messageType: 'close'});
+        let message = new Message({chatUniqId: chat.chatUniqId, messageType: 'close'});
 
-        me.users.forEach(function(status, userId) {
-            let user = app.users.get(userId);
-            user.chatRooms.delete(me.chatUniqId);
-            user.sendUserState(app);
-        });
-        me.chatStatusId = 3;
+        chat.chatStatusId = 3;
 
         if (!socket) {
             message.sender = 'system';
         } else {
             if (socket.hasOwnProperty('user')) {
-                app.checkAvailableServiceForOperator(socket.user);
+                //TODO სავარაუდოდ ზედმეტია, რადგან removeUserFromChatAndNotify-მ უნდა დააყენოს შემოწმების რიგში
+                setTimeout(()=>app.checkAvailableOperatorForServiceOrServiceForOperator(null, socket.user), 1000);
                 message.sender = socket.user.userName;
             } else {
                 message.sender = 'guest';
-                app.checkAvailableOperatorForService(me.serviceId);
+                setTimeout(()=> app.checkAvailableOperatorForServiceOrServiceForOperator(chat.serviceId, null), 1000);
             }
         }
 
         app.sendMessageToRoom(message);
-        app.io.emit('checkClientCount');
-        app.io.emit('checkActiveChats');
+        chat.users.forEach(function(status, userId) {
+            chat.removeUserFromChatAndNotify(app.users.get(userId));
+        });
+
+        app.chats.delete(chat.chatUniqId);
     });
 };
 
