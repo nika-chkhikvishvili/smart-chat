@@ -547,6 +547,7 @@ app.io.on('connection', function (socket) {
             ans.uptime = process.hasOwnProperty('uptime') ? process.uptime() : {};
             ans.env = process.hasOwnProperty('env') ? process.env : {};
             ans.memoryUsage = process.hasOwnProperty('memoryUsage') ? process.memoryUsage() : {};
+            ans.report = process.hasOwnProperty('report') ? process.report.getReport() : {};
         }
         socket.emit('getStatisticResponse', ans);
     });
