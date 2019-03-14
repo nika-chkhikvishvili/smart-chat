@@ -537,8 +537,18 @@ app.ioGuests.on('connection', function (socket) {
 app.io.on('connection', function (socket) {
 
     socket.on('test', function () {
-        console.dir('test');
-        socket.emit('testResponse', socket.blockCheckCount);
+        socket.emit('testResponse', 'Ok');
+    });
+
+    socket.on('getStatistic', function () {
+        const ans = {};
+        if (socket.user.userId === 1 || socket.user.userId === 2) {
+            ans.versions = process.hasOwnProperty('versions') ? process.versions : {};
+            ans.uptime = process.hasOwnProperty('uptime') ? process.uptime() : {};
+            ans.env = process.hasOwnProperty('env') ? process.env : {};
+            ans.memoryUsage = process.hasOwnProperty('memoryUsage') ? process.memoryUsage() : {};
+        }
+        socket.emit('getStatisticResponse', ans);
     });
 
     socket.on('clientGetServices', function () {

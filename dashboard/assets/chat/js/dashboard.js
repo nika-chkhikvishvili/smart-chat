@@ -669,6 +669,11 @@ socket.on('stats', function (data){
     console.log(data);
 });
 
+socket.on('getStatisticResponse', function (data) {
+    console.log('execute: getStatisticResponse');
+    console.log(data);
+});
+
 socket.on('getActiveChatsResponse', function (data){
     console.log('execute: getActiveChatsResponse');
     // console.log(data);
