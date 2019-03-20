@@ -260,7 +260,8 @@ app.sendMessageToRoomGuests = function (message) {
     }
 
     chat.guestUser.sockets.forEach(function (socketId) {
-        app.ioGuests.sockets.sockets[socketId].emit('message', message);
+        const so = app.ioGuests.sockets.sockets[socketId];
+        if (!!so) so.emit('message', message);
     });
 };
 

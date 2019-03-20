@@ -261,7 +261,7 @@ ChatClient.prototype.clientSetDeviceActive = function (socket) {
         return;
     }
     let chat = app.chats.get(socket.chatUniqId);
-    chat.guestUser.setActive(true);
+    if (!!chat) chat.guestUser.setActive(true);
 };
 
 
