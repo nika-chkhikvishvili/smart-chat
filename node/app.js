@@ -316,13 +316,16 @@ app.addOperatorToService = function (userId, serviceId, joinedModeId) {
 
             if (!!user) {
                 chat.addUser(user, 1);
-                let socketIdTemp = null;
+                let socketTemp = null;
                 user.sockets.forEach(function (socketId) {
-                    app.io.sockets.sockets[socketId].emit('newChatWindow', chat);
-                    socketIdTemp = socketId;
+                    let socketTemp1 = app.io.sockets.sockets[socketId];
+                    if (!!socketTemp1) {
+                        socketTemp1.emit('newChatWindow', chat);
+                        socketTemp = socketTemp1;
+                    }
                 });
-                if (!!socketIdTemp) {
-                    server.sendWelcomeMessage(app.io.sockets.sockets[socketIdTemp], chat.chatUniqId);
+                if (!!socketTemp) {
+                    server.sendWelcomeMessage(socketTemp, chat.chatUniqId);
                 }
             }
 
