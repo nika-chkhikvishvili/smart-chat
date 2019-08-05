@@ -73,7 +73,7 @@ ChatClient.prototype.clientInitParams = function (socket, data) {
             }
         }
 
-        let guestUser = new GuestUser({firstName: data.firstName, lastName: data.lastName, ip: socket.conn.remoteAddress, pushNotificationToken: socket.pushNotificationToken});
+        let guestUser = new GuestUser({firstName: Escape(data.firstName), lastName: Escape(data.lastName), ip: socket.conn.remoteAddress, pushNotificationToken: socket.pushNotificationToken});
 
         app.connection.query('INSERT INTO `online_users` SET ? ', guestUser.getInsertObject(), function (err, res) {
             if (err) {
